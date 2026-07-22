@@ -9,7 +9,7 @@ using System.Text;
 
 namespace BeeFriend.Infrastructure.DbContext
 {
-    public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid>, Guid>
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, Guid>
     {
         public virtual DbSet<UserProfile> UserProfiles { get; set; }
         public virtual DbSet<Country> Countries { get; set; }
