@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="BeeFriend.Core/BeeFriend.Core.csproj" />
+    <Project Path="BeeFriend.Infrastructure/BeeFriend.Infrastructure.csproj" />
+    <Project Path="BeeFriend.Web/BeeFriend.Web.csproj" />
+  </Folder>
+  <Folder Name="/tests/" />
+</Solution>
