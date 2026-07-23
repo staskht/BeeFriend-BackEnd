@@ -14,10 +14,14 @@ var app = builder.Build();
 app.UseHsts();
 app.UseHttpsRedirection();
 
-app.UseAuthorization();
+app.UseSwagger();
+app.UseSwaggerUI();
+
+app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
 app.MapControllers();
 
 app.Run();

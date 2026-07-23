@@ -10,6 +10,7 @@ namespace BeeFriend.Web.StartupExtensions
         public static IServiceCollection ConfigureServices(this IServiceCollection services, IConfiguration configuration) 
         {
             services.AddControllers();
+
             // Db conf
             services.AddDbContext<ApplicationDbContext>(options =>
             {
@@ -30,6 +31,10 @@ namespace BeeFriend.Web.StartupExtensions
                 })
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
+
+            // Swagger
+            services.AddEndpointsApiExplorer();
+            services.AddSwaggerGen();
 
 
             return services;

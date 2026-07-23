@@ -12,9 +12,17 @@ namespace BeeFriend.Infrastructure.DbContext
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, Guid>
     {
         public virtual DbSet<UserProfile> UserProfiles { get; set; }
+
         public virtual DbSet<Country> Countries { get; set; }
+
         public virtual DbSet<City> Cities { get; set; }
+
         public ApplicationDbContext(DbContextOptions options) : base(options)
+        {
+
+        }
+
+        public ApplicationDbContext()
         {
 
         }

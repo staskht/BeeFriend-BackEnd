@@ -11,6 +11,7 @@ namespace BeeFriend.Core.Domain.Entities
 
         [StringLength(50)]
         public string Name { get; set; } = null!;
+
         public ICollection<City> Cities { get; } = new List<City>();
     }
 }

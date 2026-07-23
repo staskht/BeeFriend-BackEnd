@@ -12,7 +12,9 @@ namespace BeeFriend.Core.Domain.Entities
     {
         
         public Guid UserId { get; set; }
+
         public ApplicationUser User { get; set; } = null!;
+
         public int? CityId { get; set; }
 
         public City? City { get; set; }
@@ -22,8 +24,11 @@ namespace BeeFriend.Core.Domain.Entities
 
         [StringLength(200)]
         public string? Bio {get; set; }
+
         public DateTime? BirthDate { get; set; }
+
         public GenderOptions? Gender {get; set;}
+
         public PronounsOptions? Pronouns {get; set;}
 
         [StringLength(200)]
