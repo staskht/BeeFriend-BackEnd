@@ -1,7 +1,10 @@
-﻿using BeeFriend.Core.Domain.IdentityEntities;
+﻿using Asp.Versioning;
+using BeeFriend.Core.Domain.IdentityEntities;
 using BeeFriend.Infrastructure.DbContext;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi;
 
 namespace BeeFriend.Web.StartupExtensions
 {
@@ -9,15 +12,20 @@ namespace BeeFriend.Web.StartupExtensions
     {
         public static IServiceCollection ConfigureServices(this IServiceCollection services, IConfiguration configuration) 
         {
-            services.AddControllers();
+            services.AddControllers(options =>
+            {
+                options.ReturnHttpNotAcceptable = true;
+                options.Filters.Add(new ProducesAttribute("application/json"));
+                options.Filters.Add(new ConsumesAttribute("application/json"));
+            });
 
-            // Db conf
+            // Database
             services.AddDbContext<ApplicationDbContext>(options =>
             {
                 options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
             });
 
-            // Identity
+            // Authentication & Authorization
             services
                 .AddIdentity<ApplicationUser, ApplicationRole>(options =>
                 {
@@ -32,9 +40,30 @@ namespace BeeFriend.Web.StartupExtensions
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
-            // Swagger
+            // Api Versioning
+            services.AddApiVersioning(options =>
+            {
+                options.DefaultApiVersion = new ApiVersion(1, 0);
+                options.AssumeDefaultVersionWhenUnspecified = true;
+                options.ReportApiVersions = true;
+                options.ApiVersionReader = new UrlSegmentApiVersionReader();
+            })
+                .AddApiExplorer(options =>
+                {
+                    options.GroupNameFormat = "v'VVV";
+                    options.SubstituteApiVersionInUrl = true;
+                });
+
+            // Documentation
             services.AddEndpointsApiExplorer();
-            services.AddSwaggerGen();
+            services.AddSwaggerGen(options =>
+            {
+                options.SwaggerDoc("v1", new OpenApiInfo()
+                {
+                    Title = "BeeFriend Web Api",
+                    Version = "v1"
+                });
+            });
 
 
             return services;

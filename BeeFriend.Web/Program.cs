@@ -15,7 +15,10 @@ app.UseHsts();
 app.UseHttpsRedirection();
 
 app.UseSwagger();
-app.UseSwaggerUI();
+app.UseSwaggerUI(options =>
+{
+    options.SwaggerEndpoint("/swagger/v1/swagger.json", "1.0");
+});
 
 app.UseRouting();
 
