@@ -21,7 +21,6 @@ namespace BeeFriend.Core.Service
         }
         public AuthenticationResponse CreateJwtToken(ApplicationUser user)
         {
-            var expiryMinutes = _configuration.GetValue<double>("Jwt:ExpiryMinutes");
 
             var expirationTime = DateTime.UtcNow.AddMinutes(expiryMinutes);
 
