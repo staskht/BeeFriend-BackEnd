@@ -3,10 +3,16 @@ using BeeFriend.Core.Domain.IdentityEntities;
 using BeeFriend.Core.Service;
 using BeeFriend.Core.ServiceContracts;
 using BeeFriend.Infrastructure.DbContext;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
+using System.Text;
 
 namespace BeeFriend.Web.StartupExtensions
 {
@@ -20,6 +26,11 @@ namespace BeeFriend.Web.StartupExtensions
                 options.ReturnHttpNotAcceptable = true;
                 options.Filters.Add(new ProducesAttribute("application/json"));
                 options.Filters.Add(new ConsumesAttribute("application/json"));
+
+                // Authorization policy
+                var policy = new AuthorizationPolicyBuilder()
+                .RequireAuthenticatedUser().Build();
+                options.Filters.Add(new AuthorizeFilter(policy));
             });
 
             services.AddScoped<IJwtService, JwtService>();
@@ -70,6 +81,28 @@ namespace BeeFriend.Web.StartupExtensions
                 });
             });
 
+            // JWT
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.TokenValidationParameters = new TokenValidationParameters()
+                    {
+                        ValidateAudience = true,
+                        ValidAudience = configuration["Jwt:Audience"],
+                        ValidateIssuer = true,
+                        ValidIssuer = configuration["Jwt:Issuer"],
+                        ValidateLifetime = true,
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(
+                            Encoding.UTF8.GetBytes(
+                                configuration["Jwt:Key"]!))
+
+                    };
+                });
+
+            services.AddAuthorization(options =>
+            {
+            });
 
             return services;
 
