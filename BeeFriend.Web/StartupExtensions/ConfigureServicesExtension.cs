@@ -1,5 +1,7 @@
 ﻿using Asp.Versioning;
 using BeeFriend.Core.Domain.IdentityEntities;
+using BeeFriend.Core.Service;
+using BeeFriend.Core.ServiceContracts;
 using BeeFriend.Infrastructure.DbContext;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -12,12 +14,15 @@ namespace BeeFriend.Web.StartupExtensions
     {
         public static IServiceCollection ConfigureServices(this IServiceCollection services, IConfiguration configuration) 
         {
+            // Services
             services.AddControllers(options =>
             {
                 options.ReturnHttpNotAcceptable = true;
                 options.Filters.Add(new ProducesAttribute("application/json"));
                 options.Filters.Add(new ConsumesAttribute("application/json"));
             });
+
+            services.AddScoped<IJwtService, JwtService>();
 
             // Database
             services.AddDbContext<ApplicationDbContext>(options =>
