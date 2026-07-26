@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace BeeFriend.Core.Service
@@ -19,7 +20,7 @@ namespace BeeFriend.Core.Service
         {
             _configuration = configuration;
         }
-        public AuthenticationResponse CreateJwtToken(ApplicationUser user)
+        public AuthenticationResponse GenerateTokens(ApplicationUser user)
         {
 
             var expirationTime = DateTime.UtcNow.AddMinutes(
@@ -52,9 +53,48 @@ namespace BeeFriend.Core.Service
 
             return new AuthenticationResponse()
             {
-                Token = token,
+                AccessToken = token,
                 ExpiresAt = expirationTime,
+                RefreshToken = GenerateRefreshToken(),
+                RefreshTokenExpiresAt = DateTime.UtcNow.AddMinutes(
+                    Convert.ToInt32(_configuration["RefreshToken:ExpiryMinutes"]))
             };
+        }
+
+        public ClaimsPrincipal? GetPrincipalFromJwtToken(string? token)
+        {
+            var tokenValidationParameters = new TokenValidationParameters()
+            {
+                ValidateAudience = true,
+                ValidAudience = _configuration["Jwt:Audience"],
+                ValidateIssuer = true,
+                ValidIssuer = _configuration["Jwt:Issuer"],
+
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]!)),
+
+                ValidateLifetime = false
+            };
+
+            var jwtSecurityTokenHandler = new JwtSecurityTokenHandler();
+            ClaimsPrincipal principal = jwtSecurityTokenHandler.ValidateToken(
+                token, tokenValidationParameters, out SecurityToken securityToken);
+
+            if (securityToken is not JwtSecurityToken jwtSecurityToken 
+                || !jwtSecurityToken.Header.Alg.Equals(
+                    SecurityAlgorithms.HmacSha256,
+                    StringComparison.InvariantCultureIgnoreCase))
+            {
+                throw new SecurityTokenException("Invalid Token");
+            }
+
+            return principal;
+        }
+
+        private string GenerateRefreshToken()
+        {
+            return Convert.ToBase64String(RandomNumberGenerator.GetBytes(64));
         }
     }
 }

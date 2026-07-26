@@ -4,15 +4,10 @@ using System.Text;
 
 namespace BeeFriend.Core.DTO
 {
-    public record AuthenticationResponse
+    public record TokenModel
     {
         public required string AccessToken { get; init; }
 
-        public required DateTime ExpiresAt { get; init; }
-
         public required string RefreshToken { get; init; }
-
-        public required DateTime RefreshTokenExpiresAt { get; init; }
-
     }
 }
