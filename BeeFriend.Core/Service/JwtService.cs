@@ -14,35 +14,53 @@ namespace BeeFriend.Core.Service
 {
     public class JwtService : IJwtService
     {
-        private readonly IConfiguration _configuration;
+
+        private readonly SymmetricSecurityKey _symmetricSecurityKey;
+        private readonly string _issuer;
+        private readonly string _audience;
+        private readonly int _accessTokenExpiryMinutes;
+        private readonly int _refreshTokenExpiryDays;
 
         public JwtService(IConfiguration configuration)
         {
-            _configuration = configuration;
+
+            _symmetricSecurityKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(configuration["Jwt:Key"] ?? throw new InvalidOperationException("Jwt:Key is missing.")));
+
+            _issuer = configuration["Jwt:Issuer"] ?? throw new InvalidOperationException("Jwt:Issuer is missing."); 
+
+            _audience = configuration["Jwt:Audience"] ?? throw new InvalidOperationException("Jwt:Audience is missing.");
+
+            _accessTokenExpiryMinutes = int.Parse(configuration["Jwt:ExpiryMinutes"]!);
+
+            _refreshTokenExpiryDays = int.Parse(configuration["RefreshToken:ExpiryDays"]!);
         }
         public AuthenticationResponse GenerateTokens(ApplicationUser user)
         {
 
-            var expirationTime = DateTime.UtcNow.AddMinutes(
-                Convert.ToDouble(_configuration["Jwt:ExpiryMinutes"]));
+            var expirationTime = DateTime.UtcNow.AddMinutes(_accessTokenExpiryMinutes);
 
             Claim[] claims = new Claim[]
             {
                 new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
+
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToString()),
+
+                new Claim(
+                    JwtRegisteredClaimNames.Iat,
+                    EpochTime.GetIntDate(DateTime.UtcNow).ToString(),
+                    ClaimValueTypes.Integer64),
+
                 new Claim(JwtRegisteredClaimNames.Email, user.Email!),
+
             };
 
-            var securityKey = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]!));
-
             var credentials = new SigningCredentials(
-                securityKey, SecurityAlgorithms.HmacSha256);
+                _symmetricSecurityKey, SecurityAlgorithms.HmacSha256);
 
             var tokenGenerator = new JwtSecurityToken(
-                _configuration["Jwt:Issuer"],
-                _configuration["Jwt:Audience"],
+                _issuer,
+                _audience,
                 claims,
                 expires: expirationTime,
                 signingCredentials: credentials
@@ -56,8 +74,7 @@ namespace BeeFriend.Core.Service
                 AccessToken = token,
                 ExpiresAt = expirationTime,
                 RefreshToken = GenerateRefreshToken(),
-                RefreshTokenExpiresAt = DateTime.UtcNow.AddMinutes(
-                    Convert.ToInt32(_configuration["RefreshToken:ExpiryMinutes"]))
+                RefreshTokenExpiresAt = DateTime.UtcNow.AddDays(_refreshTokenExpiryDays)
             };
         }
 
@@ -66,13 +83,12 @@ namespace BeeFriend.Core.Service
             var tokenValidationParameters = new TokenValidationParameters()
             {
                 ValidateAudience = true,
-                ValidAudience = _configuration["Jwt:Audience"],
+                ValidAudience = _audience,
                 ValidateIssuer = true,
-                ValidIssuer = _configuration["Jwt:Issuer"],
+                ValidIssuer = _issuer,
 
                 ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]!)),
+                IssuerSigningKey = _symmetricSecurityKey,
 
                 ValidateLifetime = false
             };
@@ -86,7 +102,7 @@ namespace BeeFriend.Core.Service
                     SecurityAlgorithms.HmacSha256,
                     StringComparison.InvariantCultureIgnoreCase))
             {
-                throw new SecurityTokenException("Invalid Token");
+                return null;
             }
 
             return principal;

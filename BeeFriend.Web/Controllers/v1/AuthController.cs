@@ -23,38 +23,6 @@ namespace BeeFriend.Web.Controllers.v1
             _userManager = userManager;
         }
 
-        [HttpPost("generate-new-jwt-token")]
-        public async Task<IActionResult> GenerateNewAccessToken(TokenModel tokenModel)
-        {
-            if (tokenModel == null)
-                return BadRequest("Invalid client request");
-
-            string? accessToken = tokenModel.AccessToken;
-            string? refreshToken = tokenModel.RefreshToken;
-
-            ClaimsPrincipal? principal = _jwtService.GetPrincipalFromJwtToken(accessToken);
-            if (principal == null)
-
-                return BadRequest("Invalid jwt access token");
-
-            string? email =  principal.FindFirstValue(JwtRegisteredClaimNames.Email);
-
-            ApplicationUser? user = await _userManager.FindByEmailAsync(email);
-
-            if (user == null || user.RefreshToken !=
-                tokenModel.RefreshToken || 
-                user.RefreshTokenExpiryDate <= DateTime.Now)
-
-                return BadRequest("Invalid refresh token");
-
-            AuthenticationResponse authenticationResponse =
-                _jwtService.GenerateTokens(user);
-
-            user.RefreshToken = authenticationResponse.RefreshToken;
-            user.RefreshTokenExpiryDate = authenticationResponse.RefreshTokenExpiresAt;
-
-            return Ok(authenticationResponse);
-            
-        }
+       
     }
 }

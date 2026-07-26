@@ -33,7 +33,7 @@ namespace BeeFriend.Web.StartupExtensions
                 options.Filters.Add(new AuthorizeFilter(policy));
             });
 
-            services.AddScoped<IJwtService, JwtService>();
+            services.AddSingleton<IJwtService, JwtService>();
 
             // Database
             services.AddDbContext<ApplicationDbContext>(options =>
