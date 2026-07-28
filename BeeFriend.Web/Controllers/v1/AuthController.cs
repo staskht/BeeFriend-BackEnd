@@ -23,6 +23,43 @@ namespace BeeFriend.Web.Controllers.v1
             _userManager = userManager;
         }
 
-        
+        [HttpPost("generate-tokens")]
+        public async Task<IActionResult> GenerateTokens(TokenModel tokenModel)
+        {
+            if (tokenModel == null)
+            {
+                return BadRequest("Invalid client request");
+            }
+
+            ClaimsPrincipal? principal = _jwtService.GetPrincipalFromJwtToken(tokenModel.AccessToken);
+            if (principal == null)
+            {
+                return Unauthorized("Invalid jwt access token");
+            }
+
+            string? userId = principal.FindFirstValue(JwtRegisteredClaimNames.Sub);
+
+            ApplicationUser? user = await _userManager.FindByIdAsync(userId!);
+
+            if (user == null || user.RefreshToken != tokenModel.RefreshToken || user.RefreshTokenExpiryDate <= DateTime.UtcNow)
+            {
+                return Unauthorized("Invalid refresh token");
+            }
+
+            AuthenticationResponse authenticationResponse = _jwtService.GenerateTokens(user);
+
+            user.RefreshToken = authenticationResponse.RefreshToken;
+            user.RefreshTokenExpiryDate = authenticationResponse.RefreshTokenExpiresAt;
+
+            IdentityResult result = await _userManager.UpdateAsync(user);
+
+            if (!result.Succeeded)
+            {
+                return StatusCode(500);
+            }
+
+            return Ok(authenticationResponse);
+        }
+
     }
 }

@@ -57,6 +57,12 @@ namespace BeeFriend.Infrastructure.DbContext
             // Country
             builder.Entity<Country>()
                 .HasKey(pk => pk.CountryId);
+
+            // ApplicationUser
+
+            builder.Entity<ApplicationUser>()
+                .Property(u => u.Email)
+                .IsRequired();
             
         }
 

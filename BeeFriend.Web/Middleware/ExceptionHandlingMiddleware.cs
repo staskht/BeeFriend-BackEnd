@@ -33,7 +33,7 @@ namespace BeeFriend.Web.Middleware
         private static Task HandleExceptionAsync(HttpContext httpContext, Exception exception)
         {
             httpContext.Response.ContentType = "application/json";
-            httpContext.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+            httpContext.Response.StatusCode = (int)HttpStatusCode.InternalServerError; // extend with more exceptions later
 
             var response = new
             {

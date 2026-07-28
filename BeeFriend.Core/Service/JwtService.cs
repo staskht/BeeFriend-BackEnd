@@ -90,7 +90,10 @@ namespace BeeFriend.Core.Service
                 ValidateIssuerSigningKey = true,
                 IssuerSigningKey = _symmetricSecurityKey,
 
-                ValidateLifetime = false
+                ValidateLifetime = false,
+
+                ClockSkew = TimeSpan.Zero 
+
             };
 
             var jwtSecurityTokenHandler = new JwtSecurityTokenHandler();
