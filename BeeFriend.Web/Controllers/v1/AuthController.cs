@@ -23,6 +23,6 @@ namespace BeeFriend.Web.Controllers.v1
             _userManager = userManager;
         }
 
-       
+        
     }
 }

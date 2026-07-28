@@ -1,3 +1,4 @@
+using BeeFriend.Web.Middleware;
 using BeeFriend.Web.StartupExtensions;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,7 +11,8 @@ builder.Services.ConfigureServices(builder.Configuration);
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+app.UseExceptionHandlingMiddleware();
+
 app.UseHsts();
 app.UseHttpsRedirection();
 
