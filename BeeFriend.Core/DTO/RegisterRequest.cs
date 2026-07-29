@@ -13,6 +13,7 @@ namespace BeeFriend.Core.DTO
 
 
         [Required(ErrorMessage = "Password can't be blank")]
+        [MinLength(8, ErrorMessage = "Password must be at least 8 characters long.")]
         public required string Password { get; init; }
 
 

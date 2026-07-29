@@ -66,7 +66,7 @@ namespace BeeFriend.Web.StartupExtensions
             })
                 .AddApiExplorer(options =>
                 {
-                    options.GroupNameFormat = "v'VVV";
+                    options.GroupNameFormat = "'v'VVV";
                     options.SubstituteApiVersionInUrl = true;
                 });
 
