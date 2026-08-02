@@ -82,14 +82,16 @@ namespace BeeFriend.Web.Controllers.v1
                 return Problem(errorMessage);
             }
 
-            ApplicationUser? user = await _userManager.FindByEmailAsync(loginRequest.Email);
+            ApplicationUser? user = 
+                await _userManager.FindByEmailAsync(loginRequest.Email);
 
             if (user == null)
             {
                 return Unauthorized("User does not exist");
             }
 
-            bool valid = await _userManager.CheckPasswordAsync(user, loginRequest.Password);
+            bool valid = 
+                await _userManager.CheckPasswordAsync(user, loginRequest.Password);
 
             if (!valid)
             {
@@ -146,7 +148,6 @@ namespace BeeFriend.Web.Controllers.v1
 
             return Ok(authenticationResponse);
         }
-
 
     }
 }
