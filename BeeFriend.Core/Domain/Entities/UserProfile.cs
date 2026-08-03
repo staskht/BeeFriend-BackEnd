@@ -19,6 +19,10 @@ namespace BeeFriend.Core.Domain.Entities
 
         public City? City { get; set; }
 
+        public int? CountryId { get; set; }
+
+        public Country? Country { get; set; }
+
         [StringLength(50)]
         public string? FirstName {get; set;}
 

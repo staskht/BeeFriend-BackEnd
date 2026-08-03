@@ -37,21 +37,26 @@ namespace BeeFriend.Infrastructure.DbContext
 
             builder.Entity<UserProfile>()
                 .HasOne(u => u.User)
-                .WithOne(p => p.UserProfile)
+                .WithOne(ap => ap.UserProfile)
                 .HasForeignKey<UserProfile>(fk => fk.UserId);
 
             builder.Entity<UserProfile>()
                 .HasOne(u => u.City)
-                .WithMany(p => p.UserProfiles)
+                .WithMany(c => c.UserProfiles)
                 .HasForeignKey(fk => fk.CityId);
+
+            builder.Entity<UserProfile>()
+                .HasOne(u => u.Country)
+                .WithMany(c => c.UserProfiles)
+                .HasForeignKey(fk => fk.CountryId);
 
             // City 
             builder.Entity<City>()
                 .HasKey(pk => pk.CityId);
 
             builder.Entity<City>()
-                .HasOne(u => u.Country)
-                .WithMany(p => p.Cities)
+                .HasOne(c => c.Country)
+                .WithMany(cn => cn.Cities)
                 .HasForeignKey(fk => fk.CountryId);
 
             // Country
