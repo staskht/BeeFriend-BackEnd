@@ -6,6 +6,6 @@ namespace BeeFriend.Core.Domain.RepositoryContracts.CrudRepositoryContracts
 {
     public interface IUpdaterRepository<TEntity>
     {
-        Task<TEntity?> UpdateAsync(TEntity entity);
+        Task<TEntity> UpdateAsync(TEntity entity);
     }
 }

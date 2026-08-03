@@ -6,6 +6,6 @@ namespace BeeFriend.Core.ServiceContracts.CrudServiceContracts
 {
     public interface IUpdaterService<TRequest, TResponse>
     {
-        Task<TResponse?> UpdateAsync(TRequest entity);
+        Task<TResponse?> UpdateAsync(TRequest request);
     }
 }

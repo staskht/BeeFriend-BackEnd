@@ -1,6 +1,7 @@
 ﻿using BeeFriend.Core.Domain.Entities;
 using BeeFriend.Core.Domain.RepositoryContracts;
 using BeeFriend.Core.DTO;
+using BeeFriend.Core.Mappers;
 using BeeFriend.Core.ServiceContracts;
 
 
@@ -15,12 +16,16 @@ namespace BeeFriend.Core.Service
             _userProfilesRepository = userProfilesRepository;
         }
 
-        public Task<IReadOnlyList<UserDto>> GetAllAsync()
+        public async Task<IReadOnlyList<UserProfileResponse>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            var userProfiles = await _userProfilesRepository.GetAllAsync();
+
+            return userProfiles
+                .Select(u => u.ToDto())
+                .ToList();
         }
 
-        public async Task<UserDto?> GetByIdAsync(Guid? id)
+        public async Task<UserProfileResponse?> GetByIdAsync(Guid? id)
         {
             if (id == null)
             {
@@ -34,13 +39,37 @@ namespace BeeFriend.Core.Service
                 return null;
             }
 
-            return null; // temporary fix with dto later
+            return userProfile.ToDto();
 
         }
 
-        public Task<UserDto?> UpdateAsync(UserDto entity)
+        public async Task<UserProfileResponse?> UpdateAsync(UserProfileUpdateRequest userProfileUpdateRequest)
         {
-            throw new NotImplementedException();
+            if (userProfileUpdateRequest == null) 
+            {
+                throw new ArgumentNullException(nameof(userProfileUpdateRequest));
+            }
+
+            UserProfile? matchingUserProfile = 
+                await _userProfilesRepository.GetByIdAsync(userProfileUpdateRequest.UserId);
+
+            if (matchingUserProfile == null)
+            {
+                throw new ArgumentException("Given user id does not exist");
+            }
+
+            matchingUserProfile.CityId = userProfileUpdateRequest.CityId;
+            matchingUserProfile.CountryId = userProfileUpdateRequest.CountryId;
+            matchingUserProfile.FirstName = userProfileUpdateRequest.FirstName;
+            matchingUserProfile.Bio = userProfileUpdateRequest.Bio;
+            matchingUserProfile.Gender = userProfileUpdateRequest.Gender;
+            matchingUserProfile.Pronouns = userProfileUpdateRequest.Pronouns;
+            matchingUserProfile.Interests = userProfileUpdateRequest.Interests;
+
+            UserProfile userProfile = 
+                await _userProfilesRepository.UpdateAsync(matchingUserProfile);
+
+            return userProfile.ToDto();
         }
     }
 }

@@ -5,8 +5,8 @@ using BeeFriend.Core.ServiceContracts.CrudServiceContracts;
 namespace BeeFriend.Core.ServiceContracts
 {
     public interface IUserProfilesService :
-        IReaderService<UserDto, Guid>,
-        IUpdaterService<UserDto, UserDto>
+        IReaderService<UserProfileResponse, Guid>,
+        IUpdaterService<UserProfileUpdateRequest, UserProfileResponse>
 
     {
         
