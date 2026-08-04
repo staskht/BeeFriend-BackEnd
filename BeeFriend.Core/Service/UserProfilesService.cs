@@ -16,34 +16,27 @@ namespace BeeFriend.Core.Service
             _userProfilesRepository = userProfilesRepository;
         }
 
-        public async Task<IReadOnlyList<UserProfileResponse>> GetAllAsync()
+        public async Task<IEnumerable<UserProfileResponse>> GetAllAsync()
         {
-            var userProfiles = await _userProfilesRepository.GetAllAsync();
+            var userProfiles = 
+                await _userProfilesRepository.GetAllAsync();
 
             return userProfiles
                 .Select(u => u.ToDto())
                 .ToList();
         }
 
-        public async Task<UserProfileResponse?> GetByIdAsync(Guid? id)
+        public async Task<UserProfileResponse?> GetByIdAsync(Guid id)
         {
-            if (id == null)
-            {
-                return null;
-            }
 
-            UserProfile? userProfile = await _userProfilesRepository.GetByIdAsync(id.Value);
+            UserProfile? userProfile = 
+                await _userProfilesRepository.GetByIdAsync(id);
 
-            if (userProfile == null) 
-            {
-                return null;
-            }
-
-            return userProfile.ToDto();
+            return userProfile?.ToDto();
 
         }
 
-        public async Task<UserProfileResponse?> UpdateAsync(UserProfileUpdateRequest userProfileUpdateRequest)
+        public async Task<UserProfileResponse?> UpdateAsync(Guid id, UserProfileUpdateRequest userProfileUpdateRequest)
         {
             if (userProfileUpdateRequest == null) 
             {
@@ -51,7 +44,7 @@ namespace BeeFriend.Core.Service
             }
 
             UserProfile? matchingUserProfile = 
-                await _userProfilesRepository.GetByIdAsync(userProfileUpdateRequest.UserId);
+                await _userProfilesRepository.GetByIdAsync(id);
 
             if (matchingUserProfile == null)
             {

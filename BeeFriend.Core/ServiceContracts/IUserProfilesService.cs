@@ -6,7 +6,7 @@ namespace BeeFriend.Core.ServiceContracts
 {
     public interface IUserProfilesService :
         IReaderService<UserProfileResponse, Guid>,
-        IUpdaterService<UserProfileUpdateRequest, UserProfileResponse>
+        IUpdaterService<UserProfileUpdateRequest, UserProfileResponse, Guid>
 
     {
         

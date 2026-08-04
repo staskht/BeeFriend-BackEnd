@@ -4,8 +4,8 @@ using System.Text;
 
 namespace BeeFriend.Core.ServiceContracts.CrudServiceContracts
 {
-    public interface IUpdaterService<TRequest, TResponse>
+    public interface IUpdaterService<TRequest, TResponse, TKey>
     {
-        Task<TResponse?> UpdateAsync(TRequest request);
+        Task<TResponse?> UpdateAsync(TKey key, TRequest request);
     }
 }

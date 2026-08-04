@@ -2,15 +2,13 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Runtime.InteropServices;
 using System.Text;
 
 namespace BeeFriend.Core.DTO
 {
     public class UserProfileUpdateRequest
     {
-        [Required(ErrorMessage = "User Id cannot be blank")]
-        public Guid UserId { get; set; }
-
         public int? CityId { get; set; }
 
         public int? CountryId { get; set; }

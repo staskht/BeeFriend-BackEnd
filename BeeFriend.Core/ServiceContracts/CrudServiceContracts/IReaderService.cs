@@ -2,11 +2,10 @@
 
 namespace BeeFriend.Core.ServiceContracts.CrudServiceContracts
 {
-    public interface IReaderService<TEntity, TKey> 
-        where TKey : struct
+    public interface IReaderService<TEntity, TKey>      
     {
-        Task<TEntity?> GetByIdAsync(TKey? id);
+        Task<TEntity?> GetByIdAsync(TKey id);
 
-        Task<IReadOnlyList<TEntity>> GetAllAsync();
+        Task<IEnumerable<TEntity>> GetAllAsync();
     }
 }
