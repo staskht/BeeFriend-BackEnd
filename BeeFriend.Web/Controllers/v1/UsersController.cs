@@ -2,6 +2,7 @@
 using BeeFriend.Core.Domain.IdentityEntities;
 using BeeFriend.Core.DTO;
 using BeeFriend.Core.ServiceContracts;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -44,21 +45,18 @@ namespace BeeFriend.Web.Controllers.v1
 
         [HttpPut("{id}")]
         public async Task<ActionResult<UserProfileResponse>> PutUserProfile(Guid id, 
-            [FromBody] UserProfileUpdateRequest userProfileUpdateRequest)
+            UserProfileUpdateRequest userProfileUpdateRequest)
         {
             if (id == Guid.Empty)
                 return BadRequest("Invalid user id.");
 
-            UserProfileResponse? userProfileResponse = 
-                await _userProfilesService.GetByIdAsync(id);
+            UserProfileResponse? userProfileResponse =
+               await _userProfilesService.UpdateAsync(id, userProfileUpdateRequest);
 
             if (userProfileResponse == null)
                 return NotFound("User id was not found");
 
-            UserProfileResponse? updatedUserProfile = 
-                await _userProfilesService.UpdateAsync(id, userProfileUpdateRequest);
-
-            return updatedUserProfile!;
+            return userProfileResponse;
         }
     }
 }

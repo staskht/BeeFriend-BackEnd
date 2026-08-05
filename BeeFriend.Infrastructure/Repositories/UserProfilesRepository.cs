@@ -15,7 +15,7 @@ namespace BeeFriend.Infrastructure.Repositories
             _context = context;
         }
 
-        public async Task<IEnumerable<UserProfile>> GetAllAsync()
+        public async Task<IReadOnlyList<UserProfile>> GetAllAsync()
         {
             var userProfiles = await _context.UserProfiles
                 .Include(u => u.City)

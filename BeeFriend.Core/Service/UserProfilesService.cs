@@ -28,6 +28,8 @@ namespace BeeFriend.Core.Service
 
         public async Task<UserProfileResponse?> GetByIdAsync(Guid id)
         {
+            if (id == Guid.Empty)
+                throw new ArgumentException(nameof(id), "Id cannot be empty.");
 
             UserProfile? userProfile = 
                 await _userProfilesRepository.GetByIdAsync(id);
@@ -38,18 +40,17 @@ namespace BeeFriend.Core.Service
 
         public async Task<UserProfileResponse?> UpdateAsync(Guid id, UserProfileUpdateRequest userProfileUpdateRequest)
         {
-            if (userProfileUpdateRequest == null) 
-            {
+            if (id == Guid.Empty)
+                throw new ArgumentOutOfRangeException(nameof(id), "Id cannot be empty.");
+
+            if (userProfileUpdateRequest == null)
                 throw new ArgumentNullException(nameof(userProfileUpdateRequest));
-            }
 
             UserProfile? matchingUserProfile = 
                 await _userProfilesRepository.GetByIdAsync(id);
 
             if (matchingUserProfile == null)
-            {
-                throw new ArgumentException("Given user id does not exist");
-            }
+                return null;
 
             matchingUserProfile.CityId = userProfileUpdateRequest.CityId;
             matchingUserProfile.CountryId = userProfileUpdateRequest.CountryId;
@@ -59,10 +60,10 @@ namespace BeeFriend.Core.Service
             matchingUserProfile.Pronouns = userProfileUpdateRequest.Pronouns;
             matchingUserProfile.Interests = userProfileUpdateRequest.Interests;
 
-            UserProfile userProfile = 
+            UserProfile updatedUserProfile = 
                 await _userProfilesRepository.UpdateAsync(matchingUserProfile);
 
-            return userProfile.ToDto();
+            return updatedUserProfile.ToDto();
         }
     }
 }

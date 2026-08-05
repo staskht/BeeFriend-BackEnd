@@ -8,6 +8,6 @@ namespace BeeFriend.Core.Domain.RepositoryContracts.CrudRepositoryContracts
     {
         Task<TEntity?> GetByIdAsync(TKey id);
 
-        Task<IEnumerable<TEntity>> GetAllAsync();
+        Task<IReadOnlyList<TEntity>> GetAllAsync();
     }
 }

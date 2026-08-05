@@ -37,6 +37,8 @@ namespace BeeFriend.Core.Service
         }
         public AuthenticationResponse GenerateTokens(ApplicationUser user)
         {
+            if (user == null) 
+                throw new ArgumentNullException(nameof(user));
 
             var expirationTime = DateTime.UtcNow.AddMinutes(_accessTokenExpiryMinutes);
 
