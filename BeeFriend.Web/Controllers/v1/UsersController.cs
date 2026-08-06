@@ -1,9 +1,6 @@
 ﻿using Asp.Versioning;
-using BeeFriend.Core.Domain.IdentityEntities;
 using BeeFriend.Core.DTO;
 using BeeFriend.Core.ServiceContracts;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BeeFriend.Web.Controllers.v1
@@ -11,11 +8,9 @@ namespace BeeFriend.Web.Controllers.v1
     [ApiVersion("1.0")]
     public class UsersController : CustomControllerBase
     {
-        private readonly UserManager<ApplicationUser> _userManager;
         private readonly IUserProfilesService _userProfilesService;
-        public UsersController(UserManager<ApplicationUser> userManager, IUserProfilesService userProfilesService) 
+        public UsersController(IUserProfilesService userProfilesService) 
         {
-            _userManager = userManager;
             _userProfilesService = userProfilesService;
         }
 

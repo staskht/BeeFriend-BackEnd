@@ -1,12 +1,19 @@
 ﻿using BeeFriend.Core.Domain.Entities;
-using BeeFriend.Core.Domain.RepositoryContracts.CrudRepositoryContracts;
 
 
 namespace BeeFriend.Core.Domain.RepositoryContracts
 {
-    public interface IUserProfilesRepository : 
-        IReaderRepository<UserProfile, Guid>,
-        IUpdaterRepository<UserProfile>
+    public interface IUserProfilesRepository
     {
+        Task CreateAsync(UserProfile profile);
+
+        Task<bool> DeleteByIdAsync(Guid id);
+
+        Task<UserProfile?> GetByIdAsync(Guid id);
+
+        Task<IReadOnlyList<UserProfile>> GetAllAsync();
+
+        Task<UserProfile> UpdateAsync(UserProfile entity);
+
     }
 }

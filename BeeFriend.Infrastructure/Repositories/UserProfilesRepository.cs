@@ -15,6 +15,17 @@ namespace BeeFriend.Infrastructure.Repositories
             _context = context;
         }
 
+        public async Task CreateAsync(UserProfile userProfile)
+        {
+            await _context.UserProfiles.AddAsync(userProfile);
+            await _context.SaveChangesAsync();
+        }
+
+        public Task<bool> DeleteByIdAsync(Guid id)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<IReadOnlyList<UserProfile>> GetAllAsync()
         {
             var userProfiles = await _context.UserProfiles

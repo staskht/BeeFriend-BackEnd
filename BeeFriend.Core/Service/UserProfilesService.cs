@@ -1,4 +1,5 @@
 ﻿using BeeFriend.Core.Domain.Entities;
+using BeeFriend.Core.Domain.IdentityEntities;
 using BeeFriend.Core.Domain.RepositoryContracts;
 using BeeFriend.Core.DTO;
 using BeeFriend.Core.Mappers;
@@ -14,6 +15,34 @@ namespace BeeFriend.Core.Service
         public UserProfilesService(IUserProfilesRepository userProfilesRepository)
         {
             _userProfilesRepository = userProfilesRepository;
+        }
+
+        public async Task<bool> CreateAsync(ApplicationUser user)
+        {
+            if (user == null)
+                throw new ArgumentNullException(nameof(user));
+
+            UserProfile? userProfile =
+                await _userProfilesRepository.GetByIdAsync(user.Id);
+
+            if (userProfile == null)
+            {
+                var createUserProfile = new UserProfile()
+                {
+                    UserId = user.Id,
+                };
+
+                await _userProfilesRepository.CreateAsync(createUserProfile);
+
+                return true;
+            }
+
+            return false;
+        }
+
+        public Task<bool> DeleteByIdAsync(Guid id)
+        {
+            throw new NotImplementedException();
         }
 
         public async Task<IEnumerable<UserProfileResponse>> GetAllAsync()
