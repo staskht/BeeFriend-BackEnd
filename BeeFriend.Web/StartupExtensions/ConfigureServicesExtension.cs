@@ -39,6 +39,7 @@ namespace BeeFriend.Web.StartupExtensions
             services.AddSingleton<IJwtService, JwtService>();
             services.AddScoped<IUserProfilesRepository, UserProfilesRepository>();
             services.AddScoped<IUserProfilesService, UserProfilesService>();
+            services.AddScoped<IAuthenticationService, AuthenticationService>();
 
             // Database
             services.AddDbContext<ApplicationDbContext>(options =>

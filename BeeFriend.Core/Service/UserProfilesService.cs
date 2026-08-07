@@ -1,7 +1,9 @@
-﻿using BeeFriend.Core.Domain.Entities;
+﻿using BeeFriend.Core.Results;
+using BeeFriend.Core.Domain.Entities;
 using BeeFriend.Core.Domain.IdentityEntities;
 using BeeFriend.Core.Domain.RepositoryContracts;
 using BeeFriend.Core.DTO;
+using BeeFriend.Core.Enums;
 using BeeFriend.Core.Mappers;
 using BeeFriend.Core.ServiceContracts;
 
@@ -17,30 +19,7 @@ namespace BeeFriend.Core.Service
             _userProfilesRepository = userProfilesRepository;
         }
 
-        public async Task<bool> CreateAsync(ApplicationUser user)
-        {
-            if (user == null)
-                throw new ArgumentNullException(nameof(user));
-
-            UserProfile? userProfile =
-                await _userProfilesRepository.GetByIdAsync(user.Id);
-
-            if (userProfile == null)
-            {
-                var createUserProfile = new UserProfile()
-                {
-                    UserId = user.Id,
-                };
-
-                await _userProfilesRepository.CreateAsync(createUserProfile);
-
-                return true;
-            }
-
-            return false;
-        }
-
-        public Task<bool> DeleteByIdAsync(Guid id)
+        public Task<Result> DeleteByIdAsync(Guid id)
         {
             throw new NotImplementedException();
         }
@@ -55,31 +34,32 @@ namespace BeeFriend.Core.Service
                 .ToList();
         }
 
-        public async Task<UserProfileResponse?> GetByIdAsync(Guid id)
+        public async Task<Result<UserProfileResponse>> GetByIdAsync(Guid id)
         {
             if (id == Guid.Empty)
-                throw new ArgumentException(nameof(id), "Id cannot be empty.");
+                return Errors.EmptyGuid(nameof(id));
 
             UserProfile? userProfile = 
                 await _userProfilesRepository.GetByIdAsync(id);
 
-            return userProfile?.ToDto();
+            if (userProfile == null)
+                return Errors.UserNotFound;
 
+            return userProfile.ToDto();
         }
 
-        public async Task<UserProfileResponse?> UpdateAsync(Guid id, UserProfileUpdateRequest userProfileUpdateRequest)
+        public async Task<Result<UserProfileResponse>> UpdateAsync(Guid id, UserProfileUpdateRequest userProfileUpdateRequest)
         {
             if (id == Guid.Empty)
-                throw new ArgumentOutOfRangeException(nameof(id), "Id cannot be empty.");
+                return Errors.EmptyGuid(nameof(id));
 
-            if (userProfileUpdateRequest == null)
-                throw new ArgumentNullException(nameof(userProfileUpdateRequest));
+            ArgumentNullException.ThrowIfNull(userProfileUpdateRequest);
 
             UserProfile? matchingUserProfile = 
                 await _userProfilesRepository.GetByIdAsync(id);
 
             if (matchingUserProfile == null)
-                return null;
+                return Errors.UserNotFound;
 
             matchingUserProfile.CityId = userProfileUpdateRequest.CityId;
             matchingUserProfile.CountryId = userProfileUpdateRequest.CountryId;

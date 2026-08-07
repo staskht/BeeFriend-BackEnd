@@ -1,4 +1,5 @@
 ﻿using Asp.Versioning;
+using BeeFriend.Core.Results;
 using BeeFriend.Core.DTO;
 using BeeFriend.Core.ServiceContracts;
 using Microsoft.AspNetCore.Mvc;
@@ -26,32 +27,27 @@ namespace BeeFriend.Web.Controllers.v1
         [HttpGet("{id}")]
         public async Task<ActionResult<UserProfileResponse>> GetUserProfile(Guid id)
         {
-            if (id == Guid.Empty)
-                return BadRequest("Invalid user id.");
-
-            UserProfileResponse? userProfileResponse = 
+            Result<UserProfileResponse> result = 
                 await _userProfilesService.GetByIdAsync(id);
 
-            if (userProfileResponse == null)
-                return NotFound("User id was not found");
+            if (result.IsFailure)
+                return HandleFailure(result);
 
-            return userProfileResponse;
+            return Ok(result.Value);
+            
         }
 
         [HttpPut("{id}")]
         public async Task<ActionResult<UserProfileResponse>> PutUserProfile(Guid id, 
             UserProfileUpdateRequest userProfileUpdateRequest)
         {
-            if (id == Guid.Empty)
-                return BadRequest("Invalid user id.");
+            Result<UserProfileResponse> result = 
+                await _userProfilesService.UpdateAsync(id, userProfileUpdateRequest);
 
-            UserProfileResponse? userProfileResponse =
-               await _userProfilesService.UpdateAsync(id, userProfileUpdateRequest);
+            if (result.IsFailure)
+                return HandleFailure(result);
 
-            if (userProfileResponse == null)
-                return NotFound("User id was not found");
-
-            return userProfileResponse;
+            return Ok(result.Value);
         }
     }
 }

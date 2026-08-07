@@ -1,5 +1,7 @@
-﻿using BeeFriend.Core.Domain.IdentityEntities;
+﻿using BeeFriend.Core.Results;
+using BeeFriend.Core.Domain.IdentityEntities;
 using BeeFriend.Core.DTO;
+using BeeFriend.Core.Enums;
 
 
 namespace BeeFriend.Core.ServiceContracts
@@ -7,15 +9,13 @@ namespace BeeFriend.Core.ServiceContracts
     public interface IUserProfilesService 
 
     {
-        Task<bool> CreateAsync(ApplicationUser entity);
+        Task<Result> DeleteByIdAsync(Guid id);
 
-        Task<bool> DeleteByIdAsync(Guid id);
-
-        Task<UserProfileResponse?> GetByIdAsync(Guid id);
+        Task<Result<UserProfileResponse>> GetByIdAsync(Guid id);
 
         Task<IEnumerable<UserProfileResponse>> GetAllAsync();
 
-        Task<UserProfileResponse?> UpdateAsync(Guid key, UserProfileUpdateRequest request);
+        Task<Result<UserProfileResponse>> UpdateAsync(Guid key, UserProfileUpdateRequest request);
 
 
     }
