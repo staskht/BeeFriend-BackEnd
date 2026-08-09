@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BeeFriend.Infrastructure.Repositories
 {
-    public class UserProfilesRepository : IUserProfilesRepository
+    public class UserProfilesRepository : IUserProfileRepository
     {
         private readonly ApplicationDbContext _context;
 
@@ -18,10 +18,9 @@ namespace BeeFriend.Infrastructure.Repositories
         public async Task CreateAsync(UserProfile userProfile)
         {
             await _context.UserProfiles.AddAsync(userProfile);
-            await _context.SaveChangesAsync();
         }
 
-        public Task<bool> DeleteByIdAsync(Guid id)
+        public Task DeleteByIdAsync(Guid id)
         {
             throw new NotImplementedException();
         }
@@ -48,7 +47,7 @@ namespace BeeFriend.Infrastructure.Repositories
 
         public async Task<UserProfile> UpdateAsync(UserProfile entity)
         {
-            await _context.SaveChangesAsync();
+            _context.UserProfiles.Update(entity);
             return entity;
         }
     }

@@ -6,17 +6,18 @@ using BeeFriend.Core.DTO;
 using BeeFriend.Core.Enums;
 using BeeFriend.Core.Mappers;
 using BeeFriend.Core.ServiceContracts;
+using BeeFriend.Core.Domain.UnitOfWorkContract;
 
 
 namespace BeeFriend.Core.Service
 {
     public class UserProfilesService : IUserProfilesService
     {
-        private readonly IUserProfilesRepository _userProfilesRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public UserProfilesService(IUserProfilesRepository userProfilesRepository)
+        public UserProfilesService(IUnitOfWork unitOfWork)
         {
-            _userProfilesRepository = userProfilesRepository;
+            _unitOfWork = unitOfWork;
         }
 
         public Task<Result> DeleteByIdAsync(Guid id)
@@ -27,7 +28,7 @@ namespace BeeFriend.Core.Service
         public async Task<IEnumerable<UserProfileResponse>> GetAllAsync()
         {
             var userProfiles = 
-                await _userProfilesRepository.GetAllAsync();
+                await _unitOfWork.UserProfiles.GetAllAsync();
 
             return userProfiles
                 .Select(u => u.ToDto())
@@ -40,7 +41,7 @@ namespace BeeFriend.Core.Service
                 return Errors.EmptyGuid(nameof(id));
 
             UserProfile? userProfile = 
-                await _userProfilesRepository.GetByIdAsync(id);
+                await _unitOfWork.UserProfiles.GetByIdAsync(id);
 
             if (userProfile == null)
                 return Errors.UserNotFound;
@@ -56,7 +57,7 @@ namespace BeeFriend.Core.Service
             ArgumentNullException.ThrowIfNull(userProfileUpdateRequest);
 
             UserProfile? matchingUserProfile = 
-                await _userProfilesRepository.GetByIdAsync(id);
+                await _unitOfWork.UserProfiles.GetByIdAsync(id);
 
             if (matchingUserProfile == null)
                 return Errors.UserNotFound;
@@ -70,7 +71,9 @@ namespace BeeFriend.Core.Service
             matchingUserProfile.Interests = userProfileUpdateRequest.Interests;
 
             UserProfile updatedUserProfile = 
-                await _userProfilesRepository.UpdateAsync(matchingUserProfile);
+                await _unitOfWork.UserProfiles.UpdateAsync(matchingUserProfile);
+
+            await _unitOfWork.CommitAsync();
 
             return updatedUserProfile.ToDto();
         }

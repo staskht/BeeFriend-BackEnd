@@ -4,10 +4,7 @@ using BeeFriend.Core.Domain.IdentityEntities;
 using BeeFriend.Core.DTO;
 using BeeFriend.Core.ServiceContracts;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
 
 namespace BeeFriend.Web.Controllers.v1
 {

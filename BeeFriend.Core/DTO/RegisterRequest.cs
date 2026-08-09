@@ -20,5 +20,9 @@ namespace BeeFriend.Core.DTO
         [Required(ErrorMessage = "Confirm Password can't be blank")]
         [Compare("Password", ErrorMessage = "Password and Confirm Password do not match")]
         public required string ConfirmPassword { get; init; }
+        
+
+        [Required(ErrorMessage = "Birth Date can't be blank.")]
+        public required DateTime BirthDate { get; init; }
     }
 }

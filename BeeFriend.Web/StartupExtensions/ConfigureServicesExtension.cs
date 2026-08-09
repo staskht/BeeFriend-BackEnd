@@ -1,10 +1,12 @@
 ﻿using Asp.Versioning;
 using BeeFriend.Core.Domain.IdentityEntities;
 using BeeFriend.Core.Domain.RepositoryContracts;
+using BeeFriend.Core.Domain.UnitOfWorkContract;
 using BeeFriend.Core.Service;
 using BeeFriend.Core.ServiceContracts;
 using BeeFriend.Infrastructure.DbContext;
 using BeeFriend.Infrastructure.Repositories;
+using BeeFriend.Infrastructure.UnitOfWork;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -37,9 +39,10 @@ namespace BeeFriend.Web.StartupExtensions
 
             //IoC
             services.AddSingleton<IJwtService, JwtService>();
-            services.AddScoped<IUserProfilesRepository, UserProfilesRepository>();
+            services.AddScoped<IUserProfileRepository, UserProfilesRepository>();
             services.AddScoped<IUserProfilesService, UserProfilesService>();
             services.AddScoped<IAuthenticationService, AuthenticationService>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             // Database
             services.AddDbContext<ApplicationDbContext>(options =>

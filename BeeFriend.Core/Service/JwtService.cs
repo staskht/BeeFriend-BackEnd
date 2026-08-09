@@ -43,9 +43,13 @@ namespace BeeFriend.Core.Service
 
             Claim[] claims = new Claim[]
             {
-                new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
+                new Claim(
+                    JwtRegisteredClaimNames.Sub, 
+                    user.Id.ToString()),
 
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                new Claim(
+                    JwtRegisteredClaimNames.Jti, 
+                    Guid.NewGuid().ToString()),
 
                 new Claim(
                     JwtRegisteredClaimNames.Iat,
@@ -81,6 +85,9 @@ namespace BeeFriend.Core.Service
 
         public ClaimsPrincipal? GetPrincipalFromJwtToken(string? token)
         {
+            if (string.IsNullOrWhiteSpace(token)) 
+                return null;
+
             var tokenValidationParameters = new TokenValidationParameters()
             {
                 ValidateAudience = true,
@@ -96,8 +103,8 @@ namespace BeeFriend.Core.Service
                 ClockSkew = TimeSpan.Zero 
 
             };
-
             var jwtSecurityTokenHandler = new JwtSecurityTokenHandler();
+
             ClaimsPrincipal principal = jwtSecurityTokenHandler.ValidateToken(
                 token, tokenValidationParameters, out SecurityToken securityToken);
 

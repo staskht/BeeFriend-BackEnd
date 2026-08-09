@@ -1,8 +1,10 @@
-﻿using BeeFriend.Core.Results;
-using BeeFriend.Core.Domain.Entities;
+﻿using BeeFriend.Core.Domain.Entities;
 using BeeFriend.Core.Domain.IdentityEntities;
 using BeeFriend.Core.Domain.RepositoryContracts;
+using BeeFriend.Core.Domain.UnitOfWorkContract;
 using BeeFriend.Core.DTO;
+using BeeFriend.Core.Exceptions;
+using BeeFriend.Core.Results;
 using BeeFriend.Core.ServiceContracts;
 using Microsoft.AspNetCore.Identity;
 using System.IdentityModel.Tokens.Jwt;
@@ -14,16 +16,16 @@ namespace BeeFriend.Core.Service
     {
         private readonly IJwtService _jwtService;
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly IUserProfilesRepository _userProfilesRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
         public AuthenticationService(
             IJwtService jwtService, 
             UserManager<ApplicationUser> userManager,
-            IUserProfilesRepository userProfilesRepository)
+            IUnitOfWork unitOfWork)
         {
             _jwtService = jwtService;
             _userManager = userManager;
-            _userProfilesRepository = userProfilesRepository;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<Result<AuthenticationResponse>> RegisterAsync(RegisterRequest registerRequest)
@@ -36,18 +38,24 @@ namespace BeeFriend.Core.Service
                 UserName = registerRequest.Email
             };
 
-            IdentityResult result =
+            await _unitOfWork.ExecuteInTransaction(async () =>
+            {
+                IdentityResult result =
                 await _userManager.CreateAsync(user, registerRequest.Password);
 
-            if (!result.Succeeded)
-            {
-                return Errors.Validation(
-                    "RegistrationFailed", 
-                    (string.Join(" | ", result.Errors.Select(e => e.Description))));
-                
-            }
+                if (!result.Succeeded)
+                {
+                    throw new RegistrationException(
+                    string.Join(
+                        " | ",
+                        result.Errors.Select(e => e.Description)));
+
+                }
+                await CreateUserProfileAsync(user, registerRequest.BirthDate);
+
+                await _unitOfWork.CommitAsync();
+            });
             
-            await CreateUserProfileAsync(user);
 
             return await GenerateTokens(user);
         }
@@ -105,24 +113,18 @@ namespace BeeFriend.Core.Service
 
             user.RefreshToken = authenticationResponse.RefreshToken;
             user.RefreshTokenExpiryDate = authenticationResponse.RefreshTokenExpiresAt;
-
-            IdentityResult result =
-                await _userManager.UpdateAsync(user);
-
-            if (!result.Succeeded)
-            {
-                throw new InvalidOperationException(
-                    $"Failed to update refresh token: {string.Join(", ", result.Errors.Select(e => e.Description))}");
-            }
+            
+            await _userManager.UpdateAsync(user);
 
             return authenticationResponse;
         }
 
-        private async Task CreateUserProfileAsync(ApplicationUser user)
+        private async Task CreateUserProfileAsync(ApplicationUser user, DateTime birthDate)
         {
-            await _userProfilesRepository.CreateAsync(new UserProfile
+            await _unitOfWork.UserProfiles.CreateAsync(new UserProfile
             {
                 UserId = user.Id,
+                BirthDate = birthDate
             });
         }
     }

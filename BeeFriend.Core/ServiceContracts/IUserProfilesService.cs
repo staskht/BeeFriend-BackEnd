@@ -17,6 +17,5 @@ namespace BeeFriend.Core.ServiceContracts
 
         Task<Result<UserProfileResponse>> UpdateAsync(Guid key, UserProfileUpdateRequest request);
 
-
     }
 }

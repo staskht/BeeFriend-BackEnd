@@ -12,6 +12,6 @@ namespace BeeFriend.Core.Domain.IdentityEntities
 
         public string? RefreshToken { get; set; }
 
-        public DateTime RefreshTokenExpiryDate { get; set; }
+        public DateTime? RefreshTokenExpiryDate { get; set; }
     }
 }
