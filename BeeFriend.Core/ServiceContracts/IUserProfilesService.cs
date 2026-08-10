@@ -11,7 +11,7 @@ namespace BeeFriend.Core.ServiceContracts
     {
         Task<Result> DeleteByIdAsync(Guid id);
         Task<Result<UserProfileResponse>> GetByIdAsync(Guid id);
-        Task<IEnumerable<UserProfileResponse>> GetAllAsync();
+        Task<IReadOnlyList<UserProfileResponse>> GetAllAsync();
         Task<Result<UserProfileResponse>> UpdateAsync(Guid key, UserProfileUpdateRequest request);
 
     }

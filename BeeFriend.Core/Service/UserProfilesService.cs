@@ -4,6 +4,7 @@ using BeeFriend.Core.DTO;
 using BeeFriend.Core.Mappers;
 using BeeFriend.Core.ServiceContracts;
 using BeeFriend.Core.Domain.UnitOfWorkContract;
+using AutoMapper;
 
 
 namespace BeeFriend.Core.Service
@@ -11,10 +12,12 @@ namespace BeeFriend.Core.Service
     public class UserProfilesService : IUserProfilesService
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
 
-        public UserProfilesService(IUnitOfWork unitOfWork)
+        public UserProfilesService(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
+            _mapper = mapper;
         }
 
         public Task<Result> DeleteByIdAsync(Guid id)
@@ -22,14 +25,12 @@ namespace BeeFriend.Core.Service
             throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<UserProfileResponse>> GetAllAsync()
+        public async Task<IReadOnlyList<UserProfileResponse>> GetAllAsync()
         {
             var userProfiles = 
                 await _unitOfWork.UserProfiles.GetAllAsync();
 
-            return userProfiles
-                .Select(u => u.ToDto())
-                .ToList();
+            return _mapper.Map<List<UserProfileResponse>>(userProfiles);
         }
 
         public async Task<Result<UserProfileResponse>> GetByIdAsync(Guid id)
@@ -43,7 +44,7 @@ namespace BeeFriend.Core.Service
             if (userProfile == null)
                 return Errors.UserNotFound;
 
-            return userProfile.ToDto();
+            return _mapper.Map<UserProfileResponse>(userProfile);
         }
 
         public async Task<Result<UserProfileResponse>> UpdateAsync(
@@ -74,7 +75,7 @@ namespace BeeFriend.Core.Service
 
             await _unitOfWork.CommitAsync();
 
-            return updatedUserProfile.ToDto();
+            return _mapper.Map<UserProfileResponse>(updatedUserProfile);
         }
     }
 }

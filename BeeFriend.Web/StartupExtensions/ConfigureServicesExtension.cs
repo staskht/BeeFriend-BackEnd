@@ -17,6 +17,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
 using System.Text;
 using BeeFriend.Core.Options;
+using BeeFriend.Core.Mappers;
 
 namespace BeeFriend.Web.StartupExtensions
 {
@@ -53,6 +54,10 @@ namespace BeeFriend.Web.StartupExtensions
             services.AddOptions<RefreshTokenOptions>()
                 .Bind(configuration.GetSection(RefreshTokenOptions.SectionName))
                 .ValidateOnStart();
+
+            //AutoMapper
+            services.AddAutoMapper(cfg => cfg.AddProfile<UserMappingProfile>());
+
 
             // Database
             services.AddDbContext<ApplicationDbContext>(options =>
