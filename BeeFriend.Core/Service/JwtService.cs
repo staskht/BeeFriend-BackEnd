@@ -1,7 +1,9 @@
 ﻿using BeeFriend.Core.Domain.IdentityEntities;
 using BeeFriend.Core.DTO;
+using BeeFriend.Core.Options;
 using BeeFriend.Core.ServiceContracts;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
@@ -21,19 +23,23 @@ namespace BeeFriend.Core.Service
         private readonly int _accessTokenExpiryMinutes;
         private readonly int _refreshTokenExpiryDays;
 
-        public JwtService(IConfiguration configuration)
+        public JwtService(
+            IOptions<JwtOptions> jwtOptions, 
+            IOptions<RefreshTokenOptions> refreshTokenOptions)
         {
+            var jwt = jwtOptions.Value;
+            var refreshToken = refreshTokenOptions.Value;
 
             _symmetricSecurityKey = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(configuration["Jwt:Key"] ?? throw new InvalidOperationException("Jwt:Key is missing.")));
+                Encoding.UTF8.GetBytes(jwt.Key));
 
-            _issuer = configuration["Jwt:Issuer"] ?? throw new InvalidOperationException("Jwt:Issuer is missing."); 
+            _issuer = jwt.Issuer; 
 
-            _audience = configuration["Jwt:Audience"] ?? throw new InvalidOperationException("Jwt:Audience is missing.");
+            _audience = jwt.Audience;
 
-            _accessTokenExpiryMinutes = int.Parse(configuration["Jwt:ExpiryMinutes"]!);
+            _accessTokenExpiryMinutes = jwt.ExpiryMinutes;
 
-            _refreshTokenExpiryDays = int.Parse(configuration["RefreshToken:ExpiryDays"]!);
+            _refreshTokenExpiryDays = refreshToken.ExpiryDays;
         }
         public AuthenticationResponse GenerateTokens(ApplicationUser user)
         {

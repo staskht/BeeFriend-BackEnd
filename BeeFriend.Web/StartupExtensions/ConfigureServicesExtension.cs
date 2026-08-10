@@ -7,7 +7,6 @@ using BeeFriend.Core.ServiceContracts;
 using BeeFriend.Infrastructure.DbContext;
 using BeeFriend.Infrastructure.Repositories;
 using BeeFriend.Infrastructure.UnitOfWork;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -17,6 +16,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
 using System.Text;
+using BeeFriend.Core.Options;
 
 namespace BeeFriend.Web.StartupExtensions
 {
@@ -43,6 +43,16 @@ namespace BeeFriend.Web.StartupExtensions
             services.AddScoped<IUserProfilesService, UserProfilesService>();
             services.AddScoped<IAuthenticationService, AuthenticationService>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+            //Options
+
+            services.AddOptions<JwtOptions>()
+                .Bind(configuration.GetSection(JwtOptions.SectionName))
+                .ValidateOnStart();
+
+            services.AddOptions<RefreshTokenOptions>()
+                .Bind(configuration.GetSection(RefreshTokenOptions.SectionName))
+                .ValidateOnStart();
 
             // Database
             services.AddDbContext<ApplicationDbContext>(options =>
