@@ -25,22 +25,21 @@ namespace BeeFriend.Web.Middleware
             catch(Exception ex)
             {
                 _logger.LogError(ex, "Unhandled exception occurred.");
-                await HandleExceptionAsync(httpContext, ex);
+                await HandleExceptionAsync(httpContext);
             }
             
         }
 
-        private static Task HandleExceptionAsync(HttpContext httpContext, Exception exception)
+        private static Task HandleExceptionAsync(HttpContext httpContext)
         {
             httpContext.Response.ContentType = "application/json";
-            httpContext.Response.StatusCode = (int)HttpStatusCode.InternalServerError; // extend with more exceptions later
+            httpContext.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
 
             var response = new
             {
               
                 StatusCode = httpContext.Response.StatusCode,
                 Message = "Internal Server Error. Please try again later.",
-                //Detail = exception.Message 
             };
 
             return httpContext.Response.WriteAsJsonAsync(response);

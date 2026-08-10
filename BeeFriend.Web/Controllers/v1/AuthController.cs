@@ -1,6 +1,5 @@
 ﻿using Asp.Versioning;
 using BeeFriend.Core.Results;
-using BeeFriend.Core.Domain.IdentityEntities;
 using BeeFriend.Core.DTO;
 using BeeFriend.Core.ServiceContracts;
 using Microsoft.AspNetCore.Authorization;
@@ -30,10 +29,9 @@ namespace BeeFriend.Web.Controllers.v1
             Result<AuthenticationResponse> result = 
                 await _authenticationService.RegisterAsync(registerRequest);
 
-            if (result.IsFailure)
-                return HandleFailure(result);
-
-            return Ok(result.Value);
+            return ReturnResponse(
+                result, 
+                value => CreatedAtAction(nameof(PostRegister), value));
         }
 
 
@@ -43,10 +41,7 @@ namespace BeeFriend.Web.Controllers.v1
             Result<AuthenticationResponse> result = 
                 await _authenticationService.LoginAsync(loginRequest);
 
-            if (result.IsFailure)
-                return HandleFailure(result);
-
-            return Ok(result.Value);
+            return ReturnResponse(result, value => Ok(value));
         }
 
         [HttpPost("generate-tokens")]
@@ -55,11 +50,7 @@ namespace BeeFriend.Web.Controllers.v1
             Result<AuthenticationResponse> result =
                 await _authenticationService.GenerateNewTokensAsync(tokenModel);
 
-            if (result.IsFailure)
-                return HandleFailure(result);
-
-            return Ok(result.Value);
+             return ReturnResponse(result, value => Ok(value));
         }
-
     }
 }

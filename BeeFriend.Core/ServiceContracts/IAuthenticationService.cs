@@ -9,9 +9,7 @@ namespace BeeFriend.Core.ServiceContracts
     public interface IAuthenticationService
     {
         Task<Result<AuthenticationResponse>> RegisterAsync(RegisterRequest registerRequest);
-
         Task<Result<AuthenticationResponse>> LoginAsync(LoginRequest loginRequest);
-
         Task<Result<AuthenticationResponse>> GenerateNewTokensAsync(TokenModel tokenModel);
 
     }

@@ -1,6 +1,5 @@
-﻿using BeeFriend.Core.Results;
-using BeeFriend.Core.Enums;
-using Microsoft.AspNetCore.Http;
+﻿using BeeFriend.Core.Enums;
+using BeeFriend.Core.Results;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BeeFriend.Web.Controllers
@@ -9,7 +8,17 @@ namespace BeeFriend.Web.Controllers
     [ApiController]
     public class CustomControllerBase : ControllerBase
     {
-        protected ActionResult HandleFailure(Result result)
+        protected ActionResult ReturnResponse<T>(
+            Result<T> result, 
+            Func<T, ActionResult> successResponse)
+        {
+            if (result.IsFailure)
+                return HandleFailure(result);
+
+            return successResponse(result.Value!);
+        }
+
+        private ActionResult HandleFailure(Result result)
         {
             if (result.Error == null)
                 return StatusCode(500, "An unknown error occurred.");

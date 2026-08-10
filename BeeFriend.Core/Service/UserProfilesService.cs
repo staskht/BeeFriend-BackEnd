@@ -1,9 +1,6 @@
 ﻿using BeeFriend.Core.Results;
 using BeeFriend.Core.Domain.Entities;
-using BeeFriend.Core.Domain.IdentityEntities;
-using BeeFriend.Core.Domain.RepositoryContracts;
 using BeeFriend.Core.DTO;
-using BeeFriend.Core.Enums;
 using BeeFriend.Core.Mappers;
 using BeeFriend.Core.ServiceContracts;
 using BeeFriend.Core.Domain.UnitOfWorkContract;
@@ -49,7 +46,9 @@ namespace BeeFriend.Core.Service
             return userProfile.ToDto();
         }
 
-        public async Task<Result<UserProfileResponse>> UpdateAsync(Guid id, UserProfileUpdateRequest userProfileUpdateRequest)
+        public async Task<Result<UserProfileResponse>> UpdateAsync(
+            Guid id, 
+            UserProfileUpdateRequest userProfileUpdateRequest)
         {
             if (id == Guid.Empty)
                 return Errors.EmptyGuid(nameof(id));

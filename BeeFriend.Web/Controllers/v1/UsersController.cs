@@ -30,24 +30,19 @@ namespace BeeFriend.Web.Controllers.v1
             Result<UserProfileResponse> result = 
                 await _userProfilesService.GetByIdAsync(id);
 
-            if (result.IsFailure)
-                return HandleFailure(result);
-
-            return Ok(result.Value);
+            return ReturnResponse(result, value => Ok(value));
             
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult<UserProfileResponse>> PutUserProfile(Guid id, 
+        public async Task<ActionResult<UserProfileResponse>> PutUserProfile(
+            Guid id, 
             UserProfileUpdateRequest userProfileUpdateRequest)
         {
             Result<UserProfileResponse> result = 
                 await _userProfilesService.UpdateAsync(id, userProfileUpdateRequest);
 
-            if (result.IsFailure)
-                return HandleFailure(result);
-
-            return Ok(result.Value);
+            return ReturnResponse(result, value => Ok(value));
         }
     }
 }

@@ -51,12 +51,14 @@ namespace BeeFriend.Core.Service
                         result.Errors.Select(e => e.Description)));
 
                 }
-                await CreateUserProfileAsync(user, registerRequest.BirthDate);
+                await _unitOfWork.UserProfiles.CreateAsync(new UserProfile
+                {
+                    UserId = user.Id,
+                    BirthDate = registerRequest.BirthDate
+                });
 
                 await _unitOfWork.CommitAsync();
             });
-            
-
             return await GenerateTokens(user);
         }
 
@@ -83,17 +85,19 @@ namespace BeeFriend.Core.Service
         {
             ArgumentNullException.ThrowIfNull(tokenModel);
 
-            ClaimsPrincipal? principal = _jwtService.GetPrincipalFromJwtToken(tokenModel.AccessToken);
+            ClaimsPrincipal? principal = 
+                _jwtService.GetPrincipalFromJwtToken(tokenModel.AccessToken);
 
             if (principal == null)
                 return Errors.InvalidAccessToken;
 
-            string? userId = principal.FindFirstValue(JwtRegisteredClaimNames.Sub);
+            string? userId = 
+                principal.FindFirstValue(JwtRegisteredClaimNames.Sub);
 
             if (string.IsNullOrWhiteSpace(userId))
                 return Errors.InvalidAccessToken;
 
-            ApplicationUser? user =
+            ApplicationUser? user = 
                 await _userManager.FindByIdAsync(userId);
 
             if (user == null || 
@@ -108,8 +112,7 @@ namespace BeeFriend.Core.Service
 
         private async Task<AuthenticationResponse> GenerateTokens(ApplicationUser user)
         {
-            AuthenticationResponse authenticationResponse = 
-                _jwtService.GenerateTokens(user);
+            var authenticationResponse = _jwtService.GenerateTokens(user);
 
             user.RefreshToken = authenticationResponse.RefreshToken;
             user.RefreshTokenExpiryDate = authenticationResponse.RefreshTokenExpiresAt;
@@ -117,15 +120,6 @@ namespace BeeFriend.Core.Service
             await _userManager.UpdateAsync(user);
 
             return authenticationResponse;
-        }
-
-        private async Task CreateUserProfileAsync(ApplicationUser user, DateTime birthDate)
-        {
-            await _unitOfWork.UserProfiles.CreateAsync(new UserProfile
-            {
-                UserId = user.Id,
-                BirthDate = birthDate
-            });
         }
     }
 }
