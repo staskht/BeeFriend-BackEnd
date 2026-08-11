@@ -1,3 +1,4 @@
+using BeeFriend.Infrastructure.DbContext;
 using BeeFriend.Web.Middleware;
 using BeeFriend.Web.StartupExtensions;
 
@@ -10,6 +11,16 @@ builder.Services.ConfigureServices(builder.Configuration);
 
 
 var app = builder.Build();
+
+if (app.Environment.IsDevelopment())
+{
+    using var scope = app.Services.CreateScope();
+
+    var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+
+    await db.Database.EnsureDeletedAsync();
+    await db.Database.EnsureCreatedAsync();
+}
 
 app.UseExceptionHandlingMiddleware();
 

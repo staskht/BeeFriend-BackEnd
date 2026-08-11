@@ -20,9 +20,21 @@ namespace BeeFriend.Core.Service
             _mapper = mapper;
         }
 
-        public Task<Result> DeleteByIdAsync(Guid id)
+        public async Task<Result> DeleteByIdAsync(Guid id)
         {
-            throw new NotImplementedException();
+            if (id == Guid.Empty)
+                return Errors.EmptyGuid(nameof(id));
+
+            var userProfile = 
+                await _unitOfWork.UserProfiles.GetByIdAsync(id);
+
+            if (userProfile == null)
+                return Errors.UserNotFound;
+
+            _unitOfWork.UserProfiles.Delete(userProfile);
+            await _unitOfWork.CommitAsync();
+
+            return Result.Success();
         }
 
         public async Task<IReadOnlyList<UserProfileResponse>> GetAllAsync()
@@ -71,7 +83,7 @@ namespace BeeFriend.Core.Service
             matchingUserProfile.Interests = userProfileUpdateRequest.Interests;
 
             UserProfile updatedUserProfile = 
-                await _unitOfWork.UserProfiles.UpdateAsync(matchingUserProfile);
+                _unitOfWork.UserProfiles.Update(matchingUserProfile);
 
             await _unitOfWork.CommitAsync();
 

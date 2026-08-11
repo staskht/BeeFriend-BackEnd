@@ -16,7 +16,7 @@ namespace BeeFriend.Web.Controllers.v1
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<UserProfileResponse>>> GetAllMatchingUsers() 
+        public async Task<ActionResult<IEnumerable<UserProfileResponse>>> GetAll() 
         {
             var matchingUsers = 
                 await _userProfilesService.GetAllAsync();
@@ -24,7 +24,7 @@ namespace BeeFriend.Web.Controllers.v1
             return matchingUsers.ToList();
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id:guid}")]
         public async Task<ActionResult<UserProfileResponse>> GetUserProfile(Guid id)
         {
             Result<UserProfileResponse> result = 
@@ -34,8 +34,8 @@ namespace BeeFriend.Web.Controllers.v1
             
         }
 
-        [HttpPut("{id}")]
-        public async Task<ActionResult<UserProfileResponse>> PutUserProfile(
+        [HttpPatch("{id:guid}")]
+        public async Task<ActionResult<UserProfileResponse>> PatchUserProfile(
             Guid id, 
             UserProfileUpdateRequest userProfileUpdateRequest)
         {
@@ -43,6 +43,14 @@ namespace BeeFriend.Web.Controllers.v1
                 await _userProfilesService.UpdateAsync(id, userProfileUpdateRequest);
 
             return ReturnResponse(result, value => Ok(value));
+        }
+
+        [HttpDelete("{id:guid}")]
+        public async Task<ActionResult> DeleteUserProfile(Guid id)
+        {
+            Result result = await _userProfilesService.DeleteByIdAsync(id);
+
+            return ReturnResponse(result, () => NoContent());
         }
     }
 }

@@ -9,6 +9,5 @@ namespace BeeFriend.Core.Domain.UnitOfWorkContract
     {
         IUserProfileRepository UserProfiles {  get; }
         Task CommitAsync();
-        Task ExecuteInTransaction(Func<Task> action);
     }
 }

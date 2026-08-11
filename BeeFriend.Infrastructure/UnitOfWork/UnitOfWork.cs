@@ -26,23 +26,5 @@ namespace BeeFriend.Infrastructure.UnitOfWork
         {
             return _context.SaveChangesAsync();
         }
-
-        public async Task ExecuteInTransaction(Func<Task> action)
-        {
-            await using var transaction = 
-                await _context.Database.BeginTransactionAsync();
-
-            try
-            {
-                await action();
-
-                await transaction.CommitAsync();
-            }
-            catch
-            {
-                await transaction.RollbackAsync();
-                throw;
-            }
-        }
     }
 }

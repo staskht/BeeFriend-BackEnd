@@ -18,6 +18,16 @@ namespace BeeFriend.Web.Controllers
             return successResponse(result.Value!);
         }
 
+        protected ActionResult ReturnResponse(
+            Result result,
+            Func<ActionResult> successResponse)
+        {
+            if (result.IsFailure)
+                return HandleFailure(result);
+
+            return successResponse();
+        }
+
         private ActionResult HandleFailure(Result result)
         {
             if (result.Error == null)

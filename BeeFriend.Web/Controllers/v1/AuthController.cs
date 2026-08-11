@@ -31,7 +31,7 @@ namespace BeeFriend.Web.Controllers.v1
 
             return ReturnResponse(
                 result, 
-                value => CreatedAtAction(nameof(PostRegister), value));
+                value => StatusCode(StatusCodes.Status201Created, value));
         }
 
 

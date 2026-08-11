@@ -18,6 +18,8 @@ using Microsoft.OpenApi;
 using System.Text;
 using BeeFriend.Core.Options;
 using BeeFriend.Core.Mappers;
+using BeeFriend.Infrastructure.IdentityStore;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace BeeFriend.Web.StartupExtensions
 {
@@ -44,6 +46,7 @@ namespace BeeFriend.Web.StartupExtensions
             services.AddScoped<IUserProfilesService, UserProfilesService>();
             services.AddScoped<IAuthenticationService, AuthenticationService>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddScoped<IUserStore<ApplicationUser>, ApplicationUserStore>();
 
             //Options
 
@@ -78,7 +81,9 @@ namespace BeeFriend.Web.StartupExtensions
                     options.User.RequireUniqueEmail = true;
                 })
                 .AddEntityFrameworkStores<ApplicationDbContext>()
-                .AddDefaultTokenProviders();
+                .AddDefaultTokenProviders()
+                .AddUserStore<ApplicationUserStore>()
+                .AddRoleStore<RoleStore<ApplicationRole, ApplicationDbContext, Guid>>();
 
             // Api Versioning
             services.AddApiVersioning(options =>

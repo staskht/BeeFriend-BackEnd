@@ -38,27 +38,26 @@ namespace BeeFriend.Core.Service
                 UserName = registerRequest.Email
             };
 
-            await _unitOfWork.ExecuteInTransaction(async () =>
+            IdentityResult result =
+                   await _userManager.CreateAsync(user, registerRequest.Password);
+
+            if (!result.Succeeded)
             {
-                IdentityResult result =
-                await _userManager.CreateAsync(user, registerRequest.Password);
-
-                if (!result.Succeeded)
-                {
-                    throw new RegistrationException(
+                return Errors.Validation(
+                    "RegistrationValidation",
                     string.Join(
-                        " | ",
-                        result.Errors.Select(e => e.Description)));
+                    " | ",
+                    result.Errors.Select(e => e.Description)));
 
-                }
-                await _unitOfWork.UserProfiles.CreateAsync(new UserProfile
-                {
-                    UserId = user.Id,
-                    BirthDate = registerRequest.BirthDate
-                });
-
-                await _unitOfWork.CommitAsync();
+            }
+            await _unitOfWork.UserProfiles.CreateAsync(new UserProfile
+            {
+                UserId = user.Id,
+                BirthDate = registerRequest.BirthDate
             });
+
+            await _unitOfWork.CommitAsync();
+
             return await GenerateTokens(user);
         }
 
@@ -118,6 +117,7 @@ namespace BeeFriend.Core.Service
             user.RefreshTokenExpiryDate = authenticationResponse.RefreshTokenExpiresAt;
             
             await _userManager.UpdateAsync(user);
+            await _unitOfWork.CommitAsync();
 
             return authenticationResponse;
         }

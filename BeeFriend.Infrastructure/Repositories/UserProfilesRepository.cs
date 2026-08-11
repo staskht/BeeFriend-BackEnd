@@ -20,9 +20,9 @@ namespace BeeFriend.Infrastructure.Repositories
             await _context.UserProfiles.AddAsync(userProfile);
         }
 
-        public Task DeleteByIdAsync(Guid id)
+        public void Delete(UserProfile userProfile)
         {
-            throw new NotImplementedException();
+            _context.UserProfiles.Remove(userProfile);
         }
 
         public async Task<IReadOnlyList<UserProfile>> GetAllAsync()
@@ -45,7 +45,7 @@ namespace BeeFriend.Infrastructure.Repositories
             return userProfile;
         }
 
-        public async Task<UserProfile> UpdateAsync(UserProfile entity)
+        public UserProfile Update(UserProfile entity)
         {
             _context.UserProfiles.Update(entity);
             return entity;
