@@ -35,7 +35,7 @@ namespace BeeFriend.Web.StartupExtensions
                 options.Filters.Add(new ConsumesAttribute("application/json"));
 
                 // Authorization policy
-                var policy = new AuthorizationPolicyBuilder()
+                var policy = new AuthorizationPolicyBuilder(JwtBearerDefaults.AuthenticationScheme)
                 .RequireAuthenticatedUser().Build();
                 options.Filters.Add(new AuthorizeFilter(policy));
             });
@@ -108,6 +108,22 @@ namespace BeeFriend.Web.StartupExtensions
                     Title = "BeeFriend Web Api",
                     Version = "v1"
                 });
+
+                options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.Http,
+                    Scheme = "bearer",
+                    BearerFormat = "JWT",
+                    In = ParameterLocation.Header,
+                    Description = "Enter your JWT token"
+                });
+
+    options.AddSecurityRequirement(document =>
+        new OpenApiSecurityRequirement
+        {
+            [new OpenApiSecuritySchemeReference("Bearer", document)] = []
+        });
             });
 
             // JWT
@@ -118,10 +134,15 @@ namespace BeeFriend.Web.StartupExtensions
                     {
                         ValidateAudience = true,
                         ValidAudience = configuration["Jwt:Audience"],
+
                         ValidateIssuer = true,
                         ValidIssuer = configuration["Jwt:Issuer"],
+
                         ValidateLifetime = true,
+                        ClockSkew = TimeSpan.Zero,
+
                         ValidateIssuerSigningKey = true,
+
                         IssuerSigningKey = new SymmetricSecurityKey(
                             Encoding.UTF8.GetBytes(
                                 configuration["Jwt:Key"]!))

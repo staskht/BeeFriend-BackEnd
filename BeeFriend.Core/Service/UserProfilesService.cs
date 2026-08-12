@@ -5,6 +5,8 @@ using BeeFriend.Core.Mappers;
 using BeeFriend.Core.ServiceContracts;
 using BeeFriend.Core.Domain.UnitOfWorkContract;
 using AutoMapper;
+using Microsoft.AspNetCore.Identity;
+using BeeFriend.Core.Domain.IdentityEntities;
 
 
 namespace BeeFriend.Core.Service
@@ -13,11 +15,13 @@ namespace BeeFriend.Core.Service
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public UserProfilesService(IUnitOfWork unitOfWork, IMapper mapper)
+        public UserProfilesService(IUnitOfWork unitOfWork, IMapper mapper, UserManager<ApplicationUser> userManager)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _userManager = userManager;
         }
 
         public async Task<Result> DeleteByIdAsync(Guid id)
@@ -30,6 +34,19 @@ namespace BeeFriend.Core.Service
 
             if (userProfile == null)
                 return Errors.UserNotFound;
+            
+            var user = 
+                await _userManager.FindByIdAsync(id.ToString());
+
+            IdentityResult result = 
+                await _userManager.DeleteAsync(user!);
+
+            if (!result.Succeeded)
+            {
+                throw new NotImplementedException(string.Join(
+                    " | ",
+                    result.Errors.Select(e => e.Description)));
+            }
 
             _unitOfWork.UserProfiles.Delete(userProfile);
             await _unitOfWork.CommitAsync();

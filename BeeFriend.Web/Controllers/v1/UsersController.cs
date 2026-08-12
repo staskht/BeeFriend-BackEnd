@@ -3,6 +3,8 @@ using BeeFriend.Core.Results;
 using BeeFriend.Core.DTO;
 using BeeFriend.Core.ServiceContracts;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace BeeFriend.Web.Controllers.v1
 {
@@ -39,6 +41,14 @@ namespace BeeFriend.Web.Controllers.v1
             Guid id, 
             UserProfileUpdateRequest userProfileUpdateRequest)
         {
+
+            var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (id.ToString() != currentUserId) 
+            {
+                return Forbid();
+            }
+
             Result<UserProfileResponse> result = 
                 await _userProfilesService.UpdateAsync(id, userProfileUpdateRequest);
 
@@ -48,6 +58,13 @@ namespace BeeFriend.Web.Controllers.v1
         [HttpDelete("{id:guid}")]
         public async Task<ActionResult> DeleteUserProfile(Guid id)
         {
+            var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (id.ToString() != currentUserId)
+            {
+                return Forbid();
+            }
+
             Result result = await _userProfilesService.DeleteByIdAsync(id);
 
             return ReturnResponse(result, () => NoContent());

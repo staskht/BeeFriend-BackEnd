@@ -3,7 +3,6 @@ using BeeFriend.Core.Domain.IdentityEntities;
 using BeeFriend.Core.Domain.RepositoryContracts;
 using BeeFriend.Core.Domain.UnitOfWorkContract;
 using BeeFriend.Core.DTO;
-using BeeFriend.Core.Exceptions;
 using BeeFriend.Core.Results;
 using BeeFriend.Core.ServiceContracts;
 using Microsoft.AspNetCore.Identity;
@@ -91,7 +90,7 @@ namespace BeeFriend.Core.Service
                 return Errors.InvalidAccessToken;
 
             string? userId = 
-                principal.FindFirstValue(JwtRegisteredClaimNames.Sub);
+                principal.FindFirstValue(ClaimTypes.NameIdentifier);
 
             if (string.IsNullOrWhiteSpace(userId))
                 return Errors.InvalidAccessToken;

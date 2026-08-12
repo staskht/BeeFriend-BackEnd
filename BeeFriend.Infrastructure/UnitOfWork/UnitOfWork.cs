@@ -1,10 +1,6 @@
 ﻿using BeeFriend.Core.Domain.RepositoryContracts;
 using BeeFriend.Core.Domain.UnitOfWorkContract;
 using BeeFriend.Infrastructure.DbContext;
-using BeeFriend.Infrastructure.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace BeeFriend.Infrastructure.UnitOfWork
 {
