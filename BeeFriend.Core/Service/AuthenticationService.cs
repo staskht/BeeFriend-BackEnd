@@ -6,19 +6,19 @@ using BeeFriend.Core.DTO;
 using BeeFriend.Core.Results;
 using BeeFriend.Core.ServiceContracts;
 using Microsoft.AspNetCore.Identity;
-using System.IdentityModel.Tokens.Jwt;
+using BeeFriend.Core.Helpers;
 using System.Security.Claims;
 
 namespace BeeFriend.Core.Service
 {
     public class AuthenticationService : IAuthenticationService
     {
-        private readonly IJwtService _jwtService;
+        private readonly ITokenAuthentication _jwtService;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IUnitOfWork _unitOfWork;
 
         public AuthenticationService(
-            IJwtService jwtService, 
+            ITokenAuthentication jwtService, 
             UserManager<ApplicationUser> userManager,
             IUnitOfWork unitOfWork)
         {
@@ -98,8 +98,10 @@ namespace BeeFriend.Core.Service
             ApplicationUser? user = 
                 await _userManager.FindByIdAsync(userId);
 
+            var hashedRefreshToken = HashHelper.Hash(tokenModel.RefreshToken);
+
             if (user == null || 
-                user.RefreshToken != tokenModel.RefreshToken || 
+                user.RefreshToken != hashedRefreshToken || 
                 user.RefreshTokenExpiryDate <= DateTime.UtcNow)
             {
                 return Errors.InvalidRefreshToken;
@@ -112,7 +114,7 @@ namespace BeeFriend.Core.Service
         {
             var authenticationResponse = _jwtService.GenerateTokens(user);
 
-            user.RefreshToken = authenticationResponse.RefreshToken;
+            user.RefreshToken = HashHelper.Hash(authenticationResponse.RefreshToken);
             user.RefreshTokenExpiryDate = authenticationResponse.RefreshTokenExpiresAt;
             
             await _userManager.UpdateAsync(user);

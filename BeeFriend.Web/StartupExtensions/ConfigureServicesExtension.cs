@@ -41,7 +41,7 @@ namespace BeeFriend.Web.StartupExtensions
             });
 
             //IoC
-            services.AddSingleton<IJwtService, JwtService>();
+            services.AddSingleton<ITokenAuthentication, TokenAuthenticationService>();
             services.AddScoped<IUserProfileRepository, UserProfilesRepository>();
             services.AddScoped<IUserProfilesService, UserProfilesService>();
             services.AddScoped<IAuthenticationService, AuthenticationService>();

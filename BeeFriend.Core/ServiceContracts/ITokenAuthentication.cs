@@ -7,7 +7,7 @@ using System.Text;
 
 namespace BeeFriend.Core.ServiceContracts
 {
-    public interface IJwtService
+    public interface ITokenAuthentication
     {
         AuthenticationResponse GenerateTokens(ApplicationUser user);
         ClaimsPrincipal? GetPrincipalFromJwtToken(string? token);

@@ -14,7 +14,7 @@ using System.Text;
 
 namespace BeeFriend.Core.Service
 {
-    public class JwtService : IJwtService
+    public class TokenAuthenticationService : ITokenAuthentication
     {
 
         private readonly SymmetricSecurityKey _symmetricSecurityKey;
@@ -23,7 +23,7 @@ namespace BeeFriend.Core.Service
         private readonly int _accessTokenExpiryMinutes;
         private readonly int _refreshTokenExpiryDays;
 
-        public JwtService(
+        public TokenAuthenticationService(
             IOptions<JwtOptions> jwtOptions, 
             IOptions<RefreshTokenOptions> refreshTokenOptions)
         {
@@ -111,18 +111,25 @@ namespace BeeFriend.Core.Service
             };
             var jwtSecurityTokenHandler = new JwtSecurityTokenHandler();
 
-            ClaimsPrincipal principal = jwtSecurityTokenHandler.ValidateToken(
+            try
+            {
+                ClaimsPrincipal principal = jwtSecurityTokenHandler.ValidateToken(
                 token, tokenValidationParameters, out SecurityToken securityToken);
 
-            if (securityToken is not JwtSecurityToken jwtSecurityToken 
-                || !jwtSecurityToken.Header.Alg.Equals(
-                    SecurityAlgorithms.HmacSha256,
-                    StringComparison.InvariantCultureIgnoreCase))
+                if (securityToken is not JwtSecurityToken jwtSecurityToken
+                    || !jwtSecurityToken.Header.Alg.Equals(
+                        SecurityAlgorithms.HmacSha256,
+                        StringComparison.InvariantCultureIgnoreCase))
+                {
+                    return null;
+                }
+
+                return principal;
+            }
+            catch (Exception) 
             {
                 return null;
             }
-
-            return principal;
         }
 
         private string GenerateRefreshToken()
