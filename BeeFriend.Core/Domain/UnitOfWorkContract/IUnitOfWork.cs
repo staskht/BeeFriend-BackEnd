@@ -7,7 +7,9 @@ namespace BeeFriend.Core.Domain.UnitOfWorkContract
 {
     public interface IUnitOfWork
     {
-        IUserProfileRepository UserProfiles {  get; }
+        IUserProfilesRepository UserProfiles {  get; }
+        ICountriesRepository Countries { get; }
+        ICitiesRepository Cities { get; }
         Task CommitAsync();
     }
 }

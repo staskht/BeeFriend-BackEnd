@@ -7,15 +7,21 @@ namespace BeeFriend.Infrastructure.UnitOfWork
     public class UnitOfWork : IUnitOfWork
     {
         private readonly ApplicationDbContext _context;
-        public IUserProfileRepository UserProfiles {  get; }
-
+        public IUserProfilesRepository UserProfiles {  get; }
+        public ICountriesRepository Countries { get; }
+        public ICitiesRepository Cities { get; }
 
         public UnitOfWork(
             ApplicationDbContext context, 
-            IUserProfileRepository userProfileRepository)
+            IUserProfilesRepository userProfiles,
+            ICountriesRepository countries,
+            ICitiesRepository cities
+            )
         {
             _context = context;
-            UserProfiles = userProfileRepository;
+            UserProfiles = userProfiles;
+            Countries = countries;
+            Cities = cities;
              
         }
         public Task CommitAsync()

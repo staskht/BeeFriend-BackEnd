@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BeeFriend.Infrastructure.Repositories
 {
-    public class UserProfilesRepository : IUserProfileRepository
+    public class UserProfilesRepository : IUserProfilesRepository
     {
         private readonly ApplicationDbContext _context;
 

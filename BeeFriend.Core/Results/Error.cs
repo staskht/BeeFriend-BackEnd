@@ -1,7 +1,5 @@
 ﻿using BeeFriend.Core.Enums;
-using System;
-using System.Collections.Generic;
-using System.Text;
+
 
 namespace BeeFriend.Core.Results
 {
@@ -39,6 +37,13 @@ namespace BeeFriend.Core.Results
             ErrorType.NotFound, 
             "UserNotFound", 
             "User could not be found");
-         
+
+        // Cities
+
+        public static Error CitiesNotFound { get; } = new(
+            ErrorType.NotFound,
+            "CitiesNotFound",
+            "Cities with that country id could not be found"
+            );
     }
 }

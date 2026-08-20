@@ -1,7 +1,6 @@
 ﻿using BeeFriend.Core.Results;
 using BeeFriend.Core.Domain.Entities;
 using BeeFriend.Core.DTO;
-using BeeFriend.Core.Mappers;
 using BeeFriend.Core.ServiceContracts;
 using BeeFriend.Core.Domain.UnitOfWorkContract;
 using AutoMapper;
@@ -54,7 +53,7 @@ namespace BeeFriend.Core.Service
             return Result.Success();
         }
 
-        public async Task<IReadOnlyList<UserProfileResponse>> GetAllAsync()
+        public async Task<Result<IEnumerable<UserProfileResponse>>> GetAllAsync()
         {
             var userProfiles = 
                 await _unitOfWork.UserProfiles.GetAllAsync();

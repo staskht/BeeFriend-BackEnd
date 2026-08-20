@@ -23,7 +23,7 @@ namespace BeeFriend.Web.Controllers.v1
             var matchingUsers = 
                 await _userProfilesService.GetAllAsync();
 
-            return matchingUsers.ToList();
+            return ReturnResponse(matchingUsers, value => Ok(value));
         }
 
         [HttpGet("{id:guid}")]

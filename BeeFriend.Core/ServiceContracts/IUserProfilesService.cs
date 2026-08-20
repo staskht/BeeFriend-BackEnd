@@ -1,18 +1,15 @@
-﻿using BeeFriend.Core.Results;
-using BeeFriend.Core.Domain.IdentityEntities;
-using BeeFriend.Core.DTO;
-using BeeFriend.Core.Enums;
+﻿using BeeFriend.Core.DTO;
+using BeeFriend.Core.ServiceContracts.CrudServiceContracts;
 
 
 namespace BeeFriend.Core.ServiceContracts
 {
-    public interface IUserProfilesService 
+    public interface IUserProfilesService :
+        IAllReaderService<UserProfileResponse>,
+        ISingleReaderService<UserProfileResponse, Guid>,
+        IDeleterService<Guid>,
+        IUpdaterService<UserProfileResponse, UserProfileUpdateRequest, Guid>
 
     {
-        Task<Result> DeleteByIdAsync(Guid id);
-        Task<Result<UserProfileResponse>> GetByIdAsync(Guid id);
-        Task<IReadOnlyList<UserProfileResponse>> GetAllAsync();
-        Task<Result<UserProfileResponse>> UpdateAsync(Guid key, UserProfileUpdateRequest request);
-
     }
 }

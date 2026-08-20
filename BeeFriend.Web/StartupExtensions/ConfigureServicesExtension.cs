@@ -1,25 +1,28 @@
 ﻿using Asp.Versioning;
+using BeeFriend.Core.Domain.Entities;
 using BeeFriend.Core.Domain.IdentityEntities;
 using BeeFriend.Core.Domain.RepositoryContracts;
 using BeeFriend.Core.Domain.UnitOfWorkContract;
+using BeeFriend.Core.DTO;
+using BeeFriend.Core.Mappers;
+using BeeFriend.Core.Options;
 using BeeFriend.Core.Service;
 using BeeFriend.Core.ServiceContracts;
+using BeeFriend.Core.ServiceContracts.CrudServiceContracts;
 using BeeFriend.Infrastructure.DbContext;
+using BeeFriend.Infrastructure.IdentityStore;
 using BeeFriend.Infrastructure.Repositories;
 using BeeFriend.Infrastructure.UnitOfWork;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
 using System.Text;
-using BeeFriend.Core.Options;
-using BeeFriend.Core.Mappers;
-using BeeFriend.Infrastructure.IdentityStore;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace BeeFriend.Web.StartupExtensions
 {
@@ -42,11 +45,15 @@ namespace BeeFriend.Web.StartupExtensions
 
             //IoC
             services.AddSingleton<ITokenAuthentication, TokenAuthenticationService>();
-            services.AddScoped<IUserProfileRepository, UserProfilesRepository>();
+            services.AddScoped<IUserProfilesRepository, UserProfilesRepository>();
             services.AddScoped<IUserProfilesService, UserProfilesService>();
             services.AddScoped<IAuthenticationService, AuthenticationService>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IUserStore<ApplicationUser>, ApplicationUserStore>();
+            services.AddScoped<ICountriesRepository, CountriesRepository>();
+            services.AddScoped<ICitiesRepository, CitiesRepository>();
+            services.AddScoped<IAllReaderService<CountryResponse>, CountriesReader>();
+            services.AddScoped<IAllReaderService<CityResponse, int>, CitiesReader>();
 
             //Options
 
@@ -59,8 +66,10 @@ namespace BeeFriend.Web.StartupExtensions
                 .ValidateOnStart();
 
             //AutoMapper
-            services.AddAutoMapper(cfg => cfg.AddProfile<UserMappingProfile>());
-
+            services.AddAutoMapper(
+                cfg => { },
+                typeof(UserMappingProfile).Assembly
+                );
 
             // Database
             services.AddDbContext<ApplicationDbContext>(options =>
