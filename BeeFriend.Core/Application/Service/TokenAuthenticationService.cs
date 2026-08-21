@@ -1,0 +1,140 @@
+﻿using BeeFriend.Core.Application.DTO;
+using BeeFriend.Core.Application.ServiceContracts;
+using BeeFriend.Core.Domain.IdentityEntities;
+using BeeFriend.Core.Options;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
+using System;
+using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Security.Cryptography;
+using System.Text;
+
+namespace BeeFriend.Core.Application.Service
+{
+    public class TokenAuthenticationService : ITokenAuthentication
+    {
+
+        private readonly SymmetricSecurityKey _symmetricSecurityKey;
+        private readonly string _issuer;
+        private readonly string _audience;
+        private readonly int _accessTokenExpiryMinutes;
+        private readonly int _refreshTokenExpiryDays;
+
+        public TokenAuthenticationService(
+            IOptions<JwtOptions> jwtOptions, 
+            IOptions<RefreshTokenOptions> refreshTokenOptions)
+        {
+            var jwt = jwtOptions.Value;
+            var refreshToken = refreshTokenOptions.Value;
+
+            _symmetricSecurityKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(jwt.Key));
+
+            _issuer = jwt.Issuer; 
+
+            _audience = jwt.Audience;
+
+            _accessTokenExpiryMinutes = jwt.ExpiryMinutes;
+
+            _refreshTokenExpiryDays = refreshToken.ExpiryDays;
+        }
+        public AuthenticationResponse GenerateTokens(ApplicationUser user)
+        {
+            ArgumentNullException.ThrowIfNull(user);
+
+            var expirationTime = DateTime.UtcNow.AddMinutes(_accessTokenExpiryMinutes);
+
+            Claim[] claims = new Claim[]
+            {
+                new Claim(
+                    JwtRegisteredClaimNames.Sub, 
+                    user.Id.ToString()),
+
+                new Claim(
+                    JwtRegisteredClaimNames.Jti, 
+                    Guid.NewGuid().ToString()),
+
+                new Claim(
+                    JwtRegisteredClaimNames.Iat,
+                    EpochTime.GetIntDate(DateTime.UtcNow).ToString(),
+                    ClaimValueTypes.Integer64),
+
+                new Claim(JwtRegisteredClaimNames.Email, user.Email!),
+
+            };
+
+            var credentials = new SigningCredentials(
+                _symmetricSecurityKey, SecurityAlgorithms.HmacSha256);
+
+            var tokenGenerator = new JwtSecurityToken(
+                _issuer,
+                _audience,
+                claims,
+                expires: expirationTime,
+                signingCredentials: credentials
+                );
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+            string token = tokenHandler.WriteToken(tokenGenerator);
+
+            return new AuthenticationResponse()
+            {
+                AccessToken = token,
+                ExpiresAt = expirationTime,
+                RefreshToken = GenerateRefreshToken(),
+                RefreshTokenExpiresAt = DateTime.UtcNow.AddDays(_refreshTokenExpiryDays)
+            };
+        }
+
+        public ClaimsPrincipal? GetPrincipalFromJwtToken(string? token)
+        {
+            if (string.IsNullOrWhiteSpace(token)) 
+                return null;
+
+            var tokenValidationParameters = new TokenValidationParameters()
+            {
+                ValidateAudience = true,
+                ValidAudience = _audience,
+                ValidateIssuer = true,
+                ValidIssuer = _issuer,
+
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = _symmetricSecurityKey,
+
+                ValidateLifetime = false,
+
+                ClockSkew = TimeSpan.Zero 
+
+            };
+            var jwtSecurityTokenHandler = new JwtSecurityTokenHandler();
+
+            try
+            {
+                ClaimsPrincipal principal = jwtSecurityTokenHandler.ValidateToken(
+                token, tokenValidationParameters, out SecurityToken securityToken);
+
+                if (securityToken is not JwtSecurityToken jwtSecurityToken
+                    || !jwtSecurityToken.Header.Alg.Equals(
+                        SecurityAlgorithms.HmacSha256,
+                        StringComparison.InvariantCultureIgnoreCase))
+                {
+                    return null;
+                }
+
+                return principal;
+            }
+            catch (Exception) 
+            {
+                return null;
+            }
+        }
+
+        private string GenerateRefreshToken()
+        {
+            return Convert.ToBase64String(RandomNumberGenerator.GetBytes(64));
+        }
+    }
+}

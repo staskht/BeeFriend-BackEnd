@@ -1,5 +1,5 @@
-﻿using BeeFriend.Core.Domain.IdentityEntities;
-using BeeFriend.Core.Enums;
+﻿using BeeFriend.Core.Domain.Enums;
+using BeeFriend.Core.Domain.IdentityEntities;
 using System.ComponentModel.DataAnnotations;
 
 

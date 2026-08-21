@@ -7,7 +7,8 @@ using System.Text;
 namespace BeeFriend.Core.Domain.RepositoryContracts
 {
     public interface ICountriesRepository : 
-        IAllGetterRepository<Country>
+        IAllGetterRepository<Country>,
+        ISingleGetterRepository<Country, int>
     {
     }
 }

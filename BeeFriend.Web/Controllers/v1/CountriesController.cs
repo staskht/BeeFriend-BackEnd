@@ -1,6 +1,6 @@
 ﻿using Asp.Versioning;
-using BeeFriend.Core.DTO;
-using BeeFriend.Core.ServiceContracts.CrudServiceContracts;
+using BeeFriend.Core.Application.DTO;
+using BeeFriend.Core.Application.ServiceContracts.CrudServiceContracts;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BeeFriend.Web.Controllers.v1

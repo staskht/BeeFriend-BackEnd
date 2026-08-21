@@ -22,5 +22,13 @@ namespace BeeFriend.Infrastructure.Repositories
 
             return countries;
         }
+
+        public async Task<Country?> GetByIdAsync(int id)
+        {
+            var country = 
+                await _context.Countries.FirstOrDefaultAsync(c => c.CountryId == id);
+
+            return country;
+        }
     }
 }

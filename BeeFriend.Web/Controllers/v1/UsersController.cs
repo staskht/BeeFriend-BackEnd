@@ -1,10 +1,10 @@
 ﻿using Asp.Versioning;
-using BeeFriend.Core.Results;
-using BeeFriend.Core.DTO;
-using BeeFriend.Core.ServiceContracts;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
+using BeeFriend.Core.Application.DTO;
+using BeeFriend.Core.Application.ServiceContracts;
+using BeeFriend.Core.Application.Results;
 
 namespace BeeFriend.Web.Controllers.v1
 {

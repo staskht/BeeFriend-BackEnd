@@ -1,5 +1,4 @@
-﻿using BeeFriend.Core.Enums;
-using BeeFriend.Core.Results;
+﻿using BeeFriend.Core.Application.Results;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BeeFriend.Web.Controllers
