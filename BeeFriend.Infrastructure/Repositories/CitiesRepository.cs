@@ -13,7 +13,7 @@ namespace BeeFriend.Infrastructure.Repositories
         {
             _context = context;
         }
-        public async Task<IReadOnlyList<City>> GetAllByCountryIdAsync(int countryId)
+        public async Task<IReadOnlyList<City>> GetAllByIdAsync(int countryId)
         {
             var cities = await _context.Cities
                 .Where(c =>  c.CountryId == countryId)

@@ -9,4 +9,11 @@ namespace BeeFriend.Core.Domain.RepositoryContracts.CrudRepositoryContracts
     {
         Task<IReadOnlyList<TEntity>> GetAllAsync();
     }
+
+    public interface IAllGetterRepository<TEntity, TKey>
+        where TEntity : class
+        where TKey : struct
+    {
+        Task<IReadOnlyList<TEntity>> GetAllByIdAsync(TKey key);
+    }
 }

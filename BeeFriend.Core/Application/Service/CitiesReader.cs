@@ -22,21 +22,19 @@ namespace BeeFriend.Core.Application.Service
         public async Task<Result<IEnumerable<CityResponse>>> GetAllAsync(int countryId) 
         {
             if (countryId <= 0)
-            {
                 return Errors.Validation(
                     "CountryIdInvalid",
                     "CountryId must be greater than zero.");
-            }
 
-            var country = 
-                await _unitOfWork.Countries.GetByIdAsync(countryId);
+            var country = await _unitOfWork.Countries.GetByIdAsync(countryId);
 
-            if (country == null) 
-            {
+            if (country == null)
                 return Errors.CountryNotFound;
-            }
-            var cities =
-                await _unitOfWork.Cities.GetAllByCountryIdAsync(countryId);
+
+            var cities = await _unitOfWork.Cities.GetAllByIdAsync(countryId);
+
+            if (cities.Count == 0) 
+                throw new CitiesNotFoundException("A valid country exists but has no cities.");
 
             return _mapper.Map<List<CityResponse>>(cities);
         }

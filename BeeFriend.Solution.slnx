@@ -4,5 +4,7 @@
     <Project Path="BeeFriend.Infrastructure/BeeFriend.Infrastructure.csproj" />
     <Project Path="BeeFriend.Web/BeeFriend.Web.csproj" />
   </Folder>
-  <Folder Name="/tests/" />
+  <Folder Name="/tests/">
+    <Project Path="BeeFriend.CoreTest/BeeFriend.CoreTest.csproj" Id="4da57a4f-bf34-459c-a589-a787a6946ed2" />
+  </Folder>
 </Solution>
