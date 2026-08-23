@@ -16,8 +16,11 @@ namespace BeeFriend.Core.Application.Mappers
                 .ForMember(dest => dest.CountryName,
                 opt => opt.MapFrom(src => src.Country != null ? src.Country.Name : null))
 
-                .ForMember(dest => dest.Age, 
-                opt => opt.MapFrom(src => src.BirthDate.CalculateAge()));
+                .ForMember(dest => dest.Age,
+                opt => opt.MapFrom(src => src.BirthDate.CalculateAge()))
+
+                .ForMember(dest => dest.Interests,
+                opt => opt.MapFrom(src => src.Interests));
         }
     }
 }

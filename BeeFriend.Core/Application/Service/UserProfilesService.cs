@@ -96,8 +96,20 @@ namespace BeeFriend.Core.Application.Service
             matchingUserProfile.Bio = userProfileUpdateRequest.Bio;
             matchingUserProfile.Gender = userProfileUpdateRequest.Gender;
             matchingUserProfile.Pronouns = userProfileUpdateRequest.Pronouns;
-            //matchingUserProfile.Interests = userProfileUpdateRequest.Interests;
 
+            var interestIds = userProfileUpdateRequest.InterestIds;
+
+            if(interestIds != null)
+            {
+                var interests = await _unitOfWork.Interests
+                    .GetAllByIdAsync(interestIds);
+
+                matchingUserProfile.Interests.Clear();
+
+                foreach(var interest in interests)
+                    matchingUserProfile.Interests.Add(interest);
+            }
+            
             UserProfile updatedUserProfile = 
                 _unitOfWork.UserProfiles.Update(matchingUserProfile);
 

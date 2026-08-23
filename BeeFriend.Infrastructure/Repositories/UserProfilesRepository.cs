@@ -30,6 +30,7 @@ namespace BeeFriend.Infrastructure.Repositories
             var userProfiles = await _context.UserProfiles
                 .Include(u => u.City)
                 .Include(u => u.Country)
+                .Include(u => u.Interests)
                 .ToListAsync();
 
             return userProfiles;
@@ -40,6 +41,7 @@ namespace BeeFriend.Infrastructure.Repositories
             var userProfile = await _context.UserProfiles
                 .Include(u => u.City)
                 .Include(u => u.Country)
+                .Include(u => u.Interests)
                 .FirstOrDefaultAsync(u => u.UserId == id);
 
             return userProfile;

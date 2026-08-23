@@ -10,6 +10,8 @@ namespace BeeFriend.Core.Domain.UnitOfWorkContract
         IUserProfilesRepository UserProfiles {  get; }
         ICountriesRepository Countries { get; }
         ICitiesRepository Cities { get; }
+        IInterestsRepository Interests { get; }
+
         Task CommitAsync();
     }
 }

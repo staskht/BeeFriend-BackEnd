@@ -1,4 +1,5 @@
-﻿using BeeFriend.Core.Domain.Enums;
+﻿using BeeFriend.Core.Domain.Entities;
+using BeeFriend.Core.Domain.Enums;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -20,10 +21,7 @@ namespace BeeFriend.Core.Application.DTO
         public string? Bio { get; set; }
 
         public GenderOptions? Gender { get; set; }
-
         public PronounsOptions? Pronouns { get; set; }
-
-        [StringLength(200, ErrorMessage = "{0} cannot be more than {1} characters.")]
-        public string? Interests { get; set; }
+        public IEnumerable<int>? InterestIds { get; set; }
     }
 }

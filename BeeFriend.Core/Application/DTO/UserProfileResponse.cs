@@ -1,4 +1,5 @@
-﻿using BeeFriend.Core.Domain.Enums;
+﻿using BeeFriend.Core.Domain.Entities;
+using BeeFriend.Core.Domain.Enums;
 
 namespace BeeFriend.Core.Application.DTO
 {
@@ -20,6 +21,6 @@ namespace BeeFriend.Core.Application.DTO
 
         public PronounsOptions? Pronouns { get; set; }
 
-        public string? Interests { get; set; }
+        public IEnumerable<Interest> Interests { get; set; } = [];
     }
 }
