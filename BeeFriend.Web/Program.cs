@@ -1,6 +1,7 @@
 using BeeFriend.Infrastructure.DbContext;
 using BeeFriend.Web.Middleware;
 using BeeFriend.Web.StartupExtensions;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,7 +20,7 @@ if (app.Environment.IsDevelopment())
     var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
     await db.Database.EnsureDeletedAsync();
-    await db.Database.EnsureCreatedAsync();
+    await db.Database.MigrateAsync();
 }
 
 app.UseExceptionHandlingMiddleware();

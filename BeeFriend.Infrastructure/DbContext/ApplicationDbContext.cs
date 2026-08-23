@@ -12,10 +12,10 @@ namespace BeeFriend.Infrastructure.DbContext
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, Guid>
     {
         public virtual DbSet<UserProfile> UserProfiles { get; set; }
-
         public virtual DbSet<Country> Countries { get; set; }
-
         public virtual DbSet<City> Cities { get; set; }
+        public virtual DbSet<Interest> Interests { get; set; }
+        public virtual DbSet<InterestCategory> InterestCategories { get; set; }
 
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {
@@ -47,8 +47,12 @@ namespace BeeFriend.Infrastructure.DbContext
 
             builder.Entity<UserProfile>()
                 .HasOne(u => u.Country)
-                .WithMany(c => c.UserProfiles)
+                .WithMany(c => c.Users)
                 .HasForeignKey(fk => fk.CountryId);
+
+            builder.Entity<UserProfile>()
+                .HasMany(u => u.Interests)
+                .WithMany(i => i.Users);
 
             // City 
             builder.Entity<City>()
@@ -68,7 +72,19 @@ namespace BeeFriend.Infrastructure.DbContext
             builder.Entity<ApplicationUser>()
                 .Property(u => u.Email)
                 .IsRequired();
-            
+
+            // Interest
+            builder.Entity<Interest>()
+                .HasKey(pk => pk.InterestId);
+
+            builder.Entity<Interest>()
+                .HasOne(i => i.Category)
+                .WithMany(ic => ic.Interests)
+                .HasForeignKey(fk => fk.CategoryId);
+
+            //InterestCategory
+            builder.Entity<InterestCategory>()
+                .HasKey(pk => pk.CategoryId);
         }
 
     

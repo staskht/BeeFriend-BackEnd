@@ -25,9 +25,6 @@ namespace BeeFriend.Core.Domain.Entities
         public DateTime BirthDate { get; set; }
         public GenderOptions? Gender {get; set;}
         public PronounsOptions? Pronouns {get; set;}
-
-        [StringLength(200)]
-        public string? Interests { get; set;  }
-        
+        public ICollection<Interest> Interests { get; } = new List<Interest>();
     }
 }

@@ -96,7 +96,7 @@ namespace BeeFriend.Core.Application.Service
             matchingUserProfile.Bio = userProfileUpdateRequest.Bio;
             matchingUserProfile.Gender = userProfileUpdateRequest.Gender;
             matchingUserProfile.Pronouns = userProfileUpdateRequest.Pronouns;
-            matchingUserProfile.Interests = userProfileUpdateRequest.Interests;
+            //matchingUserProfile.Interests = userProfileUpdateRequest.Interests;
 
             UserProfile updatedUserProfile = 
                 _unitOfWork.UserProfiles.Update(matchingUserProfile);

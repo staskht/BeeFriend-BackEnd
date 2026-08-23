@@ -11,7 +11,7 @@ namespace BeeFriend.Core.Domain.Entities
 
         public ICollection<City> Cities { get; } = new List<City>();
 
-        public ICollection<UserProfile> UserProfiles { get; } = new List<UserProfile>();
+        public ICollection<UserProfile> Users { get; } = new List<UserProfile>();
 
     }
 }

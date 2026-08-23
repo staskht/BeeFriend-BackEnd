@@ -4,13 +4,10 @@ using System.Text;
 
 namespace BeeFriend.Core.Domain.Entities
 {
-    public class Interest
+    public class InterestCategory
     {
-        public int InterestId { get; set; }
         public int CategoryId { get; set; }
-        public InterestCategory Category { get; set; } = null!;
         public string Name { get; set; } = null!;
-        public ICollection<UserProfile> Users { get;  } = new List<UserProfile>();
-
+        public ICollection<Interest> Interests { get; } = new List<Interest>();
     }
 }
