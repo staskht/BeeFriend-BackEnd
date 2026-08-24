@@ -6,6 +6,7 @@ using BeeFriend.Core.Domain.IdentityEntities;
 using BeeFriend.Core.Application.DTO;
 using BeeFriend.Core.Application.ServiceContracts;
 using BeeFriend.Core.Application.Results;
+using BeeFriend.Core.Exceptions;
 
 
 namespace BeeFriend.Core.Application.Service
@@ -27,27 +28,22 @@ namespace BeeFriend.Core.Application.Service
         {
             if (id == Guid.Empty)
                 return Errors.EmptyGuid(nameof(id));
-
-            var userProfile = 
-                await _unitOfWork.UserProfiles.GetByIdAsync(id);
-
-            if (userProfile == null)
-                return Errors.UserNotFound;
             
-            var user = 
+            ApplicationUser? user = 
                 await _userManager.FindByIdAsync(id.ToString());
 
+            if (user == null)
+                return Errors.UserNotFound;
+
             IdentityResult result = 
-                await _userManager.DeleteAsync(user!);
+                await _userManager.DeleteAsync(user);
 
             if (!result.Succeeded)
             {
-                throw new NotImplementedException(string.Join(
+                throw new UserDeletionFailedException(string.Join(
                     " | ",
                     result.Errors.Select(e => e.Description)));
             }
-
-            _unitOfWork.UserProfiles.Delete(userProfile);
             await _unitOfWork.CommitAsync();
 
             return Result.Success();

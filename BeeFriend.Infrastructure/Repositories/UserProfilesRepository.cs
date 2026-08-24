@@ -20,11 +20,6 @@ namespace BeeFriend.Infrastructure.Repositories
             await _context.UserProfiles.AddAsync(userProfile);
         }
 
-        public void Delete(UserProfile userProfile)
-        {
-            _context.UserProfiles.Remove(userProfile);
-        }
-
         public async Task<IReadOnlyList<UserProfile>> GetAllAsync()
         {
             var userProfiles = await _context.UserProfiles

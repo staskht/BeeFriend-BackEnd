@@ -54,7 +54,7 @@ namespace BeeFriend.Core.Application.Service
                 UserId = user.Id,
                 BirthDate = registerRequest.BirthDate
             });
-
+            
             await _unitOfWork.CommitAsync();
 
             return await GenerateTokens(user);

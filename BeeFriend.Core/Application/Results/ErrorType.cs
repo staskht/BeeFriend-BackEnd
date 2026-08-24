@@ -6,6 +6,6 @@ namespace BeeFriend.Core.Application.Results
 {
     public enum ErrorType
     {
-        NotFound, Validation, Unauthorized
+        NotFound, Validation, Unauthorized, Conflict
     }
 }

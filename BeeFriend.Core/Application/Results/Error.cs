@@ -22,11 +22,14 @@
 
         //Validation
         public static Error Validation(string id, string description) => 
-            new(ErrorType.Validation, id, description);
+            new(ErrorType.Validation,
+                id, 
+                description);
 
         public static Error EmptyGuid(string parameterName) =>
             new(ErrorType.Validation, 
-                "EmptyGuid", $"{parameterName} cannot be empty");
+                "EmptyGuid",
+                $"{parameterName} cannot be empty");
 
         // User
 

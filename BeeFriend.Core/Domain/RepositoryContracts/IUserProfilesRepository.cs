@@ -8,7 +8,6 @@ namespace BeeFriend.Core.Domain.RepositoryContracts
 {
     public interface IUserProfilesRepository : 
         ICreatorRepository<UserProfile>,
-        IDeleterRepository<UserProfile>,
         IAllGetterRepository<UserProfile>,
         ISingleGetterRepository<UserProfile, Guid>,
         IUpdaterRepository<UserProfile>
