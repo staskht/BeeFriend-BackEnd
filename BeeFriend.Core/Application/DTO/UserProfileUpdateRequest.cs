@@ -23,5 +23,7 @@ namespace BeeFriend.Core.Application.DTO
         public GenderOptions? Gender { get; set; }
         public PronounsOptions? Pronouns { get; set; }
         public IEnumerable<int>? InterestIds { get; set; }
+        public IEnumerable<int>? PersonalityTraitsIds { get; set; }
+        public IEnumerable<int>? FriendshipPreferencesIds { get; set; }
     }
 }

@@ -6,23 +6,25 @@ using BeeFriend.Core.Domain.UnitOfWorkContract;
 
 namespace BeeFriend.Core.Application.Service
 {
-    public class CountriesReader : 
-        IGetterService<CountryResponse>
+    public class FriendshipPreferencesReader :
+        IGetterService<FriendshipPreferenceResponse>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public CountriesReader(IUnitOfWork unitOfWork, IMapper mapper)
+        public FriendshipPreferencesReader(
+            IUnitOfWork unitOfWork, 
+            IMapper mapper
+            )
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
-        public async Task<Result<IEnumerable<CountryResponse>>> GetAllAsync()
+        public async Task<Result<IEnumerable<FriendshipPreferenceResponse>>> GetAllAsync()
         {
-            var countries = 
-                await _unitOfWork.Countries.GetAllAsync();
+            var preferences = await _unitOfWork.FriendshipPreferences.GetAllAsync();
 
-            return _mapper.Map<List<CountryResponse>>(countries);
+            return _mapper.Map<List<FriendshipPreferenceResponse>>(preferences);
         }
     }
 }

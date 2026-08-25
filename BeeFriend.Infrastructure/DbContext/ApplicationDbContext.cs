@@ -16,6 +16,8 @@ namespace BeeFriend.Infrastructure.DbContext
         public virtual DbSet<City> Cities { get; set; }
         public virtual DbSet<Interest> Interests { get; set; }
         public virtual DbSet<InterestCategory> InterestCategories { get; set; }
+        public virtual DbSet<Personality> PersonalityTraits { get; set; }
+        public virtual DbSet<FriendshipPreference> FriendshipPreferences { get; set; }
 
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {
@@ -42,7 +44,7 @@ namespace BeeFriend.Infrastructure.DbContext
 
             builder.Entity<UserProfile>()
                 .HasOne(u => u.City)
-                .WithMany(c => c.UserProfiles)
+                .WithMany(c => c.Users)
                 .HasForeignKey(fk => fk.CityId);
 
             builder.Entity<UserProfile>()
@@ -53,6 +55,14 @@ namespace BeeFriend.Infrastructure.DbContext
             builder.Entity<UserProfile>()
                 .HasMany(u => u.Interests)
                 .WithMany(i => i.Users);
+
+            builder.Entity<UserProfile>()
+                .HasMany(u => u.PersonalityTraits)
+                .WithMany(p => p.Users);
+
+            builder.Entity<UserProfile>()
+                .HasMany(u => u.FriendshipPreferences)
+                .WithMany(fp => fp.Users);
 
             // City 
             builder.Entity<City>()
@@ -85,6 +95,14 @@ namespace BeeFriend.Infrastructure.DbContext
             //InterestCategory
             builder.Entity<InterestCategory>()
                 .HasKey(pk => pk.CategoryId);
+
+            //Personality
+            builder.Entity<Personality>()
+                .HasKey(p => p.PerosnalityId);
+
+            // FriendshipPreference
+            builder.Entity<FriendshipPreference>()
+                .HasKey(fp => fp.PreferenceId);
         }
 
     

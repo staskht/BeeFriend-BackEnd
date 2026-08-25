@@ -5,13 +5,13 @@ using System.Text;
 
 namespace BeeFriend.Core.Domain.Entities
 {
-    public class InterestCategory
+    public class FriendshipPreference
     {
-        public int CategoryId { get; set; }
+        public int PreferenceId { get; set; }
 
         [StringLength(30)]
         public string Name { get; set; } = null!;
 
-        public ICollection<Interest> Interests { get; } = new List<Interest>();
+        public ICollection<UserProfile> Users { get; } = new List<UserProfile>();
     }
 }

@@ -21,6 +21,6 @@ namespace BeeFriend.Core.Domain.Entities
 
         public double? Longitude { get; set; }
 
-        public ICollection<UserProfile> UserProfiles { get;} = new List<UserProfile>();
+        public ICollection<UserProfile> Users { get;} = new List<UserProfile>();
     }
 }

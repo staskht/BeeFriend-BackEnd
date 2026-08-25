@@ -8,7 +8,7 @@ using BeeFriend.Core.Application.Results;
 
 namespace BeeFriend.Core.Application.Service
 {
-    public class CitiesReader : IAllReaderService<CityResponse, int>
+    public class CitiesReader : IAllGetterByIdService<CityResponse, int>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
@@ -19,7 +19,7 @@ namespace BeeFriend.Core.Application.Service
             _mapper = mapper;
         }
 
-        public async Task<Result<IEnumerable<CityResponse>>> GetAllAsync(int countryId) 
+        public async Task<Result<IEnumerable<CityResponse>>> GetAllByIdAsync(int countryId) 
         {
             if (countryId <= 0)
                 return Errors.Validation(

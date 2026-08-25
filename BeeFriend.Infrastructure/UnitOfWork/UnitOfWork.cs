@@ -11,13 +11,19 @@ namespace BeeFriend.Infrastructure.UnitOfWork
         public ICountriesRepository Countries { get; }
         public ICitiesRepository Cities { get; }
         public IInterestsRepository Interests { get; }
+        public IPersonalityTraitsRepository PersonalityTraits { get; }
+        public IFriendshipPreferencesRepository FriendshipPreferences { get; }
+        public IInterestCategoriesRepository InterestCategories { get; }
 
         public UnitOfWork(
             ApplicationDbContext context, 
             IUserProfilesRepository userProfiles,
             ICountriesRepository countries,
             ICitiesRepository cities,
-            IInterestsRepository interests
+            IInterestsRepository interests,
+            IPersonalityTraitsRepository personalityTraits,
+            IFriendshipPreferencesRepository friendshipPreferences,
+            IInterestCategoriesRepository interestCategories
             )
         {
             _context = context;
@@ -25,6 +31,9 @@ namespace BeeFriend.Infrastructure.UnitOfWork
             Countries = countries;
             Cities = cities;
             Interests = interests;
+            PersonalityTraits = personalityTraits;
+            FriendshipPreferences = friendshipPreferences;
+            InterestCategories = interestCategories;
         }
         public Task CommitAsync()
         {

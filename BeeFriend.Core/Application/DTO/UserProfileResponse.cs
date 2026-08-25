@@ -6,21 +6,16 @@ namespace BeeFriend.Core.Application.DTO
     public class UserProfileResponse
     {
         public Guid UserId { get; set; }
-
         public string? CityName { get; set; }
-
         public string? CountryName { get; set; }
-
         public string? FirstName { get; set; }
-
         public string? Bio { get; set; }
-
         public int Age { get; set; }
-
         public GenderOptions? Gender { get; set; }
-
         public PronounsOptions? Pronouns { get; set; }
 
         public IEnumerable<Interest> Interests { get; set; } = [];
+        public IEnumerable<Personality> PersonalityTraits { get; set; } = [];
+        public IEnumerable<FriendshipPreference> FriendshipPreferences { get; set; } = [];
     }
 }

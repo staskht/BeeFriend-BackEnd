@@ -11,6 +11,9 @@ namespace BeeFriend.Core.Domain.UnitOfWorkContract
         ICountriesRepository Countries { get; }
         ICitiesRepository Cities { get; }
         IInterestsRepository Interests { get; }
+        IPersonalityTraitsRepository PersonalityTraits { get; }
+        IFriendshipPreferencesRepository FriendshipPreferences { get; }
+        IInterestCategoriesRepository InterestCategories { get; }
 
         Task CommitAsync();
     }

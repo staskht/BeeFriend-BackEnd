@@ -9,18 +9,19 @@ namespace BeeFriend.Web.Controllers.v1
 
     public class CitiesController : CustomControllerBase
     {
-        private readonly IAllReaderService<CityResponse, int> _allReaderService;
+        private readonly IAllGetterByIdService<CityResponse, int> _allReaderService;
 
-        public CitiesController(IAllReaderService<CityResponse, int> allReaderService)
+        public CitiesController(IAllGetterByIdService<CityResponse, int> allReaderService)
         {
             _allReaderService = allReaderService;
         }
+
         [HttpGet("{id:int}")]
         public async Task<ActionResult<IEnumerable<CityResponse>>> GetAll(int id)
         {
-            var cities = await _allReaderService.GetAllAsync(id);
+            var cities = await _allReaderService.GetAllByIdAsync(id);
 
-            return ReturnResponse(cities, value => Ok(value));
+            return ReturnResponse(cities, Ok);
         }
     }
 }

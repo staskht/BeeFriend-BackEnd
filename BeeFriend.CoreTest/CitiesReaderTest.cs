@@ -48,7 +48,7 @@ namespace BeeFriend.CoreTest
         public async Task GetAllAsync_InvalidCountryId_ReturnsValidationError()
         {
             // Act
-            var result = await _citiesReader.GetAllAsync(0);
+            var result = await _citiesReader.GetAllByIdAsync(0);
 
             // Assert
             result.Error.Should().Be(Errors.Validation(
@@ -65,7 +65,7 @@ namespace BeeFriend.CoreTest
                 .ReturnsAsync((Country?)null);
 
             // Act
-            var result = await _citiesReader.GetAllAsync(5);
+            var result = await _citiesReader.GetAllByIdAsync(5);
 
             // Assert
             result.Error.Should().Be(Errors.CountryNotFound);
@@ -90,7 +90,7 @@ namespace BeeFriend.CoreTest
 
             //Assert
             await FluentActions
-                .Invoking(() => _citiesReader.GetAllAsync(5))
+                .Invoking(() => _citiesReader.GetAllByIdAsync(5))
                 .Should()
                 .ThrowAsync<CitiesNotFoundException>("A valid country exists but has no cities.");
         }
@@ -138,7 +138,7 @@ namespace BeeFriend.CoreTest
                 .Returns(cityResponses);
 
             // Act
-            var result = await _citiesReader.GetAllAsync(5);
+            var result = await _citiesReader.GetAllByIdAsync(5);
 
             // Assert
             result.IsSuccess.Should().BeTrue();

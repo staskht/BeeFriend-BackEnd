@@ -52,9 +52,16 @@ namespace BeeFriend.Web.StartupExtensions
             services.AddScoped<IUserStore<ApplicationUser>, ApplicationUserStore>();
             services.AddScoped<ICountriesRepository, CountriesRepository>();
             services.AddScoped<ICitiesRepository, CitiesRepository>();
-            services.AddScoped<IAllReaderService<CountryResponse>, CountriesReader>();
-            services.AddScoped<IAllReaderService<CityResponse, int>, CitiesReader>();
+            services.AddScoped<IGetterService<CountryResponse>, CountriesReader>();
+            services.AddScoped<IAllGetterByIdService<CityResponse, int>, CitiesReader>();
             services.AddScoped<IInterestsRepository, InterestsRepository>();
+            services.AddScoped<IPersonalityTraitsRepository, PersonalityTraitsRepository>();
+            services.AddScoped<IFriendshipPreferencesRepository, FriendshipPreferencesRepository>();
+            services.AddScoped<IInterestCategoriesRepository, InterestCategoriesRepository>();
+            services.AddScoped<IGetterService<FriendshipPreferenceResponse>, FriendshipPreferencesReader>();
+            services.AddScoped<IGetterService<PersonalityResponse>, PersonalityReader>();
+            services.AddScoped<IGetterService<InterestsWithCategoriesResponse>, InterestsReader>();
+
 
             //Options
 

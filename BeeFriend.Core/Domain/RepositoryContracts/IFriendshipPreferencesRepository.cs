@@ -6,11 +6,9 @@ using System.Text;
 
 namespace BeeFriend.Core.Domain.RepositoryContracts
 {
-    public interface IUserProfilesRepository : 
-        ICreatorRepository<UserProfile>,
-        IGetterRepository<UserProfile>,
-        ISingleGetterByIdRepository<UserProfile, Guid>,
-        IUpdaterRepository<UserProfile>
+    public interface IFriendshipPreferencesRepository :
+        IAllGetterByIdsRepository<FriendshipPreference, int>,
+        IGetterRepository<FriendshipPreference>
     {
     }
 }

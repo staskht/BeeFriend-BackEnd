@@ -8,9 +8,9 @@ namespace BeeFriend.Web.Controllers.v1
     [ApiVersion("1.0")]
     public class CountriesController : CustomControllerBase
     {
-        private readonly IAllReaderService<CountryResponse> _allReaderService;
+        private readonly IGetterService<CountryResponse> _allReaderService;
 
-        public CountriesController(IAllReaderService<CountryResponse> allReaderService)
+        public CountriesController(IGetterService<CountryResponse> allReaderService)
         {
             _allReaderService = allReaderService;
         }

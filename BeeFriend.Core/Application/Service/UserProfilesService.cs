@@ -16,8 +16,11 @@ namespace BeeFriend.Core.Application.Service
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly UserManager<ApplicationUser> _userManager;
-
-        public UserProfilesService(IUnitOfWork unitOfWork, IMapper mapper, UserManager<ApplicationUser> userManager)
+        public UserProfilesService(
+            IUnitOfWork unitOfWork, 
+            IMapper mapper, 
+            UserManager<ApplicationUser> userManager
+            )
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
@@ -28,14 +31,14 @@ namespace BeeFriend.Core.Application.Service
         {
             if (id == Guid.Empty)
                 return Errors.EmptyGuid(nameof(id));
-            
-            ApplicationUser? user = 
+
+            ApplicationUser? user =
                 await _userManager.FindByIdAsync(id.ToString());
 
             if (user == null)
                 return Errors.UserNotFound;
 
-            IdentityResult result = 
+            IdentityResult result =
                 await _userManager.DeleteAsync(user);
 
             if (!result.Succeeded)
@@ -51,8 +54,7 @@ namespace BeeFriend.Core.Application.Service
 
         public async Task<Result<IEnumerable<UserProfileResponse>>> GetAllAsync()
         {
-            var userProfiles = 
-                await _unitOfWork.UserProfiles.GetAllAsync();
+            var userProfiles = await _unitOfWork.UserProfiles.GetAllAsync();
 
             return _mapper.Map<List<UserProfileResponse>>(userProfiles);
         }
@@ -62,7 +64,7 @@ namespace BeeFriend.Core.Application.Service
             if (id == Guid.Empty)
                 return Errors.EmptyGuid(nameof(id));
 
-            UserProfile? userProfile = 
+            UserProfile? userProfile =
                 await _unitOfWork.UserProfiles.GetByIdAsync(id);
 
             if (userProfile == null)
@@ -72,7 +74,7 @@ namespace BeeFriend.Core.Application.Service
         }
 
         public async Task<Result<UserProfileResponse>> UpdateAsync(
-            Guid id, 
+            Guid id,
             UserProfileUpdateRequest userProfileUpdateRequest)
         {
             if (id == Guid.Empty)
@@ -80,38 +82,63 @@ namespace BeeFriend.Core.Application.Service
 
             ArgumentNullException.ThrowIfNull(userProfileUpdateRequest);
 
-            UserProfile? matchingUserProfile = 
+            UserProfile? matchingUserProfile =
                 await _unitOfWork.UserProfiles.GetByIdAsync(id);
 
             if (matchingUserProfile == null)
                 return Errors.UserNotFound;
 
-            matchingUserProfile.CityId = userProfileUpdateRequest.CityId;
-            matchingUserProfile.CountryId = userProfileUpdateRequest.CountryId;
-            matchingUserProfile.FirstName = userProfileUpdateRequest.FirstName;
-            matchingUserProfile.Bio = userProfileUpdateRequest.Bio;
-            matchingUserProfile.Gender = userProfileUpdateRequest.Gender;
-            matchingUserProfile.Pronouns = userProfileUpdateRequest.Pronouns;
+            _mapper.Map(userProfileUpdateRequest, matchingUserProfile);
 
             var interestIds = userProfileUpdateRequest.InterestIds;
+            var personalityTraitsIds = userProfileUpdateRequest.PersonalityTraitsIds;
+            var friendshipPreferencesIds = userProfileUpdateRequest.FriendshipPreferencesIds;
 
-            if(interestIds != null)
+            var populationOperations = new Func<Task>[]
             {
-                var interests = await _unitOfWork.Interests
-                    .GetAllByIdAsync(interestIds);
+                () => PopulateCollection(
+                    interestIds,
+                    _unitOfWork.Interests.GetAllByIdAsync,
+                    matchingUserProfile.Interests),
 
-                matchingUserProfile.Interests.Clear();
+                () => PopulateCollection(
+                    personalityTraitsIds,
+                    _unitOfWork.PersonalityTraits.GetAllByIdAsync,
+                    matchingUserProfile.PersonalityTraits),
 
-                foreach(var interest in interests)
-                    matchingUserProfile.Interests.Add(interest);
-            }
-            
-            UserProfile updatedUserProfile = 
+                () => PopulateCollection(
+                    friendshipPreferencesIds,
+                    _unitOfWork.FriendshipPreferences.GetAllByIdAsync,
+                    matchingUserProfile.FriendshipPreferences)
+            };
+
+            foreach (var update in populationOperations)
+                await update();
+
+            UserProfile updatedUserProfile =
                 _unitOfWork.UserProfiles.Update(matchingUserProfile);
 
             await _unitOfWork.CommitAsync();
 
             return _mapper.Map<UserProfileResponse>(updatedUserProfile);
         }
+
+        private async Task PopulateCollection<TEntity>
+            (IEnumerable<int>? collectionOfIds, 
+            Func<IEnumerable<int>, Task<IReadOnlyList<TEntity>>> func,
+            ICollection<TEntity> originalCollection)
+        {
+            if (collectionOfIds != null)
+            {
+                var currentProfileEntities = await func(collectionOfIds);
+                originalCollection.Clear();
+
+                foreach (var entity in currentProfileEntities)
+                {
+                    originalCollection.Add(entity);
+                }
+            }
+        }
+
     }
 }

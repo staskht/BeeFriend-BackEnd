@@ -26,5 +26,7 @@ namespace BeeFriend.Core.Domain.Entities
         public GenderOptions? Gender {get; set;}
         public PronounsOptions? Pronouns {get; set;}
         public ICollection<Interest> Interests { get; } = new List<Interest>();
+        public ICollection<Personality> PersonalityTraits { get; } = new List<Personality>();
+        public ICollection<FriendshipPreference> FriendshipPreferences { get; } = new List<FriendshipPreference>();
     }
 }

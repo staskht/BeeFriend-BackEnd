@@ -3,9 +3,8 @@ using BeeFriend.Core.Domain.RepositoryContracts.CrudRepositoryContracts;
 
 namespace BeeFriend.Core.Domain.RepositoryContracts
 {
-    public interface ICitiesRepository:
-        IAllGetterRepository<City, int>
+    public interface ICitiesRepository
     {
-        
+        Task<IReadOnlyList<City>> GetAllByIdAsync(int id);
     }
 }

@@ -20,7 +20,16 @@ namespace BeeFriend.Core.Application.Mappers
                 opt => opt.MapFrom(src => src.BirthDate.CalculateAge()))
 
                 .ForMember(dest => dest.Interests,
-                opt => opt.MapFrom(src => src.Interests));
+                opt => opt.MapFrom(src => src.Interests))
+
+                .ForMember(dest => dest.PersonalityTraits,
+                opt => opt.MapFrom(src => src.PersonalityTraits))
+
+                .ForMember(dest => dest.FriendshipPreferences,
+                opt => opt.MapFrom(src => src.FriendshipPreferences));
+
+
+            CreateMap<UserProfileUpdateRequest, UserProfile>();
         }
     }
 }

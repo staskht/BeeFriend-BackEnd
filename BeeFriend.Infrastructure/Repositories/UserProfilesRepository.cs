@@ -26,6 +26,8 @@ namespace BeeFriend.Infrastructure.Repositories
                 .Include(u => u.City)
                 .Include(u => u.Country)
                 .Include(u => u.Interests)
+                .Include(u => u.PersonalityTraits)
+                .Include(u => u.FriendshipPreferences)
                 .ToListAsync();
 
             return userProfiles;
@@ -37,6 +39,8 @@ namespace BeeFriend.Infrastructure.Repositories
                 .Include(u => u.City)
                 .Include(u => u.Country)
                 .Include(u => u.Interests)
+                .Include(u => u.PersonalityTraits)
+                .Include(u => u.FriendshipPreferences)
                 .FirstOrDefaultAsync(u => u.UserId == id);
 
             return userProfile;
