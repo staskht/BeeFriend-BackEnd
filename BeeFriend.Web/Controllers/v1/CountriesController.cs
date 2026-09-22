@@ -1,6 +1,7 @@
 ﻿using Asp.Versioning;
 using BeeFriend.Core.Application.DTO;
-using BeeFriend.Core.Application.ServiceContracts.CrudServiceContracts;
+using BeeFriend.Core.Application.ServiceContracts;
+using BeeFriend.Core.Application.ServiceContracts.CrudServiceContracts.Getters;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BeeFriend.Web.Controllers.v1
@@ -8,19 +9,19 @@ namespace BeeFriend.Web.Controllers.v1
     [ApiVersion("1.0")]
     public class CountriesController : CustomControllerBase
     {
-        private readonly IGetterService<CountryResponse> _allReaderService;
+        private readonly ICountriesService _countriesService;
 
-        public CountriesController(IGetterService<CountryResponse> allReaderService)
+        public CountriesController(ICountriesService countriesService)
         {
-            _allReaderService = allReaderService;
+            _countriesService = countriesService;
         }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<CountryResponse>>> GettAll()
         {
-            var countries = await _allReaderService.GetAllAsync();
+            var countries = await _countriesService.GetAllAsync();
 
-            return ReturnResponse(countries, value => Ok(value));
+            return ReturnResponse(countries, Ok);
         }
     }
 }

@@ -1,28 +1,30 @@
 ﻿using Asp.Versioning;
-using BeeFriend.Core.Application.DTO;
-using BeeFriend.Core.Application.ServiceContracts.CrudServiceContracts;
+using BeeFriend.Core.Application.DTO.FriendshipPreferenceDTOs;
+using BeeFriend.Core.Application.ServiceContracts;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BeeFriend.Web.Controllers.v1
 {
     [ApiVersion("1.0")]
     public class FriendshipPreferencesController : 
-        CustomControllerBase
-
+        CrudController<
+            FriendshipPreferenceRequest, 
+            FriendshipPreferenceResponse, 
+            int, 
+            ICrudService<
+                FriendshipPreferenceRequest,
+                FriendshipPreferenceResponse,
+                int>
+            >
     {
-        private readonly IGetterService<FriendshipPreferenceResponse> _getterService;
-
-        public FriendshipPreferencesController(IGetterService<FriendshipPreferenceResponse> getterService)
+        public FriendshipPreferencesController(
+            ICrudService<
+                FriendshipPreferenceRequest, 
+                FriendshipPreferenceResponse, 
+                int> service) 
+            : base(service) 
         {
-            _getterService = getterService;
-        }
-
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<FriendshipPreferenceResponse>>> GetAll()
-        {
-            var preferences = await _getterService.GetAllAsync();
-
-            return ReturnResponse(preferences, Ok);
         }
     }
 }

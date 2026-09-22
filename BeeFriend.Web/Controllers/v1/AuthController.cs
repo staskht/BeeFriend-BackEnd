@@ -1,9 +1,9 @@
 ﻿using Asp.Versioning;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using BeeFriend.Core.Application.DTO;
 using BeeFriend.Core.Application.ServiceContracts;
 using BeeFriend.Core.Application.Results;
+using BeeFriend.Core.Application.DTO.AuthenticationDTOs;
 
 namespace BeeFriend.Web.Controllers.v1
 {

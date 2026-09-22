@@ -15,7 +15,7 @@ namespace BeeFriend.Infrastructure.Repositories
             _context = context;
         }
 
-        public async Task CreateAsync(UserProfile userProfile)
+        public async Task AddAsync(UserProfile userProfile)
         {
             await _context.UserProfiles.AddAsync(userProfile);
         }
@@ -46,10 +46,9 @@ namespace BeeFriend.Infrastructure.Repositories
             return userProfile;
         }
 
-        public UserProfile Update(UserProfile entity)
+        public void Update(UserProfile entity)
         {
             _context.UserProfiles.Update(entity);
-            return entity;
         }
     }
 }

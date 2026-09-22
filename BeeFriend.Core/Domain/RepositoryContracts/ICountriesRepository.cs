@@ -1,14 +1,11 @@
 ﻿using BeeFriend.Core.Domain.Entities;
-using BeeFriend.Core.Domain.RepositoryContracts.CrudRepositoryContracts;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using BeeFriend.Core.Domain.RepositoryContracts.CrudRepositoryContracts.Getters;
 
 namespace BeeFriend.Core.Domain.RepositoryContracts
 {
     public interface ICountriesRepository : 
-        IGetterRepository<Country>,
-        ISingleGetterByIdRepository<Country, int>
+        IGetAllRepository<Country>,
+        IGetByIdRepository<Country, int>
     {
     }
 }

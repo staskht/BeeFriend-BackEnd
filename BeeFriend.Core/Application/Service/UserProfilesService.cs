@@ -3,27 +3,42 @@ using BeeFriend.Core.Domain.UnitOfWorkContract;
 using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using BeeFriend.Core.Domain.IdentityEntities;
-using BeeFriend.Core.Application.DTO;
 using BeeFriend.Core.Application.ServiceContracts;
 using BeeFriend.Core.Application.Results;
 using BeeFriend.Core.Exceptions;
+using BeeFriend.Core.Domain.RepositoryContracts;
+using BeeFriend.Core.Domain.RepositoryContracts.CrudRepositoryContracts.Getters;
+using BeeFriend.Core.Application.DTO.UserProfileDTOs;
 
 
 namespace BeeFriend.Core.Application.Service
 {
-    public class UserProfilesService : IUserProfilesService
+    public class UserProfilesService : 
+        IUserProfilesService
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IUserProfilesRepository _userProfilesGetterRepository;
+        private readonly IGetAllByIdsRepository<Interest, int> _interestGetter;
+        private readonly IGetAllByIdsRepository<Personality, int> _personalityGetter;
+        private readonly IGetAllByIdsRepository<FriendshipPreference, int> _friendhipPreferencesGetter;
         private readonly IMapper _mapper;
         private readonly UserManager<ApplicationUser> _userManager;
         public UserProfilesService(
-            IUnitOfWork unitOfWork, 
-            IMapper mapper, 
+            IUnitOfWork unitOfWork,
+            IGetAllByIdsRepository<Interest, int> interestsGetter,
+            IGetAllByIdsRepository<Personality, int> personalityGetter,
+            IGetAllByIdsRepository<FriendshipPreference, int> friendhipPreferencesGetter,
+            IMapper mapper,
+            IUserProfilesRepository userProfilesGetterRepository,
             UserManager<ApplicationUser> userManager
             )
         {
             _unitOfWork = unitOfWork;
+            _interestGetter = interestsGetter;
+            _personalityGetter = personalityGetter;
+            _friendhipPreferencesGetter = friendhipPreferencesGetter;
             _mapper = mapper;
+            _userProfilesGetterRepository = userProfilesGetterRepository;
             _userManager = userManager;
         }
 
@@ -54,7 +69,7 @@ namespace BeeFriend.Core.Application.Service
 
         public async Task<Result<IEnumerable<UserProfileResponse>>> GetAllAsync()
         {
-            var userProfiles = await _unitOfWork.UserProfiles.GetAllAsync();
+            var userProfiles = await _userProfilesGetterRepository.GetAllAsync();
 
             return _mapper.Map<List<UserProfileResponse>>(userProfiles);
         }
@@ -65,7 +80,7 @@ namespace BeeFriend.Core.Application.Service
                 return Errors.EmptyGuid(nameof(id));
 
             UserProfile? userProfile =
-                await _unitOfWork.UserProfiles.GetByIdAsync(id);
+                await _userProfilesGetterRepository.GetByIdAsync(id);
 
             if (userProfile == null)
                 return Errors.UserNotFound;
@@ -83,7 +98,7 @@ namespace BeeFriend.Core.Application.Service
             ArgumentNullException.ThrowIfNull(userProfileUpdateRequest);
 
             UserProfile? matchingUserProfile =
-                await _unitOfWork.UserProfiles.GetByIdAsync(id);
+                await _userProfilesGetterRepository.GetByIdAsync(id);
 
             if (matchingUserProfile == null)
                 return Errors.UserNotFound;
@@ -98,39 +113,46 @@ namespace BeeFriend.Core.Application.Service
             {
                 () => PopulateCollection(
                     interestIds,
-                    _unitOfWork.Interests.GetAllByIdAsync,
-                    matchingUserProfile.Interests),
+                    _interestGetter.GetAllByIdsAsync,
+                    matchingUserProfile.Interests,
+                    nameof(Interest.InterestId)
+                    ),
 
                 () => PopulateCollection(
                     personalityTraitsIds,
-                    _unitOfWork.PersonalityTraits.GetAllByIdAsync,
-                    matchingUserProfile.PersonalityTraits),
+                    _personalityGetter.GetAllByIdsAsync,
+                    matchingUserProfile.PersonalityTraits,
+                    nameof(Personality.PerosnalityId)
+                    ),
 
                 () => PopulateCollection(
                     friendshipPreferencesIds,
-                    _unitOfWork.FriendshipPreferences.GetAllByIdAsync,
-                    matchingUserProfile.FriendshipPreferences)
+                    _friendhipPreferencesGetter.GetAllByIdsAsync,
+                    matchingUserProfile.FriendshipPreferences,
+                    nameof(FriendshipPreference.PreferenceId)
+                    )
             };
 
             foreach (var update in populationOperations)
                 await update();
 
-            UserProfile updatedUserProfile =
-                _unitOfWork.UserProfiles.Update(matchingUserProfile);
+            
+            _userProfilesGetterRepository.Update(matchingUserProfile);
 
             await _unitOfWork.CommitAsync();
 
-            return _mapper.Map<UserProfileResponse>(updatedUserProfile);
+            return _mapper.Map<UserProfileResponse>(matchingUserProfile);
         }
 
         private async Task PopulateCollection<TEntity>
             (IEnumerable<int>? collectionOfIds, 
-            Func<IEnumerable<int>, Task<IReadOnlyList<TEntity>>> func,
-            ICollection<TEntity> originalCollection)
+            Func<IEnumerable<int>, string, Task<IReadOnlyList<TEntity>>> func,
+            ICollection<TEntity> originalCollection,
+            string idPropertyName)
         {
             if (collectionOfIds != null)
             {
-                var currentProfileEntities = await func(collectionOfIds);
+                var currentProfileEntities = await func(collectionOfIds, idPropertyName);
                 originalCollection.Clear();
 
                 foreach (var entity in currentProfileEntities)

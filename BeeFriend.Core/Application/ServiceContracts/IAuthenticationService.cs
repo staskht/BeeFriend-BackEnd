@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using BeeFriend.Core.Application.DTO;
+using BeeFriend.Core.Application.DTO.AuthenticationDTOs;
 using BeeFriend.Core.Application.Results;
 
 namespace BeeFriend.Core.Application.ServiceContracts

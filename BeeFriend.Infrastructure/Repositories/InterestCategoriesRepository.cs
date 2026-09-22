@@ -5,23 +5,23 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BeeFriend.Infrastructure.Repositories
 {
-    public class InterestCategoriesRepository :
+    public class InterestCategoriesRepository : 
+        Repository<InterestCategory, int>,
         IInterestCategoriesRepository
     {
-        private readonly ApplicationDbContext _context;
-
-        public InterestCategoriesRepository(ApplicationDbContext context)
+        public InterestCategoriesRepository(ApplicationDbContext context) : 
+            base(context)
         {
-            _context = context;
         }
-        public async Task<IReadOnlyList<InterestCategory>> GetAllAsync()
+
+        public async Task<IReadOnlyList<InterestCategory>> GetAllCategoriesWithInterestsAsync()
         {
-            var categories = 
-                await _context.InterestCategories
+            var interests =
+                await _dbSet
                 .Include(ic => ic.Interests)
                 .ToListAsync();
 
-            return categories;
+            return interests;
         }
     }
 }

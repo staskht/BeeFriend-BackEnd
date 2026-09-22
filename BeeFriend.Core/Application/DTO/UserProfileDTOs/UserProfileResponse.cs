@@ -1,7 +1,7 @@
 ﻿using BeeFriend.Core.Domain.Entities;
 using BeeFriend.Core.Domain.Enums;
 
-namespace BeeFriend.Core.Application.DTO
+namespace BeeFriend.Core.Application.DTO.UserProfileDTOs
 {
     public class UserProfileResponse
     {

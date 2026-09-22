@@ -1,15 +1,14 @@
 ﻿using BeeFriend.Core.Domain.Entities;
 using BeeFriend.Core.Domain.RepositoryContracts.CrudRepositoryContracts;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using BeeFriend.Core.Domain.RepositoryContracts.CrudRepositoryContracts.Getters;
+
 
 namespace BeeFriend.Core.Domain.RepositoryContracts
 {
     public interface IUserProfilesRepository : 
         ICreatorRepository<UserProfile>,
-        IGetterRepository<UserProfile>,
-        ISingleGetterByIdRepository<UserProfile, Guid>,
+        IGetAllRepository<UserProfile>,
+        IGetByIdRepository<UserProfile, Guid>,
         IUpdaterRepository<UserProfile>
     {
     }

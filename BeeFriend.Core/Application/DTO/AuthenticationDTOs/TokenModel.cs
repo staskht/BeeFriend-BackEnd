@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace BeeFriend.Core.Application.DTO
+namespace BeeFriend.Core.Application.DTO.AuthenticationDTOs
 {
     public record TokenModel
     {

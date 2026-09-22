@@ -1,5 +1,4 @@
-﻿
-namespace BeeFriend.Core.Application.DTO
+﻿namespace BeeFriend.Core.Application.DTO.PersonalityDTOs
 {
     public record PersonalityResponse(
         int PerosnalityId,

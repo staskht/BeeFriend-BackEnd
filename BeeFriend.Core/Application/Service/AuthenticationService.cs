@@ -4,10 +4,10 @@ using BeeFriend.Core.Domain.RepositoryContracts;
 using BeeFriend.Core.Domain.UnitOfWorkContract;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
-using BeeFriend.Core.Application.DTO;
 using BeeFriend.Core.Application.ServiceContracts;
 using BeeFriend.Core.Application.Results;
 using BeeFriend.Core.Security;
+using BeeFriend.Core.Application.DTO.AuthenticationDTOs;
 
 namespace BeeFriend.Core.Application.Service
 {
@@ -16,15 +16,18 @@ namespace BeeFriend.Core.Application.Service
         private readonly ITokenAuthentication _jwtService;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IUserProfilesRepository _userProfilesRepository;
 
         public AuthenticationService(
             ITokenAuthentication jwtService, 
             UserManager<ApplicationUser> userManager,
-            IUnitOfWork unitOfWork)
+            IUnitOfWork unitOfWork,
+            IUserProfilesRepository userProfilesRepository)
         {
             _jwtService = jwtService;
             _userManager = userManager;
             _unitOfWork = unitOfWork;
+            _userProfilesRepository = userProfilesRepository;
         }
 
         public async Task<Result<AuthenticationResponse>> RegisterAsync(RegisterRequest registerRequest)
@@ -49,7 +52,7 @@ namespace BeeFriend.Core.Application.Service
                     result.Errors.Select(e => e.Description)));
 
             }
-            await _unitOfWork.UserProfiles.CreateAsync(new UserProfile
+            await _userProfilesRepository.AddAsync(new UserProfile
             {
                 UserId = user.Id,
                 BirthDate = registerRequest.BirthDate

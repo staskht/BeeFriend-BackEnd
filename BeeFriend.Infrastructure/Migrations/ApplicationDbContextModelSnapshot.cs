@@ -49,6 +49,264 @@ namespace BeeFriend.Infrastructure.Migrations
                     b.HasIndex("CountryId");
 
                     b.ToTable("Cities");
+
+                    b.HasData(
+                        new
+                        {
+                            CityId = 1,
+                            CountryId = 1,
+                            Latitude = 42.697699999999998,
+                            Longitude = 23.321899999999999,
+                            Name = "Sofia"
+                        },
+                        new
+                        {
+                            CityId = 2,
+                            CountryId = 1,
+                            Latitude = 42.135399999999997,
+                            Longitude = 24.7453,
+                            Name = "Plovdiv"
+                        },
+                        new
+                        {
+                            CityId = 3,
+                            CountryId = 1,
+                            Latitude = 43.214100000000002,
+                            Longitude = 27.9147,
+                            Name = "Varna"
+                        },
+                        new
+                        {
+                            CityId = 4,
+                            CountryId = 1,
+                            Latitude = 42.504800000000003,
+                            Longitude = 27.462599999999998,
+                            Name = "Burgas"
+                        },
+                        new
+                        {
+                            CityId = 5,
+                            CountryId = 2,
+                            Latitude = 52.520000000000003,
+                            Longitude = 13.404999999999999,
+                            Name = "Berlin"
+                        },
+                        new
+                        {
+                            CityId = 6,
+                            CountryId = 2,
+                            Latitude = 48.135100000000001,
+                            Longitude = 11.582000000000001,
+                            Name = "Munich"
+                        },
+                        new
+                        {
+                            CityId = 7,
+                            CountryId = 2,
+                            Latitude = 53.551099999999998,
+                            Longitude = 9.9937000000000005,
+                            Name = "Hamburg"
+                        },
+                        new
+                        {
+                            CityId = 8,
+                            CountryId = 2,
+                            Latitude = 50.110900000000001,
+                            Longitude = 8.6821000000000002,
+                            Name = "Frankfurt"
+                        },
+                        new
+                        {
+                            CityId = 9,
+                            CountryId = 3,
+                            Latitude = 48.8566,
+                            Longitude = 2.3521999999999998,
+                            Name = "Paris"
+                        },
+                        new
+                        {
+                            CityId = 10,
+                            CountryId = 3,
+                            Latitude = 43.296500000000002,
+                            Longitude = 5.3697999999999997,
+                            Name = "Marseille"
+                        },
+                        new
+                        {
+                            CityId = 11,
+                            CountryId = 3,
+                            Latitude = 45.764000000000003,
+                            Longitude = 4.8357000000000001,
+                            Name = "Lyon"
+                        },
+                        new
+                        {
+                            CityId = 12,
+                            CountryId = 4,
+                            Latitude = 41.902799999999999,
+                            Longitude = 12.4964,
+                            Name = "Rome"
+                        },
+                        new
+                        {
+                            CityId = 13,
+                            CountryId = 4,
+                            Latitude = 45.464199999999998,
+                            Longitude = 9.1899999999999995,
+                            Name = "Milan"
+                        },
+                        new
+                        {
+                            CityId = 14,
+                            CountryId = 4,
+                            Latitude = 40.851799999999997,
+                            Longitude = 14.2681,
+                            Name = "Naples"
+                        },
+                        new
+                        {
+                            CityId = 15,
+                            CountryId = 5,
+                            Latitude = 40.416800000000002,
+                            Longitude = -3.7038000000000002,
+                            Name = "Madrid"
+                        },
+                        new
+                        {
+                            CityId = 16,
+                            CountryId = 5,
+                            Latitude = 41.385100000000001,
+                            Longitude = 2.1734,
+                            Name = "Barcelona"
+                        },
+                        new
+                        {
+                            CityId = 17,
+                            CountryId = 5,
+                            Latitude = 39.469900000000003,
+                            Longitude = -0.37630000000000002,
+                            Name = "Valencia"
+                        },
+                        new
+                        {
+                            CityId = 18,
+                            CountryId = 6,
+                            Latitude = 51.507399999999997,
+                            Longitude = -0.1278,
+                            Name = "London"
+                        },
+                        new
+                        {
+                            CityId = 19,
+                            CountryId = 6,
+                            Latitude = 53.480800000000002,
+                            Longitude = -2.2425999999999999,
+                            Name = "Manchester"
+                        },
+                        new
+                        {
+                            CityId = 20,
+                            CountryId = 6,
+                            Latitude = 52.486199999999997,
+                            Longitude = -1.8904000000000001,
+                            Name = "Birmingham"
+                        },
+                        new
+                        {
+                            CityId = 21,
+                            CountryId = 7,
+                            Latitude = 44.4268,
+                            Longitude = 26.102499999999999,
+                            Name = "Bucharest"
+                        },
+                        new
+                        {
+                            CityId = 22,
+                            CountryId = 7,
+                            Latitude = 46.7712,
+                            Longitude = 23.6236,
+                            Name = "Cluj-Napoca"
+                        },
+                        new
+                        {
+                            CityId = 23,
+                            CountryId = 8,
+                            Latitude = 37.983800000000002,
+                            Longitude = 23.727499999999999,
+                            Name = "Athens"
+                        },
+                        new
+                        {
+                            CityId = 24,
+                            CountryId = 8,
+                            Latitude = 40.640099999999997,
+                            Longitude = 22.944400000000002,
+                            Name = "Thessaloniki"
+                        },
+                        new
+                        {
+                            CityId = 25,
+                            CountryId = 9,
+                            Latitude = 48.208199999999998,
+                            Longitude = 16.373799999999999,
+                            Name = "Vienna"
+                        },
+                        new
+                        {
+                            CityId = 26,
+                            CountryId = 9,
+                            Latitude = 47.8095,
+                            Longitude = 13.055,
+                            Name = "Salzburg"
+                        },
+                        new
+                        {
+                            CityId = 27,
+                            CountryId = 10,
+                            Latitude = 52.367600000000003,
+                            Longitude = 4.9040999999999997,
+                            Name = "Amsterdam"
+                        },
+                        new
+                        {
+                            CityId = 28,
+                            CountryId = 10,
+                            Latitude = 51.924399999999999,
+                            Longitude = 4.4776999999999996,
+                            Name = "Rotterdam"
+                        },
+                        new
+                        {
+                            CityId = 29,
+                            CountryId = 11,
+                            Latitude = 52.229700000000001,
+                            Longitude = 21.0122,
+                            Name = "Warsaw"
+                        },
+                        new
+                        {
+                            CityId = 30,
+                            CountryId = 11,
+                            Latitude = 50.064700000000002,
+                            Longitude = 19.945,
+                            Name = "Krakow"
+                        },
+                        new
+                        {
+                            CityId = 31,
+                            CountryId = 12,
+                            Latitude = 50.075499999999998,
+                            Longitude = 14.437799999999999,
+                            Name = "Prague"
+                        },
+                        new
+                        {
+                            CityId = 32,
+                            CountryId = 12,
+                            Latitude = 49.195099999999996,
+                            Longitude = 16.6068,
+                            Name = "Brno"
+                        });
                 });
 
             modelBuilder.Entity("BeeFriend.Core.Domain.Entities.Country", b =>
@@ -67,6 +325,68 @@ namespace BeeFriend.Infrastructure.Migrations
                     b.HasKey("CountryId");
 
                     b.ToTable("Countries");
+
+                    b.HasData(
+                        new
+                        {
+                            CountryId = 1,
+                            Name = "Bulgaria"
+                        },
+                        new
+                        {
+                            CountryId = 2,
+                            Name = "Germany"
+                        },
+                        new
+                        {
+                            CountryId = 3,
+                            Name = "France"
+                        },
+                        new
+                        {
+                            CountryId = 4,
+                            Name = "Italy"
+                        },
+                        new
+                        {
+                            CountryId = 5,
+                            Name = "Spain"
+                        },
+                        new
+                        {
+                            CountryId = 6,
+                            Name = "United Kingdom"
+                        },
+                        new
+                        {
+                            CountryId = 7,
+                            Name = "Romania"
+                        },
+                        new
+                        {
+                            CountryId = 8,
+                            Name = "Greece"
+                        },
+                        new
+                        {
+                            CountryId = 9,
+                            Name = "Austria"
+                        },
+                        new
+                        {
+                            CountryId = 10,
+                            Name = "Netherlands"
+                        },
+                        new
+                        {
+                            CountryId = 11,
+                            Name = "Poland"
+                        },
+                        new
+                        {
+                            CountryId = 12,
+                            Name = "Czech Republic"
+                        });
                 });
 
             modelBuilder.Entity("BeeFriend.Core.Domain.Entities.FriendshipPreference", b =>

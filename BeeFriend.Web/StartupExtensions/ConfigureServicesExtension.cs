@@ -1,12 +1,16 @@
 ﻿using Asp.Versioning;
 using BeeFriend.Core.Application.DTO;
+using BeeFriend.Core.Application.DTO.FriendshipPreferenceDTOs;
+using BeeFriend.Core.Application.DTO.InterestDTOs;
+using BeeFriend.Core.Application.DTO.PersonalityDTOs;
 using BeeFriend.Core.Application.Mappers;
 using BeeFriend.Core.Application.Service;
 using BeeFriend.Core.Application.ServiceContracts;
-using BeeFriend.Core.Application.ServiceContracts.CrudServiceContracts;
+using BeeFriend.Core.Application.ServiceContracts.CrudServiceContracts.Getters;
 using BeeFriend.Core.Domain.Entities;
 using BeeFriend.Core.Domain.IdentityEntities;
 using BeeFriend.Core.Domain.RepositoryContracts;
+using BeeFriend.Core.Domain.RepositoryContracts.CrudRepositoryContracts.Getters;
 using BeeFriend.Core.Domain.UnitOfWorkContract;
 using BeeFriend.Core.Options;
 using BeeFriend.Infrastructure.DbContext;
@@ -52,17 +56,41 @@ namespace BeeFriend.Web.StartupExtensions
             services.AddScoped<IUserStore<ApplicationUser>, ApplicationUserStore>();
             services.AddScoped<ICountriesRepository, CountriesRepository>();
             services.AddScoped<ICitiesRepository, CitiesRepository>();
-            services.AddScoped<IGetterService<CountryResponse>, CountriesReader>();
-            services.AddScoped<IAllGetterByIdService<CityResponse, int>, CitiesReader>();
-            services.AddScoped<IInterestsRepository, InterestsRepository>();
-            services.AddScoped<IPersonalityTraitsRepository, PersonalityTraitsRepository>();
-            services.AddScoped<IFriendshipPreferencesRepository, FriendshipPreferencesRepository>();
+            services.AddScoped<ICountriesService, CountriesService>();
+            services.AddScoped<ICitiesReader, CitiesReader>();
+            services.AddScoped<IGetAllRepository<InterestCategory>, InterestCategoriesRepository>();
             services.AddScoped<IInterestCategoriesRepository, InterestCategoriesRepository>();
-            services.AddScoped<IGetterService<FriendshipPreferenceResponse>, FriendshipPreferencesReader>();
-            services.AddScoped<IGetterService<PersonalityResponse>, PersonalityReader>();
-            services.AddScoped<IGetterService<InterestsWithCategoriesResponse>, InterestsReader>();
+            services.AddScoped<IInterestCategoriesService, InterestCategoriesService>();
 
+            services.AddScoped(typeof(IGetAllByIdsRepository<,>), typeof(GetAllByIdsRepository<,>));
+            services.AddScoped(typeof(IRepository<,>), typeof(Repository<,>));
 
+            services.AddScoped<
+                ICrudService<FriendshipPreferenceRequest, FriendshipPreferenceResponse, int>, 
+                CrudService<
+                    FriendshipPreference, 
+                    FriendshipPreferenceRequest, 
+                    FriendshipPreferenceResponse, 
+                    int, 
+                    IRepository<FriendshipPreference, int>
+                    >>();
+
+            services.AddScoped<
+                ICrudService<
+                    InterestRequest, 
+                    InterestResponse, 
+                    int>, 
+                InterestsService>();
+
+            services.AddScoped<
+                ICrudService<PersonalityRequest, PersonalityResponse, int>,
+                CrudService<
+                    Personality,
+                    PersonalityRequest,
+                    PersonalityResponse,
+                    int,
+                    IRepository<Personality, int>
+                    >>();
             //Options
 
             services.AddOptions<JwtOptions>()

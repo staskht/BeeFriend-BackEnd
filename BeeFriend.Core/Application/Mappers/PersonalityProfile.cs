@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using BeeFriend.Core.Application.DTO;
+using BeeFriend.Core.Application.DTO.PersonalityDTOs;
 using BeeFriend.Core.Domain.Entities;
 using System;
 using System.Collections.Generic;
@@ -12,6 +12,7 @@ namespace BeeFriend.Core.Application.Mappers
         public PersonalityProfile() 
         {
             CreateMap<Personality,PersonalityResponse>();
+            CreateMap<PersonalityRequest, Personality>();
         }
     }
 }

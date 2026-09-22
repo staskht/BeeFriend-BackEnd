@@ -7,6 +7,6 @@ namespace BeeFriend.Core.Domain.RepositoryContracts.CrudRepositoryContracts
     public interface IUpdaterRepository<TEntity>
         where TEntity : class
     {
-        TEntity Update(TEntity entity);
+        void Update(TEntity entity);
     }
 }

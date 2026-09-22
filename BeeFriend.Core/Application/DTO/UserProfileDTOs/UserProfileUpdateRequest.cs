@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace BeeFriend.Core.Application.DTO
+namespace BeeFriend.Core.Application.DTO.UserProfileDTOs
 {
     public class UserProfileUpdateRequest
     {

@@ -2,9 +2,9 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
-using BeeFriend.Core.Application.DTO;
 using BeeFriend.Core.Application.ServiceContracts;
 using BeeFriend.Core.Application.Results;
+using BeeFriend.Core.Application.DTO.UserProfileDTOs;
 
 namespace BeeFriend.Web.Controllers.v1
 {

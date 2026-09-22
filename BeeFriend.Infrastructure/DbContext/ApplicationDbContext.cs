@@ -3,6 +3,7 @@ using BeeFriend.Core.Domain.IdentityEntities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using BeeFriend.Infrastructure.SeedData;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -32,6 +33,12 @@ namespace BeeFriend.Infrastructure.DbContext
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+
+
+            //Seed data
+
+            builder.Entity<Country>().HasData(CountriesSeed.Countries);
+            builder.Entity<City>().HasData(CititesSeed.Cities);
 
             // UserProfile
             builder.Entity<UserProfile>()

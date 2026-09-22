@@ -45,5 +45,18 @@
             "CountryNotFound",
             "Country with that country id could not be found"
             );
+
+        // Generic 
+
+        public static Error EntityNotFound(string id, string description) =>
+            new(ErrorType.NotFound,
+                id,
+                description);
+
+        public static Error InvalidId { get; } = new(
+            ErrorType.Validation,
+            "InvalidId",
+            "Invalid id value.");
+
     }
 }

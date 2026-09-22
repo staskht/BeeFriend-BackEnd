@@ -1,4 +1,4 @@
-﻿using BeeFriend.Core.Application.DTO;
+﻿using BeeFriend.Core.Application.DTO.AuthenticationDTOs;
 using BeeFriend.Core.Domain.IdentityEntities;
 using System;
 using System.Collections.Generic;

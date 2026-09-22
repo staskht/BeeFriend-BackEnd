@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using BeeFriend.Core.Application.DTO;
+using BeeFriend.Core.Application.DTO.UserProfileDTOs;
 using BeeFriend.Core.Domain.Entities;
 using BeeFriend.Core.Extensions;
 
