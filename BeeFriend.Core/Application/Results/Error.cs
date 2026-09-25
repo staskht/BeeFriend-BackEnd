@@ -38,6 +38,7 @@
             "UserNotFound", 
             "User could not be found");
 
+
         // Cities
 
         public static Error CountryNotFound { get; } = new(
@@ -53,10 +54,10 @@
                 id,
                 description);
 
-        public static Error InvalidId { get; } = new(
+        public static Error InvalidId (string id, string description) => new(
             ErrorType.Validation,
-            "InvalidId",
-            "Invalid id value.");
+            id,
+            description);
 
     }
 }

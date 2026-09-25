@@ -8,6 +8,9 @@ namespace BeeFriend.Core.Application.DTO.InterestDTOs
     public record InterestResponse(
         int InterestId,
         int CategoryId,
-        string Name);
+        string Name) : ResponseBase<int>
+    {
+        public override int Id => InterestId;
+    }
 
 }

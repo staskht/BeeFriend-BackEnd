@@ -101,7 +101,7 @@ namespace BeeFriend.Core.Application.Service
         protected async Task<Result<TEntity>> FindEntityAsync(TKey id)
         {
             if (EqualityComparer<TKey>.Default.Equals(id, default))
-                return Errors.InvalidId;
+                return Errors.InvalidId("InvalidId", "Invalid id value.");
 
             var entity = await _repository.GetByIdAsync(id);
 

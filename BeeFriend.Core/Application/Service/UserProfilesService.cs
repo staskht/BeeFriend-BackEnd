@@ -109,7 +109,7 @@ namespace BeeFriend.Core.Application.Service
             var personalityTraitsIds = userProfileUpdateRequest.PersonalityTraitsIds;
             var friendshipPreferencesIds = userProfileUpdateRequest.FriendshipPreferencesIds;
 
-            var populationOperations = new Func<Task>[]
+            var populationOperations = new Func<Task<Result>>[]
             {
                 () => PopulateCollection(
                     interestIds,
@@ -134,17 +134,24 @@ namespace BeeFriend.Core.Application.Service
             };
 
             foreach (var update in populationOperations)
-                await update();
+            {
+                var result = await update();
 
+                if (result.IsFailure)
+                    return result.Error!;
+            }
             
             _userProfilesGetterRepository.Update(matchingUserProfile);
 
             await _unitOfWork.CommitAsync();
 
-            return _mapper.Map<UserProfileResponse>(matchingUserProfile);
+            UserProfile? userProfileWithDetails = 
+                await _userProfilesGetterRepository.GetByIdAsync(id);
+
+            return _mapper.Map<UserProfileResponse>(userProfileWithDetails);
         }
 
-        private async Task PopulateCollection<TEntity>
+        private async Task<Result> PopulateCollection<TEntity>
             (IEnumerable<int>? collectionOfIds, 
             Func<IEnumerable<int>, string, Task<IReadOnlyList<TEntity>>> func,
             ICollection<TEntity> originalCollection,
@@ -152,14 +159,22 @@ namespace BeeFriend.Core.Application.Service
         {
             if (collectionOfIds != null)
             {
-                var currentProfileEntities = await func(collectionOfIds, idPropertyName);
+                var ids = collectionOfIds.ToHashSet();
+
+                var entitiesFromIds = await func(ids, idPropertyName);
+
+                if (ids.Count != entitiesFromIds.Count)
+                    return Errors.InvalidId($"{idPropertyName}", "Among the collection an invalid id was sent.");
+
                 originalCollection.Clear();
 
-                foreach (var entity in currentProfileEntities)
+                foreach (var entity in entitiesFromIds)
                 {
                     originalCollection.Add(entity);
                 }
             }
+
+            return Result.Success();
         }
 
     }

@@ -2,5 +2,8 @@
 {
     public record FriendshipPreferenceResponse(
         int PreferenceId,
-        string Name);
+        string Name) : ResponseBase<int>
+    {
+        public override int Id => PreferenceId;
+    }
 }

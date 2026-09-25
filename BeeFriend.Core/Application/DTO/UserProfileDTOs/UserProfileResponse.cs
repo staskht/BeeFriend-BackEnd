@@ -1,4 +1,6 @@
-﻿using BeeFriend.Core.Domain.Entities;
+﻿using BeeFriend.Core.Application.DTO.FriendshipPreferenceDTOs;
+using BeeFriend.Core.Application.DTO.InterestDTOs;
+using BeeFriend.Core.Application.DTO.PersonalityDTOs;
 using BeeFriend.Core.Domain.Enums;
 
 namespace BeeFriend.Core.Application.DTO.UserProfileDTOs
@@ -14,8 +16,8 @@ namespace BeeFriend.Core.Application.DTO.UserProfileDTOs
         public GenderOptions? Gender { get; set; }
         public PronounsOptions? Pronouns { get; set; }
 
-        public IEnumerable<Interest> Interests { get; set; } = [];
-        public IEnumerable<Personality> PersonalityTraits { get; set; } = [];
-        public IEnumerable<FriendshipPreference> FriendshipPreferences { get; set; } = [];
+        public IEnumerable<InterestResponse> Interests { get; set; } = [];
+        public IEnumerable<PersonalityResponse> PersonalityTraits { get; set; } = [];
+        public IEnumerable<FriendshipPreferenceResponse> FriendshipPreferences { get; set; } = [];
     }
 }

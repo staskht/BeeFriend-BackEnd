@@ -1,4 +1,5 @@
-﻿using BeeFriend.Core.Application.Results;
+﻿using BeeFriend.Core.Application.DTO;
+using BeeFriend.Core.Application.Results;
 using BeeFriend.Core.Application.ServiceContracts;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -10,7 +11,7 @@ namespace BeeFriend.Web.Controllers
         : CustomControllerBase
 
         where TRequest : class
-        where TResponse : class
+        where TResponse : ResponseBase<TKey>
         where TKey : struct
         where TService : ICrudService<TRequest, TResponse, TKey>
 
@@ -59,7 +60,11 @@ namespace BeeFriend.Web.Controllers
         {
             Result<TResponse> response = await _service.AddAsync(request);
 
-            return ReturnResponse(response, Created);
+            return ReturnResponse(response, value => CreatedAtAction(
+                nameof(GetById),
+                new {id = value.Id}, 
+                value));
         }
+
     }
 }

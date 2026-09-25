@@ -2,6 +2,9 @@
 {
     public record PersonalityResponse(
         int PerosnalityId,
-        string Name);
+        string Name) : ResponseBase<int>
+    {
+        public override int Id => PerosnalityId;
+    }
 
 }
