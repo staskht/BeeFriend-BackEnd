@@ -42,12 +42,12 @@ namespace BeeFriend.Infrastructure.DbContext
 
             // UserProfile
             builder.Entity<UserProfile>()
-                .HasKey(pk => pk.UserId);
+                .HasKey(pk => pk.Id);
 
             builder.Entity<UserProfile>()
                 .HasOne(u => u.User)
                 .WithOne(ap => ap.UserProfile)
-                .HasForeignKey<UserProfile>(fk => fk.UserId);
+                .HasForeignKey<UserProfile>(fk => fk.Id);
 
             builder.Entity<UserProfile>()
                 .HasOne(u => u.City)
@@ -73,7 +73,7 @@ namespace BeeFriend.Infrastructure.DbContext
 
             // City 
             builder.Entity<City>()
-                .HasKey(pk => pk.CityId);
+                .HasKey(pk => pk.Id);
 
             builder.Entity<City>()
                 .HasOne(c => c.Country)
@@ -82,7 +82,7 @@ namespace BeeFriend.Infrastructure.DbContext
 
             // Country
             builder.Entity<Country>()
-                .HasKey(pk => pk.CountryId);
+                .HasKey(pk => pk.Id);
 
             // ApplicationUser
 
@@ -92,7 +92,7 @@ namespace BeeFriend.Infrastructure.DbContext
 
             // Interest
             builder.Entity<Interest>()
-                .HasKey(pk => pk.InterestId);
+                .HasKey(pk => pk.Id);
 
             builder.Entity<Interest>()
                 .HasOne(i => i.Category)
@@ -101,15 +101,15 @@ namespace BeeFriend.Infrastructure.DbContext
 
             //InterestCategory
             builder.Entity<InterestCategory>()
-                .HasKey(pk => pk.CategoryId);
+                .HasKey(pk => pk.Id);
 
             //Personality
             builder.Entity<Personality>()
-                .HasKey(p => p.PerosnalityId);
+                .HasKey(p => p.Id);
 
             // FriendshipPreference
             builder.Entity<FriendshipPreference>()
-                .HasKey(fp => fp.PreferenceId);
+                .HasKey(fp => fp.Id);
         }
 
     

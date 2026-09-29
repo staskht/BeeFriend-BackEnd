@@ -1,10 +1,9 @@
-﻿namespace BeeFriend.Core.Application.DTO.PersonalityDTOs
+﻿using BeeFriend.Core.Application.DTO.Interfaces;
+
+namespace BeeFriend.Core.Application.DTO.PersonalityDTOs
 {
     public record PersonalityResponse(
-        int PerosnalityId,
-        string Name) : ResponseBase<int>
-    {
-        public override int Id => PerosnalityId;
-    }
+        int Id,
+        string Name) : IResponse<int>;
 
 }

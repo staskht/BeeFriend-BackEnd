@@ -8,7 +8,7 @@ using System.Text;
 namespace BeeFriend.Core.Application.DTO
 {
     public record InterestsWithCategoriesResponse(
-        int CategoryId,
+        int Id,
         string Name,
         IEnumerable<InterestResponse> Interests
         );

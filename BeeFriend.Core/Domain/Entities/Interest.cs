@@ -7,7 +7,7 @@ namespace BeeFriend.Core.Domain.Entities
 {
     public class Interest
     {
-        public int InterestId { get; set; }
+        public int Id { get; set; }
         public int CategoryId { get; set; }
         public InterestCategory Category { get; set; } = null!;
 

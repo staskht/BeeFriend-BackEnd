@@ -22,5 +22,13 @@ namespace BeeFriend.Infrastructure.Repositories
 
             return cities;
         }
+
+        public async Task<City?> GetByIdAsync(int id)
+        {
+            var city =  
+                await _context.Cities.FirstOrDefaultAsync(c => c.Id == id);
+
+            return city;
+        }
     }
 }

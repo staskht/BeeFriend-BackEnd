@@ -41,7 +41,7 @@ namespace BeeFriend.Infrastructure.Repositories
                 .Include(u => u.Interests)
                 .Include(u => u.PersonalityTraits)
                 .Include(u => u.FriendshipPreferences)
-                .FirstOrDefaultAsync(u => u.UserId == id);
+                .FirstOrDefaultAsync(u => u.Id == id);
 
             return userProfile;
         }

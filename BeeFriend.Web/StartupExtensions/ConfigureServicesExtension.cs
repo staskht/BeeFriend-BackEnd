@@ -57,7 +57,7 @@ namespace BeeFriend.Web.StartupExtensions
             services.AddScoped<ICountriesRepository, CountriesRepository>();
             services.AddScoped<ICitiesRepository, CitiesRepository>();
             services.AddScoped<ICountriesService, CountriesService>();
-            services.AddScoped<ICitiesReader, CitiesReader>();
+            services.AddScoped<ICitiesService, CitiesService>();
             services.AddScoped<IGetAllRepository<InterestCategory>, InterestCategoriesRepository>();
             services.AddScoped<IInterestCategoriesRepository, InterestCategoriesRepository>();
             services.AddScoped<IInterestCategoriesService, InterestCategoriesService>();

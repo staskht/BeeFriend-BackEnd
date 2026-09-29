@@ -1,4 +1,5 @@
 ﻿using BeeFriend.Core.Application.DTO;
+using BeeFriend.Core.Application.DTO.Interfaces;
 using BeeFriend.Core.Application.Results;
 using BeeFriend.Core.Application.ServiceContracts;
 using Microsoft.AspNetCore.Http;
@@ -11,7 +12,7 @@ namespace BeeFriend.Web.Controllers
         : CustomControllerBase
 
         where TRequest : class
-        where TResponse : ResponseBase<TKey>
+        where TResponse : class, IResponse<TKey>
         where TKey : struct
         where TService : ICrudService<TRequest, TResponse, TKey>
 

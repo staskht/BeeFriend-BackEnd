@@ -7,7 +7,7 @@ namespace BeeFriend.Core.Domain.Entities
 {
     public class FriendshipPreference
     {
-        public int PreferenceId { get; set; }
+        public int Id { get; set; }
 
         [StringLength(30)]
         public string Name { get; set; } = null!;

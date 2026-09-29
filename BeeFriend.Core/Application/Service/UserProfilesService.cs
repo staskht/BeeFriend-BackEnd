@@ -9,6 +9,8 @@ using BeeFriend.Core.Exceptions;
 using BeeFriend.Core.Domain.RepositoryContracts;
 using BeeFriend.Core.Domain.RepositoryContracts.CrudRepositoryContracts.Getters;
 using BeeFriend.Core.Application.DTO.UserProfileDTOs;
+using BeeFriend.Core.Application.ServiceContracts.CrudServiceContracts.Getters;
+using BeeFriend.Core.Application.Helpers;
 
 
 namespace BeeFriend.Core.Application.Service
@@ -23,6 +25,8 @@ namespace BeeFriend.Core.Application.Service
         private readonly IGetAllByIdsRepository<FriendshipPreference, int> _friendhipPreferencesGetter;
         private readonly IMapper _mapper;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly ICountriesService _countriesService;
+        private readonly ICitiesService _citysService;
         public UserProfilesService(
             IUnitOfWork unitOfWork,
             IGetAllByIdsRepository<Interest, int> interestsGetter,
@@ -30,7 +34,9 @@ namespace BeeFriend.Core.Application.Service
             IGetAllByIdsRepository<FriendshipPreference, int> friendhipPreferencesGetter,
             IMapper mapper,
             IUserProfilesRepository userProfilesGetterRepository,
-            UserManager<ApplicationUser> userManager
+            UserManager<ApplicationUser> userManager,
+            ICountriesService countriesService,
+            ICitiesService citysService
             )
         {
             _unitOfWork = unitOfWork;
@@ -40,6 +46,8 @@ namespace BeeFriend.Core.Application.Service
             _mapper = mapper;
             _userProfilesGetterRepository = userProfilesGetterRepository;
             _userManager = userManager;
+            _countriesService = countriesService;
+            _citysService = citysService;
         }
 
         public async Task<Result> DeleteByIdAsync(Guid id)
@@ -103,43 +111,34 @@ namespace BeeFriend.Core.Application.Service
             if (matchingUserProfile == null)
                 return Errors.UserNotFound;
 
+            var locationResult = await ValidateLocationAsync(
+                userProfileUpdateRequest.CountryId, 
+                userProfileUpdateRequest.CityId, 
+                matchingUserProfile);
+
+            if (locationResult.IsFailure)
+                return locationResult.Error!;
+
+            if (userProfileUpdateRequest.CountryId.HasValue && 
+                matchingUserProfile.CityId.HasValue &&
+                !userProfileUpdateRequest.CityId.HasValue)
+            {
+                matchingUserProfile.CityId = null;
+            }
+
+            if (!EnumValidator.IsValidEnum(userProfileUpdateRequest.Pronouns))
+                return Errors.Validation("InvalidPronoun", "Supplied Pronoun value is invalid.");
+
+            if (!EnumValidator.IsValidEnum(userProfileUpdateRequest.Gender))
+                return Errors.Validation("InvalidGender", "Supplied Gender value is invalid.");
+
             _mapper.Map(userProfileUpdateRequest, matchingUserProfile);
 
-            var interestIds = userProfileUpdateRequest.InterestIds;
-            var personalityTraitsIds = userProfileUpdateRequest.PersonalityTraitsIds;
-            var friendshipPreferencesIds = userProfileUpdateRequest.FriendshipPreferencesIds;
+            var resultFromCollectionUpdates = await UpdateCollectionAsync(
+                userProfileUpdateRequest, matchingUserProfile);
 
-            var populationOperations = new Func<Task<Result>>[]
-            {
-                () => PopulateCollection(
-                    interestIds,
-                    _interestGetter.GetAllByIdsAsync,
-                    matchingUserProfile.Interests,
-                    nameof(Interest.InterestId)
-                    ),
-
-                () => PopulateCollection(
-                    personalityTraitsIds,
-                    _personalityGetter.GetAllByIdsAsync,
-                    matchingUserProfile.PersonalityTraits,
-                    nameof(Personality.PerosnalityId)
-                    ),
-
-                () => PopulateCollection(
-                    friendshipPreferencesIds,
-                    _friendhipPreferencesGetter.GetAllByIdsAsync,
-                    matchingUserProfile.FriendshipPreferences,
-                    nameof(FriendshipPreference.PreferenceId)
-                    )
-            };
-
-            foreach (var update in populationOperations)
-            {
-                var result = await update();
-
-                if (result.IsFailure)
-                    return result.Error!;
-            }
+            if (resultFromCollectionUpdates.IsFailure)
+                return resultFromCollectionUpdates.Error!;
             
             _userProfilesGetterRepository.Update(matchingUserProfile);
 
@@ -151,6 +150,41 @@ namespace BeeFriend.Core.Application.Service
             return _mapper.Map<UserProfileResponse>(userProfileWithDetails);
         }
 
+        private async Task<Result> ValidateLocationAsync(
+            int? requestedCountryId, 
+            int? requestedCityId, 
+            UserProfile existingUser)
+        {
+            int? effectiveCountryId = requestedCountryId ?? existingUser.CountryId;
+
+            if (requestedCountryId.HasValue)
+            {
+                var countryResult = await _countriesService.GetByIdAsync(
+                    requestedCountryId.Value);
+
+                if (countryResult.IsFailure)
+                    return countryResult.Error!;
+            }
+
+            if (requestedCityId.HasValue)
+            {
+                if (!effectiveCountryId.HasValue)
+                    return Errors.Validation("MissingCountryId", "City cannot be assigned before country!");
+
+                var cityResult = await _citysService.GetByIdAsync(requestedCityId.Value);
+
+                if (cityResult.IsFailure)
+                    return cityResult.Error!;
+
+                if (cityResult.Value!.CountryId != effectiveCountryId.Value)
+                    return Errors.Validation("CountryIdAndCityIdDontMatch", "City not in the correct country.");
+            }
+
+            return Result.Success();
+        }
+
+
+
         private async Task<Result> PopulateCollection<TEntity>
             (IEnumerable<int>? collectionOfIds, 
             Func<IEnumerable<int>, string, Task<IReadOnlyList<TEntity>>> func,
@@ -161,10 +195,16 @@ namespace BeeFriend.Core.Application.Service
             {
                 var ids = collectionOfIds.ToHashSet();
 
+                if (ids.Count == 0)
+                {
+                    originalCollection.Clear();
+                    return Result.Success();
+                }
+                    
                 var entitiesFromIds = await func(ids, idPropertyName);
 
                 if (ids.Count != entitiesFromIds.Count)
-                    return Errors.InvalidId($"{idPropertyName}", "Among the collection an invalid id was sent.");
+                    return Errors.InvalidId($"{collectionOfIds}", "Among the collection an invalid id was sent.");
 
                 originalCollection.Clear();
 
@@ -176,6 +216,50 @@ namespace BeeFriend.Core.Application.Service
 
             return Result.Success();
         }
+
+        private async Task<Result>UpdateCollectionAsync(
+            UserProfileUpdateRequest request, 
+            UserProfile user)
+        {
+            var interestIds = request.InterestIds;
+            var personalityTraitsIds = request.PersonalityTraitsIds;
+            var friendshipPreferencesIds = request.FriendshipPreferencesIds;
+
+            var populationOperations = new Func<Task<Result>>[]
+            {
+                () => PopulateCollection(
+                    interestIds,
+                    _interestGetter.GetAllByIdsAsync,
+                    user.Interests,
+                    nameof(Interest.Id)
+                    ),
+
+                () => PopulateCollection(
+                    personalityTraitsIds,
+                    _personalityGetter.GetAllByIdsAsync,
+                    user.PersonalityTraits,
+                    nameof(Personality.Id)
+                    ),
+
+                () => PopulateCollection(
+                    friendshipPreferencesIds,
+                    _friendhipPreferencesGetter.GetAllByIdsAsync,
+                    user.FriendshipPreferences,
+                    nameof(FriendshipPreference.Id)
+                    )
+            };
+
+            foreach (var update in populationOperations)
+            {
+                var result = await update();
+
+                if (result.IsFailure)
+                    return result.Error!;
+            }
+
+            return Result.Success();
+        }
+
 
     }
 }

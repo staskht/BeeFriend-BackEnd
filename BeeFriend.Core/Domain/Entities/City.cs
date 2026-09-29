@@ -8,7 +8,7 @@ namespace BeeFriend.Core.Domain.Entities
 {
     public class City
     {
-        public int CityId { get; set; }
+        public int Id { get; set; }
 
         [StringLength(50)]
         public string Name { get; set; } = null!; 

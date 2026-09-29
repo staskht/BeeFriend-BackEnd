@@ -2,6 +2,7 @@
 using BeeFriend.Core.Application.DTO;
 using BeeFriend.Core.Application.Results;
 using BeeFriend.Core.Application.ServiceContracts;
+using BeeFriend.Core.Domain.Entities;
 using BeeFriend.Core.Domain.RepositoryContracts;
 
 namespace BeeFriend.Core.Application.Service
@@ -24,19 +25,19 @@ namespace BeeFriend.Core.Application.Service
             return _mapper.Map<List<CountryResponse>>(countries);
         }
 
-        public async Task<Result> ExistsAsync(int countryId)
+        public async Task<Result<Country>> GetByIdAsync(int id)
         {
-            if (countryId <= 0)
+            if (id <= 0)
                 return Errors.Validation(
                     "CountryIdInvalid",
                     "CountryId must be greater than zero.");
 
-            var country = await _countriesRepository.GetByIdAsync(countryId);
+            var country = await _countriesRepository.GetByIdAsync(id);
 
             if (country == null)
                 return Errors.CountryNotFound;
 
-            return Result.Success();
+            return country;
         }
     }
 }

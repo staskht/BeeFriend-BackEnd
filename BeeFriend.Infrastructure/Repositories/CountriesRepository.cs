@@ -26,7 +26,7 @@ namespace BeeFriend.Infrastructure.Repositories
         public async Task<Country?> GetByIdAsync(int id)
         {
             var country = 
-                await _context.Countries.FirstOrDefaultAsync(c => c.CountryId == id);
+                await _context.Countries.FirstOrDefaultAsync(c => c.Id == id);
 
             return country;
         }

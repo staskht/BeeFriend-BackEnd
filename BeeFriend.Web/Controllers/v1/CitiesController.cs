@@ -10,9 +10,9 @@ namespace BeeFriend.Web.Controllers.v1
 
     public class CitiesController : CustomControllerBase
     {
-        private readonly ICitiesReader _citiesReader;
+        private readonly ICitiesService _citiesReader;
 
-        public CitiesController(ICitiesReader citiesReader)
+        public CitiesController(ICitiesService citiesReader)
         {
             _citiesReader = citiesReader;
         }

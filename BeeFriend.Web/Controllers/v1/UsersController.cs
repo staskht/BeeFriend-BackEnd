@@ -23,7 +23,7 @@ namespace BeeFriend.Web.Controllers.v1
             var matchingUsers = 
                 await _userProfilesService.GetAllAsync();
 
-            return ReturnResponse(matchingUsers, value => Ok(value));
+            return ReturnResponse(matchingUsers, Ok);
         }
 
         [HttpGet("{id:guid}")]
@@ -32,14 +32,14 @@ namespace BeeFriend.Web.Controllers.v1
             Result<UserProfileResponse> result = 
                 await _userProfilesService.GetByIdAsync(id);
 
-            return ReturnResponse(result, value => Ok(value));
+            return ReturnResponse(result, Ok);
             
         }
 
         [HttpPatch("{id:guid}")]
         public async Task<ActionResult<UserProfileResponse>> PatchUserProfile(
             Guid id, 
-            UserProfileUpdateRequest userProfileUpdateRequest)
+            [FromBody] UserProfileUpdateRequest userProfileUpdateRequest)
         {
 
             var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -52,7 +52,7 @@ namespace BeeFriend.Web.Controllers.v1
             Result<UserProfileResponse> result = 
                 await _userProfilesService.UpdateAsync(id, userProfileUpdateRequest);
 
-            return ReturnResponse(result, value => Ok(value));
+            return ReturnResponse(result, Ok);
         }
 
         [HttpDelete("{id:guid}")]
@@ -67,7 +67,7 @@ namespace BeeFriend.Web.Controllers.v1
 
             Result result = await _userProfilesService.DeleteByIdAsync(id);
 
-            return ReturnResponse(result, () => NoContent());
+            return ReturnResponse(result, NoContent);
         }
     }
 }

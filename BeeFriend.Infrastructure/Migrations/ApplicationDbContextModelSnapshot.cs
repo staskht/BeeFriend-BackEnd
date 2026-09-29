@@ -24,11 +24,11 @@ namespace BeeFriend.Infrastructure.Migrations
 
             modelBuilder.Entity("BeeFriend.Core.Domain.Entities.City", b =>
                 {
-                    b.Property<int>("CityId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CityId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("CountryId")
                         .HasColumnType("int");
@@ -44,7 +44,7 @@ namespace BeeFriend.Infrastructure.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.HasKey("CityId");
+                    b.HasKey("Id");
 
                     b.HasIndex("CountryId");
 
@@ -53,7 +53,7 @@ namespace BeeFriend.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            CityId = 1,
+                            Id = 1,
                             CountryId = 1,
                             Latitude = 42.697699999999998,
                             Longitude = 23.321899999999999,
@@ -61,7 +61,7 @@ namespace BeeFriend.Infrastructure.Migrations
                         },
                         new
                         {
-                            CityId = 2,
+                            Id = 2,
                             CountryId = 1,
                             Latitude = 42.135399999999997,
                             Longitude = 24.7453,
@@ -69,7 +69,7 @@ namespace BeeFriend.Infrastructure.Migrations
                         },
                         new
                         {
-                            CityId = 3,
+                            Id = 3,
                             CountryId = 1,
                             Latitude = 43.214100000000002,
                             Longitude = 27.9147,
@@ -77,7 +77,7 @@ namespace BeeFriend.Infrastructure.Migrations
                         },
                         new
                         {
-                            CityId = 4,
+                            Id = 4,
                             CountryId = 1,
                             Latitude = 42.504800000000003,
                             Longitude = 27.462599999999998,
@@ -85,7 +85,7 @@ namespace BeeFriend.Infrastructure.Migrations
                         },
                         new
                         {
-                            CityId = 5,
+                            Id = 5,
                             CountryId = 2,
                             Latitude = 52.520000000000003,
                             Longitude = 13.404999999999999,
@@ -93,7 +93,7 @@ namespace BeeFriend.Infrastructure.Migrations
                         },
                         new
                         {
-                            CityId = 6,
+                            Id = 6,
                             CountryId = 2,
                             Latitude = 48.135100000000001,
                             Longitude = 11.582000000000001,
@@ -101,7 +101,7 @@ namespace BeeFriend.Infrastructure.Migrations
                         },
                         new
                         {
-                            CityId = 7,
+                            Id = 7,
                             CountryId = 2,
                             Latitude = 53.551099999999998,
                             Longitude = 9.9937000000000005,
@@ -109,7 +109,7 @@ namespace BeeFriend.Infrastructure.Migrations
                         },
                         new
                         {
-                            CityId = 8,
+                            Id = 8,
                             CountryId = 2,
                             Latitude = 50.110900000000001,
                             Longitude = 8.6821000000000002,
@@ -117,7 +117,7 @@ namespace BeeFriend.Infrastructure.Migrations
                         },
                         new
                         {
-                            CityId = 9,
+                            Id = 9,
                             CountryId = 3,
                             Latitude = 48.8566,
                             Longitude = 2.3521999999999998,
@@ -125,7 +125,7 @@ namespace BeeFriend.Infrastructure.Migrations
                         },
                         new
                         {
-                            CityId = 10,
+                            Id = 10,
                             CountryId = 3,
                             Latitude = 43.296500000000002,
                             Longitude = 5.3697999999999997,
@@ -133,7 +133,7 @@ namespace BeeFriend.Infrastructure.Migrations
                         },
                         new
                         {
-                            CityId = 11,
+                            Id = 11,
                             CountryId = 3,
                             Latitude = 45.764000000000003,
                             Longitude = 4.8357000000000001,
@@ -141,7 +141,7 @@ namespace BeeFriend.Infrastructure.Migrations
                         },
                         new
                         {
-                            CityId = 12,
+                            Id = 12,
                             CountryId = 4,
                             Latitude = 41.902799999999999,
                             Longitude = 12.4964,
@@ -149,7 +149,7 @@ namespace BeeFriend.Infrastructure.Migrations
                         },
                         new
                         {
-                            CityId = 13,
+                            Id = 13,
                             CountryId = 4,
                             Latitude = 45.464199999999998,
                             Longitude = 9.1899999999999995,
@@ -157,7 +157,7 @@ namespace BeeFriend.Infrastructure.Migrations
                         },
                         new
                         {
-                            CityId = 14,
+                            Id = 14,
                             CountryId = 4,
                             Latitude = 40.851799999999997,
                             Longitude = 14.2681,
@@ -165,7 +165,7 @@ namespace BeeFriend.Infrastructure.Migrations
                         },
                         new
                         {
-                            CityId = 15,
+                            Id = 15,
                             CountryId = 5,
                             Latitude = 40.416800000000002,
                             Longitude = -3.7038000000000002,
@@ -173,7 +173,7 @@ namespace BeeFriend.Infrastructure.Migrations
                         },
                         new
                         {
-                            CityId = 16,
+                            Id = 16,
                             CountryId = 5,
                             Latitude = 41.385100000000001,
                             Longitude = 2.1734,
@@ -181,7 +181,7 @@ namespace BeeFriend.Infrastructure.Migrations
                         },
                         new
                         {
-                            CityId = 17,
+                            Id = 17,
                             CountryId = 5,
                             Latitude = 39.469900000000003,
                             Longitude = -0.37630000000000002,
@@ -189,7 +189,7 @@ namespace BeeFriend.Infrastructure.Migrations
                         },
                         new
                         {
-                            CityId = 18,
+                            Id = 18,
                             CountryId = 6,
                             Latitude = 51.507399999999997,
                             Longitude = -0.1278,
@@ -197,7 +197,7 @@ namespace BeeFriend.Infrastructure.Migrations
                         },
                         new
                         {
-                            CityId = 19,
+                            Id = 19,
                             CountryId = 6,
                             Latitude = 53.480800000000002,
                             Longitude = -2.2425999999999999,
@@ -205,7 +205,7 @@ namespace BeeFriend.Infrastructure.Migrations
                         },
                         new
                         {
-                            CityId = 20,
+                            Id = 20,
                             CountryId = 6,
                             Latitude = 52.486199999999997,
                             Longitude = -1.8904000000000001,
@@ -213,7 +213,7 @@ namespace BeeFriend.Infrastructure.Migrations
                         },
                         new
                         {
-                            CityId = 21,
+                            Id = 21,
                             CountryId = 7,
                             Latitude = 44.4268,
                             Longitude = 26.102499999999999,
@@ -221,7 +221,7 @@ namespace BeeFriend.Infrastructure.Migrations
                         },
                         new
                         {
-                            CityId = 22,
+                            Id = 22,
                             CountryId = 7,
                             Latitude = 46.7712,
                             Longitude = 23.6236,
@@ -229,7 +229,7 @@ namespace BeeFriend.Infrastructure.Migrations
                         },
                         new
                         {
-                            CityId = 23,
+                            Id = 23,
                             CountryId = 8,
                             Latitude = 37.983800000000002,
                             Longitude = 23.727499999999999,
@@ -237,7 +237,7 @@ namespace BeeFriend.Infrastructure.Migrations
                         },
                         new
                         {
-                            CityId = 24,
+                            Id = 24,
                             CountryId = 8,
                             Latitude = 40.640099999999997,
                             Longitude = 22.944400000000002,
@@ -245,7 +245,7 @@ namespace BeeFriend.Infrastructure.Migrations
                         },
                         new
                         {
-                            CityId = 25,
+                            Id = 25,
                             CountryId = 9,
                             Latitude = 48.208199999999998,
                             Longitude = 16.373799999999999,
@@ -253,7 +253,7 @@ namespace BeeFriend.Infrastructure.Migrations
                         },
                         new
                         {
-                            CityId = 26,
+                            Id = 26,
                             CountryId = 9,
                             Latitude = 47.8095,
                             Longitude = 13.055,
@@ -261,7 +261,7 @@ namespace BeeFriend.Infrastructure.Migrations
                         },
                         new
                         {
-                            CityId = 27,
+                            Id = 27,
                             CountryId = 10,
                             Latitude = 52.367600000000003,
                             Longitude = 4.9040999999999997,
@@ -269,7 +269,7 @@ namespace BeeFriend.Infrastructure.Migrations
                         },
                         new
                         {
-                            CityId = 28,
+                            Id = 28,
                             CountryId = 10,
                             Latitude = 51.924399999999999,
                             Longitude = 4.4776999999999996,
@@ -277,7 +277,7 @@ namespace BeeFriend.Infrastructure.Migrations
                         },
                         new
                         {
-                            CityId = 29,
+                            Id = 29,
                             CountryId = 11,
                             Latitude = 52.229700000000001,
                             Longitude = 21.0122,
@@ -285,7 +285,7 @@ namespace BeeFriend.Infrastructure.Migrations
                         },
                         new
                         {
-                            CityId = 30,
+                            Id = 30,
                             CountryId = 11,
                             Latitude = 50.064700000000002,
                             Longitude = 19.945,
@@ -293,7 +293,7 @@ namespace BeeFriend.Infrastructure.Migrations
                         },
                         new
                         {
-                            CityId = 31,
+                            Id = 31,
                             CountryId = 12,
                             Latitude = 50.075499999999998,
                             Longitude = 14.437799999999999,
@@ -301,7 +301,7 @@ namespace BeeFriend.Infrastructure.Migrations
                         },
                         new
                         {
-                            CityId = 32,
+                            Id = 32,
                             CountryId = 12,
                             Latitude = 49.195099999999996,
                             Longitude = 16.6068,
@@ -311,109 +311,109 @@ namespace BeeFriend.Infrastructure.Migrations
 
             modelBuilder.Entity("BeeFriend.Core.Domain.Entities.Country", b =>
                 {
-                    b.Property<int>("CountryId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CountryId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.HasKey("CountryId");
+                    b.HasKey("Id");
 
                     b.ToTable("Countries");
 
                     b.HasData(
                         new
                         {
-                            CountryId = 1,
+                            Id = 1,
                             Name = "Bulgaria"
                         },
                         new
                         {
-                            CountryId = 2,
+                            Id = 2,
                             Name = "Germany"
                         },
                         new
                         {
-                            CountryId = 3,
+                            Id = 3,
                             Name = "France"
                         },
                         new
                         {
-                            CountryId = 4,
+                            Id = 4,
                             Name = "Italy"
                         },
                         new
                         {
-                            CountryId = 5,
+                            Id = 5,
                             Name = "Spain"
                         },
                         new
                         {
-                            CountryId = 6,
+                            Id = 6,
                             Name = "United Kingdom"
                         },
                         new
                         {
-                            CountryId = 7,
+                            Id = 7,
                             Name = "Romania"
                         },
                         new
                         {
-                            CountryId = 8,
+                            Id = 8,
                             Name = "Greece"
                         },
                         new
                         {
-                            CountryId = 9,
+                            Id = 9,
                             Name = "Austria"
                         },
                         new
                         {
-                            CountryId = 10,
+                            Id = 10,
                             Name = "Netherlands"
                         },
                         new
                         {
-                            CountryId = 11,
+                            Id = 11,
                             Name = "Poland"
                         },
                         new
                         {
-                            CountryId = 12,
+                            Id = 12,
                             Name = "Czech Republic"
                         });
                 });
 
             modelBuilder.Entity("BeeFriend.Core.Domain.Entities.FriendshipPreference", b =>
                 {
-                    b.Property<int>("PreferenceId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PreferenceId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(30)
                         .HasColumnType("nvarchar(30)");
 
-                    b.HasKey("PreferenceId");
+                    b.HasKey("Id");
 
                     b.ToTable("FriendshipPreferences");
                 });
 
             modelBuilder.Entity("BeeFriend.Core.Domain.Entities.Interest", b =>
                 {
-                    b.Property<int>("InterestId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("InterestId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("CategoryId")
                         .HasColumnType("int");
@@ -423,7 +423,7 @@ namespace BeeFriend.Infrastructure.Migrations
                         .HasMaxLength(30)
                         .HasColumnType("nvarchar(30)");
 
-                    b.HasKey("InterestId");
+                    b.HasKey("Id");
 
                     b.HasIndex("CategoryId");
 
@@ -432,43 +432,43 @@ namespace BeeFriend.Infrastructure.Migrations
 
             modelBuilder.Entity("BeeFriend.Core.Domain.Entities.InterestCategory", b =>
                 {
-                    b.Property<int>("CategoryId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CategoryId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(30)
                         .HasColumnType("nvarchar(30)");
 
-                    b.HasKey("CategoryId");
+                    b.HasKey("Id");
 
                     b.ToTable("InterestCategories");
                 });
 
             modelBuilder.Entity("BeeFriend.Core.Domain.Entities.Personality", b =>
                 {
-                    b.Property<int>("PerosnalityId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PerosnalityId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(30)
                         .HasColumnType("nvarchar(30)");
 
-                    b.HasKey("PerosnalityId");
+                    b.HasKey("Id");
 
                     b.ToTable("PersonalityTraits");
                 });
 
             modelBuilder.Entity("BeeFriend.Core.Domain.Entities.UserProfile", b =>
                 {
-                    b.Property<Guid>("UserId")
+                    b.Property<Guid>("Id")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Bio")
@@ -494,7 +494,7 @@ namespace BeeFriend.Infrastructure.Migrations
                     b.Property<int?>("Pronouns")
                         .HasColumnType("int");
 
-                    b.HasKey("UserId");
+                    b.HasKey("Id");
 
                     b.HasIndex("CityId");
 
@@ -606,30 +606,30 @@ namespace BeeFriend.Infrastructure.Migrations
 
             modelBuilder.Entity("FriendshipPreferenceUserProfile", b =>
                 {
-                    b.Property<int>("FriendshipPreferencesPreferenceId")
+                    b.Property<int>("FriendshipPreferencesId")
                         .HasColumnType("int");
 
-                    b.Property<Guid>("UsersUserId")
+                    b.Property<Guid>("UsersId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.HasKey("FriendshipPreferencesPreferenceId", "UsersUserId");
+                    b.HasKey("FriendshipPreferencesId", "UsersId");
 
-                    b.HasIndex("UsersUserId");
+                    b.HasIndex("UsersId");
 
                     b.ToTable("FriendshipPreferenceUserProfile");
                 });
 
             modelBuilder.Entity("InterestUserProfile", b =>
                 {
-                    b.Property<int>("InterestsInterestId")
+                    b.Property<int>("InterestsId")
                         .HasColumnType("int");
 
-                    b.Property<Guid>("UsersUserId")
+                    b.Property<Guid>("UsersId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.HasKey("InterestsInterestId", "UsersUserId");
+                    b.HasKey("InterestsId", "UsersId");
 
-                    b.HasIndex("UsersUserId");
+                    b.HasIndex("UsersId");
 
                     b.ToTable("InterestUserProfile");
                 });
@@ -739,15 +739,15 @@ namespace BeeFriend.Infrastructure.Migrations
 
             modelBuilder.Entity("PersonalityUserProfile", b =>
                 {
-                    b.Property<int>("PersonalityTraitsPerosnalityId")
+                    b.Property<int>("PersonalityTraitsId")
                         .HasColumnType("int");
 
-                    b.Property<Guid>("UsersUserId")
+                    b.Property<Guid>("UsersId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.HasKey("PersonalityTraitsPerosnalityId", "UsersUserId");
+                    b.HasKey("PersonalityTraitsId", "UsersId");
 
-                    b.HasIndex("UsersUserId");
+                    b.HasIndex("UsersId");
 
                     b.ToTable("PersonalityUserProfile");
                 });
@@ -786,7 +786,7 @@ namespace BeeFriend.Infrastructure.Migrations
 
                     b.HasOne("BeeFriend.Core.Domain.IdentityEntities.ApplicationUser", "User")
                         .WithOne("UserProfile")
-                        .HasForeignKey("BeeFriend.Core.Domain.Entities.UserProfile", "UserId")
+                        .HasForeignKey("BeeFriend.Core.Domain.Entities.UserProfile", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -801,13 +801,13 @@ namespace BeeFriend.Infrastructure.Migrations
                 {
                     b.HasOne("BeeFriend.Core.Domain.Entities.FriendshipPreference", null)
                         .WithMany()
-                        .HasForeignKey("FriendshipPreferencesPreferenceId")
+                        .HasForeignKey("FriendshipPreferencesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("BeeFriend.Core.Domain.Entities.UserProfile", null)
                         .WithMany()
-                        .HasForeignKey("UsersUserId")
+                        .HasForeignKey("UsersId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -816,13 +816,13 @@ namespace BeeFriend.Infrastructure.Migrations
                 {
                     b.HasOne("BeeFriend.Core.Domain.Entities.Interest", null)
                         .WithMany()
-                        .HasForeignKey("InterestsInterestId")
+                        .HasForeignKey("InterestsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("BeeFriend.Core.Domain.Entities.UserProfile", null)
                         .WithMany()
-                        .HasForeignKey("UsersUserId")
+                        .HasForeignKey("UsersId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -882,13 +882,13 @@ namespace BeeFriend.Infrastructure.Migrations
                 {
                     b.HasOne("BeeFriend.Core.Domain.Entities.Personality", null)
                         .WithMany()
-                        .HasForeignKey("PersonalityTraitsPerosnalityId")
+                        .HasForeignKey("PersonalityTraitsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("BeeFriend.Core.Domain.Entities.UserProfile", null)
                         .WithMany()
-                        .HasForeignKey("UsersUserId")
+                        .HasForeignKey("UsersId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

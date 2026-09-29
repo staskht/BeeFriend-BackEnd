@@ -1,9 +1,9 @@
-﻿namespace BeeFriend.Core.Application.DTO.FriendshipPreferenceDTOs
+﻿using BeeFriend.Core.Application.DTO.Interfaces;
+using System.Text.Json.Serialization;
+
+namespace BeeFriend.Core.Application.DTO.FriendshipPreferenceDTOs
 {
     public record FriendshipPreferenceResponse(
-        int PreferenceId,
-        string Name) : ResponseBase<int>
-    {
-        public override int Id => PreferenceId;
-    }
+        int Id,
+        string Name) : IResponse<int>;
 }

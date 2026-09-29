@@ -7,7 +7,7 @@ namespace BeeFriend.Core.Domain.Entities
 {
     public class UserProfile
     {
-        public Guid UserId { get; set; }
+        public Guid Id { get; set; }
         public ApplicationUser User { get; set; } = null!;
 
         public int? CityId { get; set; }

@@ -47,6 +47,12 @@
             "Country with that country id could not be found"
             );
 
+        public static Error CityNotFound { get; } = new(
+            ErrorType.NotFound,
+            "CityNotFound",
+            "City with that city id could not be found"
+            );
+
         // Generic 
 
         public static Error EntityNotFound(string id, string description) =>

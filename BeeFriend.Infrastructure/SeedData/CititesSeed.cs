@@ -12,7 +12,7 @@ namespace BeeFriend.Infrastructure.SeedData
             // Bulgaria
             new()
             {
-                CityId = 1,
+                Id = 1,
                 Name = "Sofia",
                 CountryId = 1,
                 Latitude = 42.6977,
@@ -20,7 +20,7 @@ namespace BeeFriend.Infrastructure.SeedData
             },
             new()
             {
-                CityId = 2,
+                Id = 2,
                 Name = "Plovdiv",
                 CountryId = 1,
                 Latitude = 42.1354,
@@ -28,7 +28,7 @@ namespace BeeFriend.Infrastructure.SeedData
             },
             new()
             {
-                CityId = 3,
+                Id = 3,
                 Name = "Varna",
                 CountryId = 1,
                 Latitude = 43.2141,
@@ -36,7 +36,7 @@ namespace BeeFriend.Infrastructure.SeedData
             },
             new()
             {
-                CityId = 4,
+                Id = 4,
                 Name = "Burgas",
                 CountryId = 1,
                 Latitude = 42.5048,
@@ -46,7 +46,7 @@ namespace BeeFriend.Infrastructure.SeedData
             // Germany
             new()
             {
-                CityId = 5,
+                Id = 5,
                 Name = "Berlin",
                 CountryId = 2,
                 Latitude = 52.5200,
@@ -54,7 +54,7 @@ namespace BeeFriend.Infrastructure.SeedData
             },
             new()
             {
-                CityId = 6,
+                Id = 6,
                 Name = "Munich",
                 CountryId = 2,
                 Latitude = 48.1351,
@@ -62,7 +62,7 @@ namespace BeeFriend.Infrastructure.SeedData
             },
             new()
             {
-                CityId = 7,
+                Id = 7,
                 Name = "Hamburg",
                 CountryId = 2,
                 Latitude = 53.5511,
@@ -70,7 +70,7 @@ namespace BeeFriend.Infrastructure.SeedData
             },
             new()
             {
-                CityId = 8,
+                Id = 8,
                 Name = "Frankfurt",
                 CountryId = 2,
                 Latitude = 50.1109,
@@ -80,7 +80,7 @@ namespace BeeFriend.Infrastructure.SeedData
             // France
             new()
             {
-                CityId = 9,
+                Id = 9,
                 Name = "Paris",
                 CountryId = 3,
                 Latitude = 48.8566,
@@ -88,7 +88,7 @@ namespace BeeFriend.Infrastructure.SeedData
             },
             new()
             {
-                CityId = 10,
+                Id = 10,
                 Name = "Marseille",
                 CountryId = 3,
                 Latitude = 43.2965,
@@ -96,7 +96,7 @@ namespace BeeFriend.Infrastructure.SeedData
             },
             new()
             {
-                CityId = 11,
+                Id = 11,
                 Name = "Lyon",
                 CountryId = 3,
                 Latitude = 45.7640,
@@ -106,7 +106,7 @@ namespace BeeFriend.Infrastructure.SeedData
             // Italy
             new()
             {
-                CityId = 12,
+                Id = 12,
                 Name = "Rome",
                 CountryId = 4,
                 Latitude = 41.9028,
@@ -114,7 +114,7 @@ namespace BeeFriend.Infrastructure.SeedData
             },
             new()
             {
-                CityId = 13,
+                Id = 13,
                 Name = "Milan",
                 CountryId = 4,
                 Latitude = 45.4642,
@@ -122,7 +122,7 @@ namespace BeeFriend.Infrastructure.SeedData
             },
             new()
             {
-                CityId = 14,
+                Id = 14,
                 Name = "Naples",
                 CountryId = 4,
                 Latitude = 40.8518,
@@ -132,7 +132,7 @@ namespace BeeFriend.Infrastructure.SeedData
             // Spain
             new()
             {
-                CityId = 15,
+                Id = 15,
                 Name = "Madrid",
                 CountryId = 5,
                 Latitude = 40.4168,
@@ -140,7 +140,7 @@ namespace BeeFriend.Infrastructure.SeedData
             },
             new()
             {
-                CityId = 16,
+                Id = 16,
                 Name = "Barcelona",
                 CountryId = 5,
                 Latitude = 41.3851,
@@ -148,7 +148,7 @@ namespace BeeFriend.Infrastructure.SeedData
             },
             new()
             {
-                CityId = 17,
+                Id = 17,
                 Name = "Valencia",
                 CountryId = 5,
                 Latitude = 39.4699,
@@ -158,7 +158,7 @@ namespace BeeFriend.Infrastructure.SeedData
             // United Kingdom
             new()
             {
-                CityId = 18,
+                Id = 18,
                 Name = "London",
                 CountryId = 6,
                 Latitude = 51.5074,
@@ -166,7 +166,7 @@ namespace BeeFriend.Infrastructure.SeedData
             },
             new()
             {
-                CityId = 19,
+                Id = 19,
                 Name = "Manchester",
                 CountryId = 6,
                 Latitude = 53.4808,
@@ -174,7 +174,7 @@ namespace BeeFriend.Infrastructure.SeedData
             },
             new()
             {
-                CityId = 20,
+                Id = 20,
                 Name = "Birmingham",
                 CountryId = 6,
                 Latitude = 52.4862,
@@ -184,7 +184,7 @@ namespace BeeFriend.Infrastructure.SeedData
             // Romania
             new()
             {
-                CityId = 21,
+                Id = 21,
                 Name = "Bucharest",
                 CountryId = 7,
                 Latitude = 44.4268,
@@ -192,7 +192,7 @@ namespace BeeFriend.Infrastructure.SeedData
             },
             new()
             {
-                CityId = 22,
+                Id = 22,
                 Name = "Cluj-Napoca",
                 CountryId = 7,
                 Latitude = 46.7712,
@@ -202,7 +202,7 @@ namespace BeeFriend.Infrastructure.SeedData
             // Greece
             new()
             {
-                CityId = 23,
+                Id = 23,
                 Name = "Athens",
                 CountryId = 8,
                 Latitude = 37.9838,
@@ -210,7 +210,7 @@ namespace BeeFriend.Infrastructure.SeedData
             },
             new()
             {
-                CityId = 24,
+                Id = 24,
                 Name = "Thessaloniki",
                 CountryId = 8,
                 Latitude = 40.6401,
@@ -220,7 +220,7 @@ namespace BeeFriend.Infrastructure.SeedData
             // Austria
             new()
             {
-                CityId = 25,
+                Id = 25,
                 Name = "Vienna",
                 CountryId = 9,
                 Latitude = 48.2082,
@@ -228,7 +228,7 @@ namespace BeeFriend.Infrastructure.SeedData
             },
             new()
             {
-                CityId = 26,
+                Id = 26,
                 Name = "Salzburg",
                 CountryId = 9,
                 Latitude = 47.8095,
@@ -238,7 +238,7 @@ namespace BeeFriend.Infrastructure.SeedData
             // Netherlands
             new()
             {
-                CityId = 27,
+                Id = 27,
                 Name = "Amsterdam",
                 CountryId = 10,
                 Latitude = 52.3676,
@@ -246,7 +246,7 @@ namespace BeeFriend.Infrastructure.SeedData
             },
             new()
             {
-                CityId = 28,
+                Id = 28,
                 Name = "Rotterdam",
                 CountryId = 10,
                 Latitude = 51.9244,
@@ -256,7 +256,7 @@ namespace BeeFriend.Infrastructure.SeedData
             // Poland
             new()
             {
-                CityId = 29,
+                Id = 29,
                 Name = "Warsaw",
                 CountryId = 11,
                 Latitude = 52.2297,
@@ -264,7 +264,7 @@ namespace BeeFriend.Infrastructure.SeedData
             },
             new()
             {
-                CityId = 30,
+                Id = 30,
                 Name = "Krakow",
                 CountryId = 11,
                 Latitude = 50.0647,
@@ -274,7 +274,7 @@ namespace BeeFriend.Infrastructure.SeedData
             // Czech Republic
             new()
             {
-                CityId = 31,
+                Id = 31,
                 Name = "Prague",
                 CountryId = 12,
                 Latitude = 50.0755,
@@ -282,7 +282,7 @@ namespace BeeFriend.Infrastructure.SeedData
             },
             new()
             {
-                CityId = 32,
+                Id = 32,
                 Name = "Brno",
                 CountryId = 12,
                 Latitude = 49.1951,

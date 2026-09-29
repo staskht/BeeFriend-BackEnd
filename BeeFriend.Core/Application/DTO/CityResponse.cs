@@ -1,7 +1,7 @@
 ﻿namespace BeeFriend.Core.Application.DTO
 {
     public record CityResponse(
-        int CityId,
+        int Id,
         string Name,
         double? Latitude = null,
         double? Longitude = null

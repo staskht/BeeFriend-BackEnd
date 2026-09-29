@@ -54,7 +54,7 @@ namespace BeeFriend.Core.Application.Service
             }
             await _userProfilesRepository.AddAsync(new UserProfile
             {
-                UserId = user.Id,
+                Id = user.Id,
                 BirthDate = registerRequest.BirthDate
             });
             
