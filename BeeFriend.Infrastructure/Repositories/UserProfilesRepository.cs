@@ -15,12 +15,14 @@ namespace BeeFriend.Infrastructure.Repositories
             _context = context;
         }
 
-        public async Task AddAsync(UserProfile userProfile)
+        public async Task AddAsync(
+            UserProfile userProfile, 
+            CancellationToken cancellationToken)
         {
-            await _context.UserProfiles.AddAsync(userProfile);
+            await _context.UserProfiles.AddAsync(userProfile, cancellationToken);
         }
 
-        public async Task<IReadOnlyList<UserProfile>> GetAllAsync()
+        public async Task<IReadOnlyList<UserProfile>> GetAllAsync(CancellationToken cancellationToken)
         {
             var userProfiles = await _context.UserProfiles
                 .Include(u => u.City)
@@ -28,12 +30,14 @@ namespace BeeFriend.Infrastructure.Repositories
                 .Include(u => u.Interests)
                 .Include(u => u.PersonalityTraits)
                 .Include(u => u.FriendshipPreferences)
-                .ToListAsync();
+                .ToListAsync(cancellationToken);
 
             return userProfiles;
         }
 
-        public async Task<UserProfile?> GetByIdAsync(Guid id)
+        public async Task<UserProfile?> GetByIdAsync(
+            Guid id, 
+            CancellationToken cancellationToken)
         {
             var userProfile = await _context.UserProfiles
                 .Include(u => u.City)
@@ -41,7 +45,7 @@ namespace BeeFriend.Infrastructure.Repositories
                 .Include(u => u.Interests)
                 .Include(u => u.PersonalityTraits)
                 .Include(u => u.FriendshipPreferences)
-                .FirstOrDefaultAsync(u => u.Id == id);
+                .FirstOrDefaultAsync(u => u.Id == id, cancellationToken);
 
             return userProfile;
         }

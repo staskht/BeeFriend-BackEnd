@@ -3,6 +3,6 @@
     public interface IGetAllRepository<TEntity>
         where TEntity : class
     {
-        Task<IReadOnlyList<TEntity>> GetAllAsync();
+        Task<IReadOnlyList<TEntity>> GetAllAsync(CancellationToken cancellationToken);
     }
 }

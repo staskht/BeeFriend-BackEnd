@@ -4,7 +4,7 @@ using System.Text;
 
 namespace BeeFriend.Core.Application.DTO.AuthenticationDTOs
 {
-    public record AuthenticationResponse
+    public class AuthenticationResponse
     {
         public required string AccessToken { get; init; }
 
@@ -13,6 +13,5 @@ namespace BeeFriend.Core.Application.DTO.AuthenticationDTOs
         public required string RefreshToken { get; init; }
 
         public required DateTime RefreshTokenExpiresAt { get; init; }
-
     }
 }

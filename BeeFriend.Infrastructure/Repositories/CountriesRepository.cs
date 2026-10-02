@@ -14,19 +14,19 @@ namespace BeeFriend.Infrastructure.Repositories
         {
             _context = context;
         }
-        public async Task<IReadOnlyList<Country>> GetAllAsync()
+        public async Task<IReadOnlyList<Country>> GetAllAsync(CancellationToken cancellationToken)
         {
             var countries = await _context.Countries
                 .OrderBy(c => c.Name)
-                .ToListAsync();
+                .ToListAsync(cancellationToken);
 
             return countries;
         }
 
-        public async Task<Country?> GetByIdAsync(int id)
+        public async Task<Country?> GetByIdAsync(int id, CancellationToken cancellationToken)
         {
             var country = 
-                await _context.Countries.FirstOrDefaultAsync(c => c.Id == id);
+                await _context.Countries.FirstOrDefaultAsync(c => c.Id == id, cancellationToken);
 
             return country;
         }

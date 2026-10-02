@@ -18,21 +18,21 @@ namespace BeeFriend.Core.Application.Service
             _countriesRepository = countriesRepository;
             _mapper = mapper;
         }
-        public async Task<Result<IEnumerable<CountryResponse>>> GetAllAsync()
+        public async Task<Result<IEnumerable<CountryResponse>>> GetAllAsync(CancellationToken cancellationToken)
         {
-            var countries = await _countriesRepository.GetAllAsync();
+            var countries = await _countriesRepository.GetAllAsync(cancellationToken);
 
             return _mapper.Map<List<CountryResponse>>(countries);
         }
 
-        public async Task<Result<Country>> GetByIdAsync(int id)
+        public async Task<Result<Country>> GetByIdAsync(int id, CancellationToken cancellationToken)
         {
             if (id <= 0)
                 return Errors.Validation(
                     "CountryIdInvalid",
                     "CountryId must be greater than zero.");
 
-            var country = await _countriesRepository.GetByIdAsync(id);
+            var country = await _countriesRepository.GetByIdAsync(id, cancellationToken);
 
             if (country == null)
                 return Errors.CountryNotFound;

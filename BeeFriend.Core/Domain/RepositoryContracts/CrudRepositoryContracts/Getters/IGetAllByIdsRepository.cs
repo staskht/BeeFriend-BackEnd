@@ -4,6 +4,9 @@
        where TEntity : class
        where TKey : struct
     {
-        Task<IReadOnlyList<TEntity>> GetAllByIdsAsync(IEnumerable<TKey> keys, string idPropertyName);
+        Task<IReadOnlyList<TEntity>> GetAllByIdsAsync(
+            IEnumerable<TKey> keys, 
+            string idPropertyName,
+            CancellationToken cancellationToken);
     }
 }

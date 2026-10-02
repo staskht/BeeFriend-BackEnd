@@ -7,6 +7,6 @@ namespace BeeFriend.Core.Application.ServiceContracts.CrudServiceContracts
 {
     public interface ICreatorService<TRequest,  TResponse>
     {
-        Task<Result<TResponse>> AddAsync(TRequest requestDto);
+        Task<Result<TResponse>> AddAsync(TRequest requestDto, CancellationToken cancellationToken);
     }
 }

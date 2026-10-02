@@ -4,6 +4,6 @@
         where TEntity : class
         where TKey : struct
     {
-        Task<TEntity?> GetByIdAsync(TKey id);
+        Task<TEntity?> GetByIdAsync(TKey id, CancellationToken cancellationToken);
     }
 }

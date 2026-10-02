@@ -50,7 +50,7 @@ namespace BeeFriend.Core.Application.Service
             _citysService = citysService;
         }
 
-        public async Task<Result> DeleteByIdAsync(Guid id)
+        public async Task<Result> DeleteByIdAsync(Guid id, CancellationToken cancellationToken)
         {
             if (id == Guid.Empty)
                 return Errors.EmptyGuid(nameof(id));
@@ -70,25 +70,25 @@ namespace BeeFriend.Core.Application.Service
                     " | ",
                     result.Errors.Select(e => e.Description)));
             }
-            await _unitOfWork.CommitAsync();
+            await _unitOfWork.CommitAsync(cancellationToken);
 
             return Result.Success();
         }
 
-        public async Task<Result<IEnumerable<UserProfileResponse>>> GetAllAsync()
+        public async Task<Result<IEnumerable<UserProfileResponse>>> GetAllAsync(CancellationToken cancellationToken)
         {
-            var userProfiles = await _userProfilesGetterRepository.GetAllAsync();
+            var userProfiles = await _userProfilesGetterRepository.GetAllAsync(cancellationToken);
 
             return _mapper.Map<List<UserProfileResponse>>(userProfiles);
         }
 
-        public async Task<Result<UserProfileResponse>> GetByIdAsync(Guid id)
+        public async Task<Result<UserProfileResponse>> GetByIdAsync(Guid id, CancellationToken cancellationToken)
         {
             if (id == Guid.Empty)
                 return Errors.EmptyGuid(nameof(id));
 
             UserProfile? userProfile =
-                await _userProfilesGetterRepository.GetByIdAsync(id);
+                await _userProfilesGetterRepository.GetByIdAsync(id, cancellationToken);
 
             if (userProfile == null)
                 return Errors.UserNotFound;
@@ -98,7 +98,8 @@ namespace BeeFriend.Core.Application.Service
 
         public async Task<Result<UserProfileResponse>> UpdateAsync(
             Guid id,
-            UserProfileUpdateRequest userProfileUpdateRequest)
+            UserProfileUpdateRequest userProfileUpdateRequest,
+            CancellationToken cancellationToken)
         {
             if (id == Guid.Empty)
                 return Errors.EmptyGuid(nameof(id));
@@ -106,7 +107,7 @@ namespace BeeFriend.Core.Application.Service
             ArgumentNullException.ThrowIfNull(userProfileUpdateRequest);
 
             UserProfile? matchingUserProfile =
-                await _userProfilesGetterRepository.GetByIdAsync(id);
+                await _userProfilesGetterRepository.GetByIdAsync(id, cancellationToken);
 
             if (matchingUserProfile == null)
                 return Errors.UserNotFound;
@@ -114,7 +115,8 @@ namespace BeeFriend.Core.Application.Service
             var locationResult = await ValidateLocationAsync(
                 userProfileUpdateRequest.CountryId, 
                 userProfileUpdateRequest.CityId, 
-                matchingUserProfile);
+                matchingUserProfile,
+                cancellationToken);
 
             if (locationResult.IsFailure)
                 return locationResult.Error!;
@@ -135,17 +137,19 @@ namespace BeeFriend.Core.Application.Service
             _mapper.Map(userProfileUpdateRequest, matchingUserProfile);
 
             var resultFromCollectionUpdates = await UpdateCollectionAsync(
-                userProfileUpdateRequest, matchingUserProfile);
+                userProfileUpdateRequest, 
+                matchingUserProfile, 
+                cancellationToken);
 
             if (resultFromCollectionUpdates.IsFailure)
                 return resultFromCollectionUpdates.Error!;
             
             _userProfilesGetterRepository.Update(matchingUserProfile);
 
-            await _unitOfWork.CommitAsync();
+            await _unitOfWork.CommitAsync(cancellationToken);
 
             UserProfile? userProfileWithDetails = 
-                await _userProfilesGetterRepository.GetByIdAsync(id);
+                await _userProfilesGetterRepository.GetByIdAsync(id, cancellationToken);
 
             return _mapper.Map<UserProfileResponse>(userProfileWithDetails);
         }
@@ -153,14 +157,16 @@ namespace BeeFriend.Core.Application.Service
         private async Task<Result> ValidateLocationAsync(
             int? requestedCountryId, 
             int? requestedCityId, 
-            UserProfile existingUser)
+            UserProfile existingUser,
+            CancellationToken cancellationToken)
         {
             int? effectiveCountryId = requestedCountryId ?? existingUser.CountryId;
 
             if (requestedCountryId.HasValue)
             {
                 var countryResult = await _countriesService.GetByIdAsync(
-                    requestedCountryId.Value);
+                    requestedCountryId.Value,
+                    cancellationToken);
 
                 if (countryResult.IsFailure)
                     return countryResult.Error!;
@@ -171,7 +177,7 @@ namespace BeeFriend.Core.Application.Service
                 if (!effectiveCountryId.HasValue)
                     return Errors.Validation("MissingCountryId", "City cannot be assigned before country!");
 
-                var cityResult = await _citysService.GetByIdAsync(requestedCityId.Value);
+                var cityResult = await _citysService.GetByIdAsync(requestedCityId.Value, cancellationToken);
 
                 if (cityResult.IsFailure)
                     return cityResult.Error!;
@@ -187,9 +193,11 @@ namespace BeeFriend.Core.Application.Service
 
         private async Task<Result> PopulateCollection<TEntity>
             (IEnumerable<int>? collectionOfIds, 
-            Func<IEnumerable<int>, string, Task<IReadOnlyList<TEntity>>> func,
+            Func<IEnumerable<int>, string, CancellationToken, Task<IReadOnlyList<TEntity>>> func,
             ICollection<TEntity> originalCollection,
-            string idPropertyName)
+            string idPropertyName,
+            string collecionName,
+            CancellationToken cancellationToken)
         {
             if (collectionOfIds != null)
             {
@@ -201,10 +209,10 @@ namespace BeeFriend.Core.Application.Service
                     return Result.Success();
                 }
                     
-                var entitiesFromIds = await func(ids, idPropertyName);
+                var entitiesFromIds = await func(ids, idPropertyName, cancellationToken);
 
                 if (ids.Count != entitiesFromIds.Count)
-                    return Errors.InvalidId($"{collectionOfIds}", "Among the collection an invalid id was sent.");
+                    return Errors.InvalidId($"{collecionName}", "Among the collection an invalid id was sent.");
 
                 originalCollection.Clear();
 
@@ -219,7 +227,8 @@ namespace BeeFriend.Core.Application.Service
 
         private async Task<Result>UpdateCollectionAsync(
             UserProfileUpdateRequest request, 
-            UserProfile user)
+            UserProfile user,
+            CancellationToken cancellationToken)
         {
             var interestIds = request.InterestIds;
             var personalityTraitsIds = request.PersonalityTraitsIds;
@@ -231,21 +240,27 @@ namespace BeeFriend.Core.Application.Service
                     interestIds,
                     _interestGetter.GetAllByIdsAsync,
                     user.Interests,
-                    nameof(Interest.Id)
+                    nameof(Interest.Id),
+                    nameof(interestIds),
+                    cancellationToken
                     ),
 
                 () => PopulateCollection(
                     personalityTraitsIds,
                     _personalityGetter.GetAllByIdsAsync,
                     user.PersonalityTraits,
-                    nameof(Personality.Id)
+                    nameof(Personality.Id),
+                    nameof(personalityTraitsIds),
+                    cancellationToken
                     ),
 
                 () => PopulateCollection(
                     friendshipPreferencesIds,
                     _friendhipPreferencesGetter.GetAllByIdsAsync,
                     user.FriendshipPreferences,
-                    nameof(FriendshipPreference.Id)
+                    nameof(FriendshipPreference.Id),
+                    nameof(friendshipPreferencesIds),
+                    cancellationToken
                     )
             };
 

@@ -13,20 +13,20 @@ namespace BeeFriend.Infrastructure.Repositories
         {
             _context = context;
         }
-        public async Task<IReadOnlyList<City>> GetAllByIdAsync(int countryId)
+        public async Task<IReadOnlyList<City>> GetAllByIdAsync(int countryId, CancellationToken cancellationToken)
         {
             var cities = await _context.Cities
                 .Where(c =>  c.CountryId == countryId)
                 .OrderBy(c => c.Name)
-                .ToListAsync();
+                .ToListAsync(cancellationToken);
 
             return cities;
         }
 
-        public async Task<City?> GetByIdAsync(int id)
+        public async Task<City?> GetByIdAsync(int id, CancellationToken cancellationToken)
         {
             var city =  
-                await _context.Cities.FirstOrDefaultAsync(c => c.Id == id);
+                await _context.Cities.FirstOrDefaultAsync(c => c.Id == id, cancellationToken);
 
             return city;
         }

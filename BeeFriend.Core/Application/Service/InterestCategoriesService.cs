@@ -31,9 +31,9 @@ namespace BeeFriend.Core.Application.Service
 
         }
 
-        public async Task<Result<IEnumerable<InterestsWithCategoriesResponse>>> GetAllCategoriesWithInterestsAsync()
+        public async Task<Result<IEnumerable<InterestsWithCategoriesResponse>>> GetAllCategoriesWithInterestsAsync(CancellationToken cancellationToken)
         {
-            var interests =  await _repository.GetAllCategoriesWithInterestsAsync();
+            var interests =  await _repository.GetAllCategoriesWithInterestsAsync(cancellationToken);
 
             return _mapper.Map<List<InterestsWithCategoriesResponse>>(interests);
         }

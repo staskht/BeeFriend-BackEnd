@@ -8,6 +8,7 @@ using BeeFriend.Core.Application.ServiceContracts;
 using BeeFriend.Core.Application.Results;
 using BeeFriend.Core.Security;
 using BeeFriend.Core.Application.DTO.AuthenticationDTOs;
+using Microsoft.IdentityModel.Tokens.Experimental;
 
 namespace BeeFriend.Core.Application.Service
 {
@@ -30,9 +31,16 @@ namespace BeeFriend.Core.Application.Service
             _userProfilesRepository = userProfilesRepository;
         }
 
-        public async Task<Result<AuthenticationResponse>> RegisterAsync(RegisterRequest registerRequest)
+        public async Task<Result<AuthenticationResponse>> RegisterAsync(
+            RegisterRequest registerRequest, 
+            CancellationToken cancellationToken)
         {
             ArgumentNullException.ThrowIfNull(registerRequest);
+
+            if (registerRequest.BirthDate > DateTime.Today.AddYears(-18))
+                return Errors.Validation(
+                    "UserUnder18", 
+                    "User must be at least 18 years old.");
 
             var user = new ApplicationUser
             {
@@ -56,14 +64,17 @@ namespace BeeFriend.Core.Application.Service
             {
                 Id = user.Id,
                 BirthDate = registerRequest.BirthDate
-            });
-            
-            await _unitOfWork.CommitAsync();
 
-            return await GenerateTokens(user);
+            },cancellationToken);
+            
+            await _unitOfWork.CommitAsync(cancellationToken);
+
+            return await GenerateTokens(user, cancellationToken);
         }
 
-        public async Task<Result<AuthenticationResponse>> LoginAsync(LoginRequest loginRequest)
+        public async Task<Result<AuthenticationResponse>> LoginAsync(
+            LoginRequest loginRequest, 
+            CancellationToken cancellationToken)
         {
             ArgumentNullException.ThrowIfNull(loginRequest);
 
@@ -79,10 +90,12 @@ namespace BeeFriend.Core.Application.Service
             if (!valid)
                 return Errors.InvalidCredentials;
 
-            return await GenerateTokens(user);
+            return await GenerateTokens(user, cancellationToken);
         }
 
-        public async Task<Result<AuthenticationResponse>> GenerateNewTokensAsync(TokenModel tokenModel)
+        public async Task<Result<AuthenticationResponse>> GenerateNewTokensAsync(
+            TokenModel tokenModel, 
+            CancellationToken cancellationToken)
         {
             ArgumentNullException.ThrowIfNull(tokenModel);
 
@@ -110,10 +123,12 @@ namespace BeeFriend.Core.Application.Service
                 return Errors.InvalidRefreshToken;
             }
 
-            return await GenerateTokens(user);
+            return await GenerateTokens(user, cancellationToken);
         }
 
-        private async Task<AuthenticationResponse> GenerateTokens(ApplicationUser user)
+        private async Task<AuthenticationResponse> GenerateTokens(
+            ApplicationUser user,
+            CancellationToken cancellationToken)
         {
             var authenticationResponse = _jwtService.GenerateTokens(user);
 
@@ -121,7 +136,7 @@ namespace BeeFriend.Core.Application.Service
             user.RefreshTokenExpiryDate = authenticationResponse.RefreshTokenExpiresAt;
             
             await _userManager.UpdateAsync(user);
-            await _unitOfWork.CommitAsync();
+            await _unitOfWork.CommitAsync(cancellationToken);
 
             return authenticationResponse;
         }

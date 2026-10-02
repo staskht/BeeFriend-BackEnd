@@ -11,9 +11,9 @@ namespace BeeFriend.Infrastructure.UnitOfWork
         {
             _context = context;
         }
-        public Task CommitAsync()
+        public Task CommitAsync(CancellationToken cancellationToken)
         {
-            return _context.SaveChangesAsync();
+            return _context.SaveChangesAsync(cancellationToken);
         }
     }
 }

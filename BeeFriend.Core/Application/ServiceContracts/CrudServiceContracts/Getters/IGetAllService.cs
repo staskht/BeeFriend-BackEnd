@@ -5,7 +5,7 @@ namespace BeeFriend.Core.Application.ServiceContracts.CrudServiceContracts.Gette
     public interface IGetAllService<TResponse>
         where TResponse : class
     {
-        Task<Result<IEnumerable<TResponse>>> GetAllAsync();
+        Task<Result<IEnumerable<TResponse>>> GetAllAsync(CancellationToken cancellationToken);
 
     }
 

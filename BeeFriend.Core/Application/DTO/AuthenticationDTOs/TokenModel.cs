@@ -4,10 +4,7 @@ using System.Text;
 
 namespace BeeFriend.Core.Application.DTO.AuthenticationDTOs
 {
-    public record TokenModel
-    {
-        public required string AccessToken { get; init; }
-
-        public required string RefreshToken { get; init; }
-    }
+    public record TokenModel(
+        string AccessToken, 
+        string RefreshToken);
 }

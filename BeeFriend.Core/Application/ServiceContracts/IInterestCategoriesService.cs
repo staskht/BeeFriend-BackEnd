@@ -11,6 +11,6 @@ namespace BeeFriend.Core.Application.ServiceContracts
     public interface IInterestCategoriesService 
         : ICrudService<InterestCategoryRequest, InterestCategoryResponse, int>
     {
-        Task<Result<IEnumerable<InterestsWithCategoriesResponse>>> GetAllCategoriesWithInterestsAsync();
+        Task<Result<IEnumerable<InterestsWithCategoriesResponse>>> GetAllCategoriesWithInterestsAsync(CancellationToken cancellationToken);
     }
 }

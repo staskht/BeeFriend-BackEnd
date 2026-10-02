@@ -6,7 +6,7 @@ namespace BeeFriend.Core.Application.ServiceContracts.CrudServiceContracts.Gette
         where TResponse : class
         where Tkey : struct
     {
-        Task<Result<TResponse>> GetByIdAsync(Tkey id);
+        Task<Result<TResponse>> GetByIdAsync(Tkey id, CancellationToken cancellationToken);
     }
 
 }

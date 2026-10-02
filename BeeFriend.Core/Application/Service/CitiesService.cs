@@ -27,14 +27,14 @@ namespace BeeFriend.Core.Application.Service
             _citiesRepository = citiesRepository;
         }
 
-        public async Task<Result<IEnumerable<CityResponse>>> GetAllByIdAsync(int countryId) 
+        public async Task<Result<IEnumerable<CityResponse>>> GetAllByIdAsync(int countryId, CancellationToken cancellationToken) 
         {
-            var result =  await _countriesService.GetByIdAsync(countryId);
+            var result =  await _countriesService.GetByIdAsync(countryId, cancellationToken);
 
             if (result.IsFailure)
                 return result.Error!;
 
-            var cities = await _citiesRepository.GetAllByIdAsync(countryId);
+            var cities = await _citiesRepository.GetAllByIdAsync(countryId, cancellationToken);
 
             if (cities.Count == 0) 
                 throw new CitiesNotFoundException("A valid country exists but has no cities.");
@@ -42,14 +42,14 @@ namespace BeeFriend.Core.Application.Service
             return _mapper.Map<List<CityResponse>>(cities);
         }
 
-        public async Task<Result<City>> GetByIdAsync(int id)
+        public async Task<Result<City>> GetByIdAsync(int id, CancellationToken cancellationToken)
         {
             if (id <= 0)
                 return Errors.Validation(
                    "CityIdInvalid",
                    "CityId must be greater than zero.");
 
-            var city = await _citiesRepository.GetByIdAsync(id);
+            var city = await _citiesRepository.GetByIdAsync(id, cancellationToken);
 
             if (city == null)
                 return Errors.CityNotFound;

@@ -14,12 +14,12 @@ namespace BeeFriend.Infrastructure.Repositories
         {
         }
 
-        public async Task<IReadOnlyList<InterestCategory>> GetAllCategoriesWithInterestsAsync()
+        public async Task<IReadOnlyList<InterestCategory>> GetAllCategoriesWithInterestsAsync(CancellationToken cancellationToken)
         {
             var interests =
                 await _dbSet
                 .Include(ic => ic.Interests)
-                .ToListAsync();
+                .ToListAsync(cancellationToken);
 
             return interests;
         }

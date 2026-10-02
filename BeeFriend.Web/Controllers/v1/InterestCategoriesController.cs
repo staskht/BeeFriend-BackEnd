@@ -22,9 +22,9 @@ namespace BeeFriend.Web.Controllers.v1
         }
 
         [HttpGet("categories-with-interests")]
-        public async Task<ActionResult<IEnumerable<InterestCategoryResponse>>> GetAllCategoriesWithInterestsAsync()
+        public async Task<ActionResult<IEnumerable<InterestCategoryResponse>>> GetAllCategoriesWithInterestsAsync(CancellationToken cancellationToken)
         {
-            var entities = await _service.GetAllCategoriesWithInterestsAsync();
+            var entities = await _service.GetAllCategoriesWithInterestsAsync(cancellationToken);
 
             return ReturnResponse(entities, Ok);
         }

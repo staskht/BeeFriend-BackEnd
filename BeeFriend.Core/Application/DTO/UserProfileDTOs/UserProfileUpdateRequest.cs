@@ -8,22 +8,19 @@ using System.Text;
 
 namespace BeeFriend.Core.Application.DTO.UserProfileDTOs
 {
-    public class UserProfileUpdateRequest
-    {
-        public int? CityId { get; set; }
+    public record UserProfileUpdateRequest(
+    int? CityId,
+    int? CountryId,
 
-        public int? CountryId { get; set; }
+    [param: StringLength(50, ErrorMessage = "{0} cannot be more than {1} characters.")]
+    string? FirstName,
 
-        [StringLength(50, ErrorMessage = "{0} cannot be more than {1} characters.")]
-        public string? FirstName { get; set; }
+    [param: StringLength(200, ErrorMessage = "{0} cannot be more than {1} characters.")]
+    string? Bio,
 
-        [StringLength(200, ErrorMessage = "{0} cannot be more than {1} characters.")]
-        public string? Bio { get; set; }
-
-        public GenderOptions? Gender { get; set; }
-        public PronounsOptions? Pronouns { get; set; }
-        public IEnumerable<int>? InterestIds { get; set; }
-        public IEnumerable<int>? PersonalityTraitsIds { get; set; }
-        public IEnumerable<int>? FriendshipPreferencesIds { get; set; }
-    }
+    GenderOptions? Gender,
+    PronounsOptions? Pronouns,
+    IEnumerable<int>? InterestIds,
+    IEnumerable<int>? PersonalityTraitsIds,
+    IEnumerable<int>? FriendshipPreferencesIds);
 }

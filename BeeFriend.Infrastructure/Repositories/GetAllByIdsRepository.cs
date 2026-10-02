@@ -19,11 +19,14 @@ namespace BeeFriend.Infrastructure.Repositories
             _dbSet = _context.Set<TEntity>();
         }
 
-        public async Task<IReadOnlyList<TEntity>> GetAllByIdsAsync(IEnumerable<TKey> keys, string idPropertyName)
+        public async Task<IReadOnlyList<TEntity>> GetAllByIdsAsync(
+            IEnumerable<TKey> keys, 
+            string idPropertyName, 
+            CancellationToken cancellationToken)
         {
             return await _dbSet
                 .Where(entity => keys.Contains(EF.Property<TKey>(entity, idPropertyName)))
-                .ToListAsync();
+                .ToListAsync(cancellationToken);
         }
     }
 }

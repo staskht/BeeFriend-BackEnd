@@ -24,10 +24,10 @@ namespace BeeFriend.Web.Controllers.v1
         /// <param name="registerRequest">represents the user's details as RegisterRequest</param>
         /// <returns>AuthenticationResponse</returns>
         [HttpPost("register")]
-        public async Task<ActionResult<AuthenticationResponse>> PostRegister(RegisterRequest registerRequest) 
+        public async Task<ActionResult<AuthenticationResponse>> PostRegister(RegisterRequest registerRequest, CancellationToken cancellationToken) 
         {   
             Result<AuthenticationResponse> result = 
-                await _authenticationService.RegisterAsync(registerRequest);
+                await _authenticationService.RegisterAsync(registerRequest, cancellationToken);
 
             return ReturnResponse(
                 result, 
@@ -36,19 +36,19 @@ namespace BeeFriend.Web.Controllers.v1
 
 
         [HttpPost("login")]
-        public async Task<ActionResult<AuthenticationResponse>> PostLogin(LoginRequest loginRequest) 
+        public async Task<ActionResult<AuthenticationResponse>> PostLogin(LoginRequest loginRequest, CancellationToken cancellationToken) 
         {
             Result<AuthenticationResponse> result = 
-                await _authenticationService.LoginAsync(loginRequest);
+                await _authenticationService.LoginAsync(loginRequest, cancellationToken);
 
             return ReturnResponse(result, value => Ok(value));
         }
 
         [HttpPost("generate-tokens")]
-        public async Task<ActionResult<AuthenticationResponse>> GenerateTokens(TokenModel tokenModel)
+        public async Task<ActionResult<AuthenticationResponse>> GenerateTokens(TokenModel tokenModel, CancellationToken cancellationToken)
         {
             Result<AuthenticationResponse> result =
-                await _authenticationService.GenerateNewTokensAsync(tokenModel);
+                await _authenticationService.GenerateNewTokensAsync(tokenModel, cancellationToken);
 
              return ReturnResponse(result, value => Ok(value));
         }

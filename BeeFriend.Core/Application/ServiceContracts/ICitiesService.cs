@@ -12,6 +12,6 @@ namespace BeeFriend.Core.Application.ServiceContracts
         IGetByIdService<City, int>
        
     {
-        Task<Result<IEnumerable<CityResponse>>> GetAllByIdAsync(int id);
+        Task<Result<IEnumerable<CityResponse>>> GetAllByIdAsync(int id, CancellationToken cancellationToken);
     }
 }

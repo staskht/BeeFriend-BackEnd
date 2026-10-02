@@ -8,6 +8,6 @@ namespace BeeFriend.Core.Domain.RepositoryContracts
     public interface IInterestCategoriesRepository 
         : IRepository<InterestCategory, int>
     {
-        Task<IReadOnlyList<InterestCategory>> GetAllCategoriesWithInterestsAsync();
+        Task<IReadOnlyList<InterestCategory>> GetAllCategoriesWithInterestsAsync(CancellationToken cancellationToken);
     }
 }

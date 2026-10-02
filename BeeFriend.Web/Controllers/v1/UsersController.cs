@@ -18,19 +18,19 @@ namespace BeeFriend.Web.Controllers.v1
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<UserProfileResponse>>> GetAll() 
+        public async Task<ActionResult<IEnumerable<UserProfileResponse>>> GetAll(CancellationToken cancellationToken) 
         {
             var matchingUsers = 
-                await _userProfilesService.GetAllAsync();
+                await _userProfilesService.GetAllAsync(cancellationToken);
 
             return ReturnResponse(matchingUsers, Ok);
         }
 
         [HttpGet("{id:guid}")]
-        public async Task<ActionResult<UserProfileResponse>> GetUserProfile(Guid id)
+        public async Task<ActionResult<UserProfileResponse>> GetUserProfile(Guid id, CancellationToken cancellationToken)
         {
             Result<UserProfileResponse> result = 
-                await _userProfilesService.GetByIdAsync(id);
+                await _userProfilesService.GetByIdAsync(id, cancellationToken);
 
             return ReturnResponse(result, Ok);
             
@@ -39,7 +39,8 @@ namespace BeeFriend.Web.Controllers.v1
         [HttpPatch("{id:guid}")]
         public async Task<ActionResult<UserProfileResponse>> PatchUserProfile(
             Guid id, 
-            [FromBody] UserProfileUpdateRequest userProfileUpdateRequest)
+            [FromBody] UserProfileUpdateRequest userProfileUpdateRequest,
+            CancellationToken cancellationToken)
         {
 
             var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -50,13 +51,13 @@ namespace BeeFriend.Web.Controllers.v1
             }
 
             Result<UserProfileResponse> result = 
-                await _userProfilesService.UpdateAsync(id, userProfileUpdateRequest);
+                await _userProfilesService.UpdateAsync(id, userProfileUpdateRequest, cancellationToken);
 
             return ReturnResponse(result, Ok);
         }
 
         [HttpDelete("{id:guid}")]
-        public async Task<ActionResult> DeleteUserProfile(Guid id)
+        public async Task<ActionResult> DeleteUserProfile(Guid id, CancellationToken cancellationToken)
         {
             var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
@@ -65,7 +66,7 @@ namespace BeeFriend.Web.Controllers.v1
                 return Forbid();
             }
 
-            Result result = await _userProfilesService.DeleteByIdAsync(id);
+            Result result = await _userProfilesService.DeleteByIdAsync(id, cancellationToken);
 
             return ReturnResponse(result, NoContent);
         }

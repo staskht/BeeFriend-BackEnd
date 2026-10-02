@@ -30,26 +30,31 @@ namespace BeeFriend.Core.Application.Service
             _interestCategoriesRepository = interestCategoriesRepository;
         }
 
-        public override async Task<Result<InterestResponse>> AddAsync(InterestRequest requestDto)
+        public override async Task<Result<InterestResponse>> AddAsync(
+            InterestRequest requestDto, 
+            CancellationToken cancellationToken)
         {
             var category = 
-                await _interestCategoriesRepository.GetByIdAsync(requestDto.CategoryId);
+                await _interestCategoriesRepository.GetByIdAsync(requestDto.CategoryId, cancellationToken);
 
             if (category == null)
                 return Errors.EntityNotFound("CategoryNotFound", "Category with such id doesnt exist");
 
-            return await base.AddAsync(requestDto);
+            return await base.AddAsync(requestDto, cancellationToken);
         }
 
-        public override async Task<Result<InterestResponse>> UpdateAsync(int id, InterestRequest requestDto)
+        public override async Task<Result<InterestResponse>> UpdateAsync(
+            int id, 
+            InterestRequest requestDto, 
+            CancellationToken cancellationToken)
         {
             var category =
-                await _interestCategoriesRepository.GetByIdAsync(requestDto.CategoryId);
+                await _interestCategoriesRepository.GetByIdAsync(requestDto.CategoryId, cancellationToken);
 
             if (category == null)
                 return Errors.EntityNotFound("CategoryNotFound", "Category with such id doesnt exist");
 
-            return await base.UpdateAsync(id, requestDto);
+            return await base.UpdateAsync(id, requestDto, cancellationToken);
         }
     }
 }

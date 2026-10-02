@@ -7,6 +7,6 @@ namespace BeeFriend.Core.Domain.UnitOfWorkContract
 {
     public interface IUnitOfWork
     {
-        Task CommitAsync();
+        Task CommitAsync(CancellationToken cancellationToken);
     }
 }

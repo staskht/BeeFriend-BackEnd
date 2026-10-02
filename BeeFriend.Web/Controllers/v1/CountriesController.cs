@@ -17,9 +17,9 @@ namespace BeeFriend.Web.Controllers.v1
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<CountryResponse>>> GettAll()
+        public async Task<ActionResult<IEnumerable<CountryResponse>>> GettAll(CancellationToken cancellationToken)
         {
-            var countries = await _countriesService.GetAllAsync();
+            var countries = await _countriesService.GetAllAsync(cancellationToken);
 
             return ReturnResponse(countries, Ok);
         }

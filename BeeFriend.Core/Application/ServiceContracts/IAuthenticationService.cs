@@ -8,9 +8,15 @@ namespace BeeFriend.Core.Application.ServiceContracts
 {
     public interface IAuthenticationService
     {
-        Task<Result<AuthenticationResponse>> RegisterAsync(RegisterRequest registerRequest);
-        Task<Result<AuthenticationResponse>> LoginAsync(LoginRequest loginRequest);
-        Task<Result<AuthenticationResponse>> GenerateNewTokensAsync(TokenModel tokenModel);
+        Task<Result<AuthenticationResponse>> RegisterAsync(
+            RegisterRequest registerRequest, 
+            CancellationToken cancellationToken);
+        Task<Result<AuthenticationResponse>> LoginAsync(
+            LoginRequest loginRequest, 
+            CancellationToken cancellationToken);
+        Task<Result<AuthenticationResponse>> GenerateNewTokensAsync(
+            TokenModel tokenModel, 
+            CancellationToken cancellationToken);
 
     }
 }

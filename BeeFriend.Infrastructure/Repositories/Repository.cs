@@ -21,24 +21,24 @@ namespace BeeFriend.Infrastructure.Repositories
             _context = context;
             _dbSet = _context.Set<TEntity>();
         }
-        public virtual async Task AddAsync(TEntity entity)
+        public virtual async Task AddAsync(TEntity entity, CancellationToken cancellationToken)
         {
-            await _dbSet.AddAsync(entity);
+            await _dbSet.AddAsync(entity, cancellationToken);
         }
 
-        public virtual void Delete(TEntity id)
+        public virtual void Delete(TEntity entity)
         {
-            _dbSet.Remove(id);
+            _dbSet.Remove(entity);
         }
 
-        public virtual async Task<IReadOnlyList<TEntity>> GetAllAsync()
+        public virtual async Task<IReadOnlyList<TEntity>> GetAllAsync(CancellationToken cancellationToken)
         {
-            return await _dbSet.ToListAsync();
+            return await _dbSet.ToListAsync(cancellationToken);
         }
 
-        public virtual async Task<TEntity?> GetByIdAsync(TKey id)
+        public virtual async Task<TEntity?> GetByIdAsync(TKey id, CancellationToken cancellationToken)
         {
-            return await _dbSet.FindAsync(id);
+            return await _dbSet.FindAsync(id, cancellationToken);
         }
 
         public virtual void Update(TEntity entity)

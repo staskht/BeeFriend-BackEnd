@@ -1,4 +1,6 @@
-﻿namespace BeeFriend.Core.Application.DTO.InterestCategoryDTOs
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace BeeFriend.Core.Application.DTO.InterestCategoryDTOs
 {
     public record InterestCategoryRequest(
         string Name);
