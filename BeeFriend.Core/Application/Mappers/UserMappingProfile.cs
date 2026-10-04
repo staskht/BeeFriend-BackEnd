@@ -29,9 +29,20 @@ namespace BeeFriend.Core.Application.Mappers
                 opt => opt.MapFrom(src => src.FriendshipPreferences));
 
 
-            CreateMap<UserProfileUpdateRequest, UserProfile>()
-                .ForAllMembers(opts =>
-                    opts.Condition((src, dest, srcMember) => srcMember != null));
+            CreateMap<UserProfilePatchRequest, UserProfile>();
+
+            CreateMap<UserProfile, UserProfilePatchRequest>()
+
+                .ForMember(dest => dest.InterestIds,
+                opt => opt.MapFrom(src => src.Interests.Select(i => i.Id)))
+
+                .ForMember(dest => dest.FriendshipPreferencesIds,
+                opt => opt.MapFrom(src => src.FriendshipPreferences.Select(f => f.Id)))
+
+                .ForMember(dest => dest.PersonalityTraitsIds,
+                opt => opt.MapFrom(src => src.PersonalityTraits.Select(p => p.Id)));
+
+
         }
     }
 }

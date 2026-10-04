@@ -40,8 +40,8 @@ namespace BeeFriend.Web.Controllers
             return ReturnResponse(response, Ok);
         }
 
-        [HttpPatch("{id}")]
-        public async Task<ActionResult<TResponse>> Patch(TKey id, TRequest request, CancellationToken cancellationToken) 
+        [HttpPut("{id}")]
+        public async Task<ActionResult<TResponse>> Put(TKey id, TRequest request, CancellationToken cancellationToken) 
         {
             Result<TResponse> response = await _service.UpdateAsync(id, request, cancellationToken);
 

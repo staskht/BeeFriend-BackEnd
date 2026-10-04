@@ -9,7 +9,7 @@ using BeeFriend.Core.Exceptions;
 using BeeFriend.Core.Domain.RepositoryContracts;
 using BeeFriend.Core.Domain.RepositoryContracts.CrudRepositoryContracts.Getters;
 using BeeFriend.Core.Application.DTO.UserProfileDTOs;
-using BeeFriend.Core.Application.ServiceContracts.CrudServiceContracts.Getters;
+using Microsoft.AspNetCore.JsonPatch.SystemTextJson;
 using BeeFriend.Core.Application.Helpers;
 
 
@@ -98,13 +98,13 @@ namespace BeeFriend.Core.Application.Service
 
         public async Task<Result<UserProfileResponse>> UpdateAsync(
             Guid id,
-            UserProfileUpdateRequest userProfileUpdateRequest,
+            JsonPatchDocument<UserProfilePatchRequest> patchDocument,
             CancellationToken cancellationToken)
         {
             if (id == Guid.Empty)
                 return Errors.EmptyGuid(nameof(id));
 
-            ArgumentNullException.ThrowIfNull(userProfileUpdateRequest);
+            ArgumentNullException.ThrowIfNull(patchDocument);
 
             UserProfile? matchingUserProfile =
                 await _userProfilesGetterRepository.GetByIdAsync(id, cancellationToken);
@@ -112,32 +112,61 @@ namespace BeeFriend.Core.Application.Service
             if (matchingUserProfile == null)
                 return Errors.UserNotFound;
 
-            var locationResult = await ValidateLocationAsync(
-                userProfileUpdateRequest.CountryId, 
-                userProfileUpdateRequest.CityId, 
-                matchingUserProfile,
-                cancellationToken);
+            var userProfilePatchRequest = _mapper.Map<UserProfilePatchRequest>(matchingUserProfile);
 
-            if (locationResult.IsFailure)
-                return locationResult.Error!;
+            patchDocument.ApplyTo(userProfilePatchRequest);
 
-            if (userProfileUpdateRequest.CountryId.HasValue && 
-                matchingUserProfile.CityId.HasValue &&
-                !userProfileUpdateRequest.CityId.HasValue)
+            bool cityWasChanged = patchDocument.Operations
+                .Any(x => x.path.Equals("/cityId", StringComparison.OrdinalIgnoreCase));
+
+            bool countryActuallyChanged =
+                matchingUserProfile.CountryId != userProfilePatchRequest.CountryId;
+
+            if (countryActuallyChanged && !cityWasChanged)
             {
-                matchingUserProfile.CityId = null;
+                userProfilePatchRequest.CityId = null;
             }
 
-            if (!EnumValidator.IsValidEnum(userProfileUpdateRequest.Pronouns))
+            if (userProfilePatchRequest.CountryId.HasValue)
+            {
+                var countryResult = await _countriesService.GetByIdAsync(
+                    userProfilePatchRequest.CountryId.Value,
+                    cancellationToken);
+
+                if (countryResult.IsFailure)
+                    return countryResult.Error!;
+            }
+
+            if (userProfilePatchRequest.CityId.HasValue)
+            {
+                var cityResult = await _citysService.GetByIdAsync(
+                    userProfilePatchRequest.CityId.Value,
+                    cancellationToken);
+
+                if (cityResult.IsFailure)
+                    return cityResult.Error!;
+
+                if (!userProfilePatchRequest.CountryId.HasValue)
+                    return Errors.Validation(
+                        "MissingCountryId",
+                        "City cannot be assigned before country!");
+
+                if (cityResult.Value!.CountryId != userProfilePatchRequest.CountryId.Value)
+                    return Errors.Validation(
+                        "CountryIdAndCityIdDontMatch",
+                        "City not in the correct country.");
+            }
+
+            if (!EnumValidator.IsValidEnum(userProfilePatchRequest.Pronouns))
                 return Errors.Validation("InvalidPronoun", "Supplied Pronoun value is invalid.");
 
-            if (!EnumValidator.IsValidEnum(userProfileUpdateRequest.Gender))
+            if (!EnumValidator.IsValidEnum(userProfilePatchRequest.Gender))
                 return Errors.Validation("InvalidGender", "Supplied Gender value is invalid.");
 
-            _mapper.Map(userProfileUpdateRequest, matchingUserProfile);
+            _mapper.Map(userProfilePatchRequest, matchingUserProfile);
 
             var resultFromCollectionUpdates = await UpdateCollectionAsync(
-                userProfileUpdateRequest, 
+                userProfilePatchRequest, 
                 matchingUserProfile, 
                 cancellationToken);
 
@@ -153,43 +182,6 @@ namespace BeeFriend.Core.Application.Service
 
             return _mapper.Map<UserProfileResponse>(userProfileWithDetails);
         }
-
-        private async Task<Result> ValidateLocationAsync(
-            int? requestedCountryId, 
-            int? requestedCityId, 
-            UserProfile existingUser,
-            CancellationToken cancellationToken)
-        {
-            int? effectiveCountryId = requestedCountryId ?? existingUser.CountryId;
-
-            if (requestedCountryId.HasValue)
-            {
-                var countryResult = await _countriesService.GetByIdAsync(
-                    requestedCountryId.Value,
-                    cancellationToken);
-
-                if (countryResult.IsFailure)
-                    return countryResult.Error!;
-            }
-
-            if (requestedCityId.HasValue)
-            {
-                if (!effectiveCountryId.HasValue)
-                    return Errors.Validation("MissingCountryId", "City cannot be assigned before country!");
-
-                var cityResult = await _citysService.GetByIdAsync(requestedCityId.Value, cancellationToken);
-
-                if (cityResult.IsFailure)
-                    return cityResult.Error!;
-
-                if (cityResult.Value!.CountryId != effectiveCountryId.Value)
-                    return Errors.Validation("CountryIdAndCityIdDontMatch", "City not in the correct country.");
-            }
-
-            return Result.Success();
-        }
-
-
 
         private async Task<Result> PopulateCollection<TEntity>
             (IEnumerable<int>? collectionOfIds, 
@@ -226,7 +218,7 @@ namespace BeeFriend.Core.Application.Service
         }
 
         private async Task<Result>UpdateCollectionAsync(
-            UserProfileUpdateRequest request, 
+            UserProfilePatchRequest request, 
             UserProfile user,
             CancellationToken cancellationToken)
         {

@@ -1,7 +1,7 @@
 ﻿using Asp.Versioning;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
-using System.IdentityModel.Tokens.Jwt;
+using Microsoft.AspNetCore.JsonPatch.SystemTextJson;
 using BeeFriend.Core.Application.ServiceContracts;
 using BeeFriend.Core.Application.Results;
 using BeeFriend.Core.Application.DTO.UserProfileDTOs;
@@ -39,7 +39,7 @@ namespace BeeFriend.Web.Controllers.v1
         [HttpPatch("{id:guid}")]
         public async Task<ActionResult<UserProfileResponse>> PatchUserProfile(
             Guid id, 
-            [FromBody] UserProfileUpdateRequest userProfileUpdateRequest,
+            [FromBody] JsonPatchDocument<UserProfilePatchRequest> userProfileUpdateRequest,
             CancellationToken cancellationToken)
         {
 
