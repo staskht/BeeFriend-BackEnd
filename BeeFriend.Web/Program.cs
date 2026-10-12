@@ -1,4 +1,5 @@
 using BeeFriend.Infrastructure.DbContext;
+using BeeFriend.Web.Hubs;
 using BeeFriend.Web.Middleware;
 using BeeFriend.Web.StartupExtensions;
 using Microsoft.EntityFrameworkCore;
@@ -38,5 +39,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapHub<ChatHub>("/chatHub");
 
 app.Run();

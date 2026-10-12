@@ -47,6 +47,11 @@ namespace BeeFriend.Web.StartupExtensions
                 options.Filters.Add(new AuthorizeFilter(policy));
             });
 
+
+
+            //SignalR
+            services.AddSignalR();
+
             //IoC
             services.AddSingleton<ITokenAuthentication, TokenAuthenticationService>();
             services.AddScoped<IUserProfilesRepository, UserProfilesRepository>();
