@@ -110,6 +110,31 @@ namespace BeeFriend.Infrastructure.DbContext
             // FriendshipPreference
             builder.Entity<FriendshipPreference>()
                 .HasKey(fp => fp.Id);
+
+            //message
+            builder.Entity<Message>(entity =>
+            {
+                entity.HasKey(m => m.Id);
+
+                entity.HasOne(m => m.Conversation)
+                .WithMany(c => c.Messages)
+                .HasForeignKey(m => m.ConversationId);
+
+                entity.HasOne(m => m.Sender)
+                .WithMany()
+                .HasForeignKey(m => m.SenderId);
+            });
+
+            // Conversation
+
+            builder.Entity<Conversation>(entity =>
+            {
+                entity.HasKey(c => c.Id);
+
+                entity.HasMany(c => c.Members)
+                .WithMany();
+            });
+                
         }
 
     

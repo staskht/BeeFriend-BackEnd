@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace BeeFriend.Core.Domain.Entities
@@ -9,6 +10,8 @@ namespace BeeFriend.Core.Domain.Entities
         public Guid Id { get; set; }
         public Guid ConversationId { get; set; }
         public Guid SenderId { get; set; }
+
+        [StringLength(3000)]
         public string Content { get; set; } = string.Empty;
         public DateTime SentAt { get; } = DateTime.UtcNow;
 

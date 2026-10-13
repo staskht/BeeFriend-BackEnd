@@ -39,6 +39,8 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
-app.MapHub<ChatHub>("/chatHub");
+app.MapHub<ChatHub>("/chat")
+    .RequireAuthorization();
+app.UseCors("BeeFriendClient");
 
 app.Run();
