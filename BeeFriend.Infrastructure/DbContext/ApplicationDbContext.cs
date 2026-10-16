@@ -19,6 +19,8 @@ namespace BeeFriend.Infrastructure.DbContext
         public virtual DbSet<InterestCategory> InterestCategories { get; set; }
         public virtual DbSet<Personality> PersonalityTraits { get; set; }
         public virtual DbSet<FriendshipPreference> FriendshipPreferences { get; set; }
+        public virtual DbSet<Message> Messages { get; set; }
+        public virtual DbSet<Conversation> Conversations { get; set; }
 
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {
