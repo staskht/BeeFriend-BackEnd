@@ -11,5 +11,6 @@ namespace BeeFriend.Core.Domain.RepositoryContracts
         IGetByIdRepository<UserProfile, Guid>,
         IUpdaterRepository<UserProfile>
     {
+        Task<bool> ExistsAsync(IEnumerable<Guid> userIds, CancellationToken cancellationToken);
     }
 }

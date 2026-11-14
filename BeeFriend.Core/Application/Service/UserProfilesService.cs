@@ -1,16 +1,17 @@
-﻿using BeeFriend.Core.Domain.Entities;
-using BeeFriend.Core.Domain.UnitOfWorkContract;
-using AutoMapper;
-using Microsoft.AspNetCore.Identity;
-using BeeFriend.Core.Domain.IdentityEntities;
-using BeeFriend.Core.Application.ServiceContracts;
+﻿using AutoMapper;
+using BeeFriend.Core.Application.DTO.UserProfileDTOs;
+using BeeFriend.Core.Application.Helpers;
 using BeeFriend.Core.Application.Results;
-using BeeFriend.Core.Exceptions;
+using BeeFriend.Core.Application.ServiceContracts;
+using BeeFriend.Core.Domain.Entities;
+using BeeFriend.Core.Domain.IdentityEntities;
 using BeeFriend.Core.Domain.RepositoryContracts;
 using BeeFriend.Core.Domain.RepositoryContracts.CrudRepositoryContracts.Getters;
-using BeeFriend.Core.Application.DTO.UserProfileDTOs;
+using BeeFriend.Core.Domain.UnitOfWorkContract;
+using BeeFriend.Core.Exceptions;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.JsonPatch.SystemTextJson;
-using BeeFriend.Core.Application.Helpers;
+using System.Xml.XPath;
 
 
 namespace BeeFriend.Core.Application.Service
@@ -96,6 +97,26 @@ namespace BeeFriend.Core.Application.Service
             return _mapper.Map<UserProfileResponse>(userProfile);
         }
 
+        public async Task<Result> ExistsAsync(IEnumerable<Guid> userIds, CancellationToken cancellationToken)
+        {
+            ArgumentNullException.ThrowIfNull(userIds);
+
+            foreach (Guid id in userIds)
+            {
+                if (id == Guid.Empty)
+                    return Errors.Validation("EmptyUserIdGuid", "User id cannto be an empty guid.");
+            }
+
+            var usersExist = await _userProfilesGetterRepository.ExistsAsync(userIds, cancellationToken);
+
+            if (!usersExist)
+                return Errors.EntityNotFound(
+                    "OneOrMoreUsersNotFound",
+                    "One or more user id's were not found.");
+
+            return Result.Success();
+        }
+
         public async Task<Result<UserProfileResponse>> UpdateAsync(
             Guid id,
             JsonPatchDocument<UserProfilePatchRequest> patchDocument,
@@ -173,7 +194,7 @@ namespace BeeFriend.Core.Application.Service
             if (resultFromCollectionUpdates.IsFailure)
                 return resultFromCollectionUpdates.Error!;
             
-            _userProfilesGetterRepository.Update(matchingUserProfile);
+            //_userProfilesGetterRepository.Update(matchingUserProfile);
 
             await _unitOfWork.CommitAsync(cancellationToken);
 

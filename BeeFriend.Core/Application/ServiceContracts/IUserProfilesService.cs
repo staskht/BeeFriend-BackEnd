@@ -16,5 +16,7 @@ namespace BeeFriend.Core.Application.ServiceContracts
             Guid id, 
             JsonPatchDocument<UserProfilePatchRequest> patchDocument, 
             CancellationToken cancellationToken);
+
+        Task<Result> ExistsAsync(IEnumerable<Guid> userIds, CancellationToken cancellationToken);
     }
 }

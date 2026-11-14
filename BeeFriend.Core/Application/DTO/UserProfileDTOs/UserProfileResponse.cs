@@ -11,7 +11,7 @@ namespace BeeFriend.Core.Application.DTO.UserProfileDTOs
         public Guid Id { get; set; }
         public string? CityName { get; set; }
         public string? CountryName { get; set; }
-        public string? FirstName { get; set; }
+        public string FirstName { get; set; } = null!;
         public string? Bio { get; set; }
         public int Age { get; set; }
 

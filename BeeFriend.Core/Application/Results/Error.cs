@@ -29,7 +29,7 @@
         public static Error EmptyGuid(string parameterName) =>
             new(ErrorType.Validation, 
                 "EmptyGuid",
-                $"{parameterName} cannot be empty");
+                $"{parameterName} cannot be empty guid.");
 
         // User
 
@@ -65,5 +65,9 @@
             id,
             description);
 
+        public static Error Conflict(string id, string description) => new(
+            ErrorType.Conflict,
+            id,
+            description);
     }
 }

@@ -1,4 +1,6 @@
-﻿using BeeFriend.Core.Domain.Entities;
+﻿using BeeFriend.Core.Application.DTO.ConversationDTOs;
+using BeeFriend.Core.Application.DTO.MessageDTOs;
+using BeeFriend.Core.Domain.Entities;
 using BeeFriend.Core.Domain.RepositoryContracts;
 using BeeFriend.Infrastructure.DbContext;
 using Microsoft.EntityFrameworkCore;
@@ -16,29 +18,67 @@ namespace BeeFriend.Infrastructure.Repositories
         {
             _context = context;
         }
-        public async Task AddAsync(Conversation entity, CancellationToken cancellationToken)
+        public async Task AddAsync(
+            Conversation entity, 
+            CancellationToken cancellationToken)
         {
             await _context.Conversations.AddAsync(entity, cancellationToken);
         }
 
-        public void Delete(Conversation conversation)
-        {
-            _context.Conversations.Remove(conversation);
-        }
-
-        public async Task<Conversation?> GetByMmembersIds(
-            IEnumerable<UserProfile> members,
+        public async Task<bool> IsUserMemberOfConversationAsync(
+            Guid userId,
+            Guid conversationId,
             CancellationToken cancellationToken)
         {
             return await _context.Conversations
-                .Where(c => members.All(m => 
-                c.Members.Any(cm => cm.Id == m.Id)))
-                .FirstOrDefaultAsync(cancellationToken);
+                .AnyAsync(
+                    c => c.Id == conversationId &&
+                    c.Members.Any(u => u.UserId == userId),
+                    cancellationToken);
         }
 
-        public void Update(Conversation entity)
+        public async Task<bool> AreUsersMembersOfConversationAsync(
+            IEnumerable<Guid> usersIds,
+            Guid conversationId,
+            CancellationToken cancellationToken)
         {
-            _context.Conversations.Update(entity);
+            var ids = usersIds.ToArray();
+
+            return await _context.Conversations
+                .AnyAsync(
+                    c => c.Id == conversationId &&
+                    c.Members.Any(u => ids.Contains(u.UserId)),
+                    cancellationToken);
+        }
+
+        public async Task<Conversation?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
+        {
+            return await _context.Conversations
+                .Include(c => c.Messages)
+                .Include(c => c.Members)
+                .FirstOrDefaultAsync(c => c.Id == id);
+        }
+
+        public async Task<IEnumerable<ConversationSummaryDto>> GetUsersConversationsSummariesAsync(Guid userId, CancellationToken cancellationToken)
+        {
+            return await _context.Conversations
+                .Where(c => c.Members.Any(u => u.UserId ==  userId))
+                .Select(c => new ConversationSummaryDto(
+                    c.Id,
+                    c.Messages
+                    .OrderByDescending(m => m.SentAt)
+                    .Select(m => new MessagePreviewDto(
+                        m.Content,
+                        m.SentAt,
+                        m.Sender.FirstName))
+                    .FirstOrDefault()
+                    ))
+                .ToListAsync(cancellationToken);
+        }
+
+        public void Delete(Conversation entity)
+        {
+            _context.Conversations.Remove(entity);
         }
     }
 }

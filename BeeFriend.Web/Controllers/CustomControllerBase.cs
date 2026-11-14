@@ -37,6 +37,7 @@ namespace BeeFriend.Web.Controllers
                 ErrorType.Validation => BadRequest(result.Error),
                 ErrorType.NotFound => NotFound(result.Error),
                 ErrorType.Unauthorized => Unauthorized(result.Error),
+                ErrorType.Conflict => Conflict(result.Error),
                 _ => throw new InvalidOperationException(
                     $"Unsupported error type '{result.Error.Type}'.")
             };

@@ -21,6 +21,7 @@ namespace BeeFriend.Infrastructure.DbContext
         public virtual DbSet<FriendshipPreference> FriendshipPreferences { get; set; }
         public virtual DbSet<Message> Messages { get; set; }
         public virtual DbSet<Conversation> Conversations { get; set; }
+        public virtual DbSet<ConversationUser> ConversationUser {  get; set; }
 
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {
@@ -133,8 +134,25 @@ namespace BeeFriend.Infrastructure.DbContext
             {
                 entity.HasKey(c => c.Id);
 
-                entity.HasMany(c => c.Members)
-                .WithMany();
+            });
+
+            // ConversationUser
+
+            builder.Entity<ConversationUser>(entity =>
+            {
+                entity.HasKey(cu => new
+                {
+                    cu.ConversationId,
+                    cu.UserId
+                });
+
+                entity.HasOne(cu => cu.Conversation)
+                .WithMany(c => c.Members)
+                .HasForeignKey(cu => cu.ConversationId);
+
+                entity.HasOne(cu => cu.UserProfile)
+                .WithMany()
+                .HasForeignKey(cu => cu.UserId);
             });
                 
         }

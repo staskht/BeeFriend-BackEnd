@@ -66,6 +66,12 @@ namespace BeeFriend.Web.StartupExtensions
             services.AddScoped<IGetAllRepository<InterestCategory>, InterestCategoriesRepository>();
             services.AddScoped<IInterestCategoriesRepository, InterestCategoriesRepository>();
             services.AddScoped<IInterestCategoriesService, InterestCategoriesService>();
+            services.AddScoped<IConversationRepository, ConversationRepository>();
+            services.AddScoped<IConversationService, ConversationService>();
+            services.AddScoped<IMessageRepository, MessageRepository>();
+
+            //services.AddScoped<IConversationRepository, MessageRepository>();
+
 
             services.AddScoped(typeof(IGetAllByIdsRepository<,>), typeof(GetAllByIdsRepository<,>));
             services.AddScoped(typeof(IRepository<,>), typeof(Repository<,>));

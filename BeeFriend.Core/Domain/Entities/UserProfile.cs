@@ -17,7 +17,7 @@ namespace BeeFriend.Core.Domain.Entities
         public Country? Country { get; set; }
 
         [StringLength(50)]
-        public string? FirstName {get; set;}
+        public string FirstName { get; set; } = null!;
 
         [StringLength(200)]
         public string? Bio {get; set; }

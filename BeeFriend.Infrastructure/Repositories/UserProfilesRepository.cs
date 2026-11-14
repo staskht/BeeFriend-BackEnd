@@ -54,5 +54,15 @@ namespace BeeFriend.Infrastructure.Repositories
         {
             _context.UserProfiles.Update(entity);
         }
+
+        public async Task<bool> ExistsAsync(IEnumerable<Guid> userIds, CancellationToken cancellationToken)
+        {
+            var ids = userIds.Distinct().ToArray();
+
+            var existingUsersCount = await _context.UserProfiles
+                .CountAsync(u => ids.Contains(u.Id), cancellationToken);
+
+            return existingUsersCount == ids.Length;
+        } 
     }
 }
