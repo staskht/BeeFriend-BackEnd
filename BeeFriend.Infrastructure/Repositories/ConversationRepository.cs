@@ -4,9 +4,6 @@ using BeeFriend.Core.Domain.Entities;
 using BeeFriend.Core.Domain.RepositoryContracts;
 using BeeFriend.Infrastructure.DbContext;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace BeeFriend.Infrastructure.Repositories
 {

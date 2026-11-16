@@ -20,6 +20,16 @@ namespace BeeFriend.Web.Controllers.v1
         }
 
 
+        [HttpGet("{conversationId:guid}")]
+        public async Task<ActionResult<ConversationResponse>> GetById(Guid conversationId, CancellationToken cancellationToken)
+        {
+            var currentUserId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+
+            var result = await _conversationService.GetByIdAsync(conversationId, currentUserId, cancellationToken);
+
+            return ReturnResponse(result, Ok);
+        }
+
         [HttpPost]
         public async Task<ActionResult> Create(
             [FromBody] ConversationCreateRequest conversationCreateRequest, 
@@ -43,14 +53,14 @@ namespace BeeFriend.Web.Controllers.v1
             [FromBody] ConversationAddRequest conversationAddRequest,
             CancellationToken cancellationToken)
         {
-            var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var currentUserId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
 
-            
+            var result = await _conversationService.AddMembersAsync(currentUserId, conversationId, conversationAddRequest, cancellationToken);
 
-            
+            return ReturnResponse(result, Ok);
         }
 
-        [HttpGet("{userId:guid}")]
+        [HttpGet("conversationSummaries/{userId:guid}")]
         public async Task<ActionResult<ConversationResponse>> GetUsersConversationsSummaries(
             Guid userId, 
             CancellationToken cancellationToken) 

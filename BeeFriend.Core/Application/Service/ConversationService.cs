@@ -30,7 +30,19 @@ namespace BeeFriend.Core.Application.Service
             _conversationUserRepository = conversationUserRepository;
         }
 
+        public async Task<Result<ConversationResponse>> GetByIdAsync(Guid conversationId, Guid userId, CancellationToken cancellationToken)
+        {
+            var validationResult = await ValidateConversationMembershipAsync(userId, conversationId, cancellationToken);
 
+            if (validationResult.IsFailure)
+                return validationResult.Error!;
+
+            var conversation = await _conversationRepository.GetByIdAsync(conversationId, cancellationToken);
+
+
+            return conversationResponse;
+
+        }
 
         public async Task<Result<Guid>> CreateAsync(
             Guid currentUserId, 
@@ -40,7 +52,9 @@ namespace BeeFriend.Core.Application.Service
             ArgumentNullException.ThrowIfNull(conversationCreateRequest);
 
             if (currentUserId == Guid.Empty)
-                return Errors.Validation("EmptyGuidUserId", "Invalid user id.");
+                return Errors.Validation(
+                    "EmptyGuidUserId", 
+                    "Invalid user id.");
 
             var conversationMembers = new HashSet<Guid>(conversationCreateRequest.Members);
             conversationMembers!.Add(currentUserId);
@@ -96,7 +110,9 @@ namespace BeeFriend.Core.Application.Service
                 conversationAddRequest.Members, conversationId, cancellationToken);
 
             if (areUsersMembersOfConversation)
-                return Errors.Conflict("ConversationContainsOneOrMoreUsers", "One or more users already in conversaton.");
+                return Errors.Conflict(
+                    "ConversationContainsOneOrMoreUsers", 
+                    "One or more users already in conversaton.");
 
             foreach (var memberId in conversationAddRequest.Members)
             {
@@ -172,6 +188,11 @@ namespace BeeFriend.Core.Application.Service
                     "EmptyGuidUserId", 
                     "Invalid user id.");
 
+            if (conversationId == Guid.Empty)
+                return Errors.Validation(
+                    "EmptyGuidConversationId",
+                    "Invalid conversation id.");
+
             var result = await _conversationRepository
                 .IsUserMemberOfConversationAsync(
                 currentUserId, 
@@ -186,5 +207,6 @@ namespace BeeFriend.Core.Application.Service
             return Result.Success();
         }
 
+        
     }
 }
