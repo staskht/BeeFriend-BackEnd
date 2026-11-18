@@ -10,7 +10,7 @@ namespace BeeFriend.Core.Domain.RepositoryContracts
 {
     public interface IConversationRepository :
         ICreatorRepository<Conversation>,
-        IGetByIdRepository<Conversation, Guid>,
+        IGetByIdRepository<ConversationDetailResponse, Guid>,
         IDeleterRepository<Conversation>
     {
         Task<IEnumerable<ConversationSummaryDto>> GetUsersConversationsSummariesAsync(

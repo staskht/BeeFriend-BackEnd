@@ -4,5 +4,5 @@ using System.Text;
 
 namespace BeeFriend.Core.Application.DTO.MessageDTOs
 {
-    public record MessageResponse(string Content, DateTime SentAt, string SenderName);
+    public record MessageResponse(Guid Id, Guid SenderId, string Content, DateTime SentAt, string SenderName);
 }

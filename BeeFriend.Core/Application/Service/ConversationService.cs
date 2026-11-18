@@ -30,7 +30,7 @@ namespace BeeFriend.Core.Application.Service
             _conversationUserRepository = conversationUserRepository;
         }
 
-        public async Task<Result<ConversationResponse>> GetByIdAsync(Guid conversationId, Guid userId, CancellationToken cancellationToken)
+        public async Task<Result<ConversationDetailResponse>> GetByIdAsync(Guid conversationId, Guid userId, CancellationToken cancellationToken)
         {
             var validationResult = await ValidateConversationMembershipAsync(userId, conversationId, cancellationToken);
 
@@ -39,8 +39,7 @@ namespace BeeFriend.Core.Application.Service
 
             var conversation = await _conversationRepository.GetByIdAsync(conversationId, cancellationToken);
 
-
-            return conversationResponse;
+            return conversation!;
 
         }
 

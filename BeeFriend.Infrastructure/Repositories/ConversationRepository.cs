@@ -1,4 +1,5 @@
 ﻿using BeeFriend.Core.Application.DTO.ConversationDTOs;
+using BeeFriend.Core.Application.DTO.ConversationUserDTOs;
 using BeeFriend.Core.Application.DTO.MessageDTOs;
 using BeeFriend.Core.Domain.Entities;
 using BeeFriend.Core.Domain.RepositoryContracts;
@@ -48,12 +49,19 @@ namespace BeeFriend.Infrastructure.Repositories
                     cancellationToken);
         }
 
-        public async Task<Conversation?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
+        public async Task<ConversationDetailResponse?> GetByIdAsync(Guid conversationId, CancellationToken cancellationToken)
         {
             return await _context.Conversations
-                .Include(c => c.Messages)
-                .Include(c => c.Members)
-                .FirstOrDefaultAsync(c => c.Id == id);
+                .Where(c => c.Id == conversationId)
+                .Select(c => new ConversationDetailResponse(
+                    c.Id,
+                    c.Members.Select(m => new ConversationUserMessageResponse(
+                        m.UserId,
+                        m.UserProfile.FirstName
+                        )).ToList(),
+                    c.CreatedAt
+                    ))
+                .FirstOrDefaultAsync(cancellationToken);
         }
 
         public async Task<IEnumerable<ConversationSummaryDto>> GetUsersConversationsSummariesAsync(Guid userId, CancellationToken cancellationToken)

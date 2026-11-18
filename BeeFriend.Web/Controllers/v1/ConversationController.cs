@@ -21,7 +21,7 @@ namespace BeeFriend.Web.Controllers.v1
 
 
         [HttpGet("{conversationId:guid}")]
-        public async Task<ActionResult<ConversationResponse>> GetById(Guid conversationId, CancellationToken cancellationToken)
+        public async Task<ActionResult<ConversationDetailResponse>> GetById(Guid conversationId, CancellationToken cancellationToken)
         {
             var currentUserId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
 
@@ -61,7 +61,7 @@ namespace BeeFriend.Web.Controllers.v1
         }
 
         [HttpGet("conversationSummaries/{userId:guid}")]
-        public async Task<ActionResult<ConversationResponse>> GetUsersConversationsSummaries(
+        public async Task<ActionResult<ConversationDetailResponse>> GetUsersConversationsSummaries(
             Guid userId, 
             CancellationToken cancellationToken) 
         {

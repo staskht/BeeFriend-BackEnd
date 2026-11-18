@@ -10,7 +10,7 @@ namespace BeeFriend.Core.Application.ServiceContracts
 {
     public interface IConversationService
     {
-        Task<Result<ConversationResponse>> GetByIdAsync(
+        Task<Result<ConversationDetailResponse>> GetByIdAsync(
             Guid conversationId,
             Guid userId,
             CancellationToken cancellationToken);
