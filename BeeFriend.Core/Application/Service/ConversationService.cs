@@ -180,7 +180,7 @@ namespace BeeFriend.Core.Application.Service
             return (Result<IEnumerable<ConversationSummaryDto>>)conversationSummaries;
         }
 
-        private async Task<Result> ValidateConversationMembershipAsync(Guid currentUserId, Guid conversationId, CancellationToken cancellationToken)
+        public async Task<Result> ValidateConversationMembershipAsync(Guid currentUserId, Guid conversationId, CancellationToken cancellationToken)
         {
             if (currentUserId == Guid.Empty)
                 return Errors.Validation(

@@ -60,21 +60,27 @@ namespace BeeFriend.Web.Controllers.v1
             return ReturnResponse(result, Ok);
         }
 
-        [HttpGet("conversationSummaries/{userId:guid}")]
+        [HttpGet("summaries")]
         public async Task<ActionResult<ConversationDetailResponse>> GetUsersConversationsSummaries(
-            Guid userId, 
             CancellationToken cancellationToken) 
         {
-            var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var currentUserId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
 
-            if (userId.ToString() != currentUserId)
-            {
-                return Forbid();
-            }
-
-            var result = await _conversationService.GetUsersConversationsSummariesAsync(userId, cancellationToken);
+            var result = await _conversationService.GetUsersConversationsSummariesAsync(currentUserId, cancellationToken);
 
             return ReturnResponse(result, Ok);
+        }
+
+        [HttpDelete("{conversationId:guid}")]
+        public async Task<ActionResult> LeaveConversation(
+            Guid conversationId, 
+            CancellationToken cancellationToken)
+        {
+            var currentUserId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+
+            var result = await _conversationService.LeaveConversationAsync(currentUserId, conversationId, cancellationToken);
+
+            return ReturnResponse(result, NoContent);
         }
     }
 }

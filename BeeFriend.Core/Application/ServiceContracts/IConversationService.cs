@@ -29,5 +29,12 @@ namespace BeeFriend.Core.Application.ServiceContracts
             ConversationAddRequest conversationAddRequest,
             CancellationToken cancellationToken);
 
+        Task<Result> LeaveConversationAsync(
+            Guid currentUserId,
+            Guid conversationId,
+            CancellationToken cancellationToken);
+
+        Task<Result> ValidateConversationMembershipAsync(Guid currentUserId, Guid conversationId, CancellationToken cancellationToken);
+
     }
 }

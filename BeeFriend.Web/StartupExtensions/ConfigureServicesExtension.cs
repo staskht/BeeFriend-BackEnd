@@ -69,6 +69,7 @@ namespace BeeFriend.Web.StartupExtensions
             services.AddScoped<IConversationRepository, ConversationRepository>();
             services.AddScoped<IConversationService, ConversationService>();
             services.AddScoped<IMessageRepository, MessageRepository>();
+            services.AddScoped<IMessageService, MessageService>();
 
             //services.AddScoped<IConversationRepository, MessageRepository>();
 

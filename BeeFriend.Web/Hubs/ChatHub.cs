@@ -1,22 +1,39 @@
-﻿using BeeFriend.Core.Application.ServiceContracts;
+﻿using Azure.Core;
+using BeeFriend.Core.Application.DTO.MessageDTOs;
+using BeeFriend.Core.Application.ServiceContracts;
 using BeeFriend.Core.Options;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
 
 namespace BeeFriend.Web.Hubs
 {
+    [Authorize]
     public class ChatHub : Hub
     {
-        
-        public async Task SendMessage(string user, string message)
+        private readonly IMessageService _messageService;
+
+        public ChatHub(IMessageService messageService)
         {
-            await Clients.All.SendAsync("ReceiveMessage", user, message);
+            _messageService = messageService;
+        }
+        
+        public async Task SendMessage(Guid conversationId, MessageCreateRequest messageCreateRequest)
+        {
+            var currentUserId = Guid.Parse(Context.UserIdentifier!);
+
+            var result = await _messageService.SendAsync(
+                currentUserId,
+                conversationId,
+                messageCreateRequest,
+                Context.ConnectionAborted);
+
+            if (result.IsFailure)
+                throw new HubException($"Failed to send message with error {result.Error}");
+
+            await Clients.Group(conversationId.ToString())
+                .SendAsync("ReceiveMessage", result.Value);
         }
 
-       
         
     }
 }

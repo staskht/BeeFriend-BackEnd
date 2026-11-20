@@ -20,6 +20,7 @@
             "InvalidRefreshToken",
             "Invalid refresh token.");
 
+
         //Validation
         public static Error Validation(string id, string description) => 
             new(ErrorType.Validation,
@@ -69,5 +70,10 @@
             ErrorType.Conflict,
             id,
             description);
+
+        public static Error Forbidden(string id, string description) =>
+            new(ErrorType.Forbidden,
+                id,
+                description);
     }
 }

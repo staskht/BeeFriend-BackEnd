@@ -9,11 +9,18 @@ namespace BeeFriend.Core.Domain.RepositoryContracts
 {
     public interface IMessageRepository :
         ICreatorRepository<Message>,
-        IDeleterRepository<Message>,
-        IUpdaterRepository<Message>
+        IUpdaterRepository<Message>,
+        IGetByIdRepository<Message, Guid>
     {
-        Task<IEnumerable<Message>> GetByConversationIdAsync(
-            Guid convrsationId,
+        Task<IEnumerable<Message>> GetMessagesByConversationIdAsync(
+            Guid conversationId,
+            int page,
+            int limit,
+            CancellationToken cancellationToken);
+
+        Task<bool> ExecuteDeleteMessageAsync(
+            Guid messageId,
+            Guid userId,
             CancellationToken cancellationToken);
     }
         
