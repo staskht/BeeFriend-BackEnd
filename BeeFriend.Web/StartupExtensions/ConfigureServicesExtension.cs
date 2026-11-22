@@ -70,6 +70,7 @@ namespace BeeFriend.Web.StartupExtensions
             services.AddScoped<IConversationService, ConversationService>();
             services.AddScoped<IMessageRepository, MessageRepository>();
             services.AddScoped<IMessageService, MessageService>();
+            services.AddScoped<IConversationUserRepository, ConversationUserRepository>();
 
             //services.AddScoped<IConversationRepository, MessageRepository>();
 
@@ -184,7 +185,17 @@ namespace BeeFriend.Web.StartupExtensions
             });
 
             // JWT
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme =
+                    JwtBearerDefaults.AuthenticationScheme;
+
+                options.DefaultChallengeScheme =
+                    JwtBearerDefaults.AuthenticationScheme;
+
+                options.DefaultScheme =
+                    JwtBearerDefaults.AuthenticationScheme;
+            })
                 .AddJwtBearer(options =>
                 {
                     options.TokenValidationParameters = new TokenValidationParameters()

@@ -17,7 +17,7 @@ namespace BeeFriend.Infrastructure.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "10.0.12")
+                .HasAnnotation("ProductVersion", "10.0.15")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -320,7 +320,22 @@ namespace BeeFriend.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Conversation");
+                    b.ToTable("Conversations");
+                });
+
+            modelBuilder.Entity("BeeFriend.Core.Domain.Entities.ConversationUser", b =>
+                {
+                    b.Property<Guid>("ConversationId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("ConversationId", "UserId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("ConversationUser");
                 });
 
             modelBuilder.Entity("BeeFriend.Core.Domain.Entities.Country", b =>
@@ -479,13 +494,16 @@ namespace BeeFriend.Infrastructure.Migrations
                     b.Property<Guid>("SenderId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<DateTime>("SentAt")
+                        .HasColumnType("datetime2");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ConversationId");
 
                     b.HasIndex("SenderId");
 
-                    b.ToTable("Message");
+                    b.ToTable("Messages");
                 });
 
             modelBuilder.Entity("BeeFriend.Core.Domain.Entities.Personality", b =>
@@ -642,21 +660,6 @@ namespace BeeFriend.Infrastructure.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
-                });
-
-            modelBuilder.Entity("ConversationUserProfile", b =>
-                {
-                    b.Property<Guid>("ConversationId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("MembersId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("ConversationId", "MembersId");
-
-                    b.HasIndex("MembersId");
-
-                    b.ToTable("ConversationUserProfile");
                 });
 
             modelBuilder.Entity("FriendshipPreferenceUserProfile", b =>
@@ -818,6 +821,25 @@ namespace BeeFriend.Infrastructure.Migrations
                     b.Navigation("Country");
                 });
 
+            modelBuilder.Entity("BeeFriend.Core.Domain.Entities.ConversationUser", b =>
+                {
+                    b.HasOne("BeeFriend.Core.Domain.Entities.Conversation", "Conversation")
+                        .WithMany("Members")
+                        .HasForeignKey("ConversationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BeeFriend.Core.Domain.Entities.UserProfile", "UserProfile")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Conversation");
+
+                    b.Navigation("UserProfile");
+                });
+
             modelBuilder.Entity("BeeFriend.Core.Domain.Entities.Interest", b =>
                 {
                     b.HasOne("BeeFriend.Core.Domain.Entities.InterestCategory", "Category")
@@ -869,21 +891,6 @@ namespace BeeFriend.Infrastructure.Migrations
                     b.Navigation("Country");
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("ConversationUserProfile", b =>
-                {
-                    b.HasOne("BeeFriend.Core.Domain.Entities.Conversation", null)
-                        .WithMany()
-                        .HasForeignKey("ConversationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("BeeFriend.Core.Domain.Entities.UserProfile", null)
-                        .WithMany()
-                        .HasForeignKey("MembersId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("FriendshipPreferenceUserProfile", b =>
@@ -989,6 +996,8 @@ namespace BeeFriend.Infrastructure.Migrations
 
             modelBuilder.Entity("BeeFriend.Core.Domain.Entities.Conversation", b =>
                 {
+                    b.Navigation("Members");
+
                     b.Navigation("Messages");
                 });
 

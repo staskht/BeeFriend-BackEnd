@@ -35,13 +35,13 @@ app.UseSwaggerUI(options =>
 
 app.UseRouting();
 
+app.UseCors("BeeFriendClient");
+
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
 app.MapHub<ChatHub>("/chat")
     .RequireAuthorization();
-
-app.UseCors("BeeFriendClient");
 
 app.Run();

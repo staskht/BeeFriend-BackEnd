@@ -43,7 +43,7 @@ namespace BeeFriend.Web.Controllers.v1
             return ReturnResponse(result, () =>
                     CreatedAtAction(
                         nameof(GetById),
-                        new { id = result.Value },
+                        new { conversationId = result.Value },
                         null));
         }
 
@@ -71,7 +71,7 @@ namespace BeeFriend.Web.Controllers.v1
             return ReturnResponse(result, Ok);
         }
 
-        [HttpDelete("{conversationId:guid}")]
+        [HttpGet("leave/{conversationId:guid}")]
         public async Task<ActionResult> LeaveConversation(
             Guid conversationId, 
             CancellationToken cancellationToken)
