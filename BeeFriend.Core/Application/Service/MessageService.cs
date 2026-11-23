@@ -57,6 +57,31 @@ namespace BeeFriend.Core.Application.Service
 
         }
 
+        public async Task<Result<MessageResponse>> UpdateAsync(
+            Guid currentUserId,
+            Guid messageId,
+            MessageUpdateRequest messageUpdateRequest,
+            CancellationToken cancellationToken)
+        {
+            ArgumentNullException.ThrowIfNull(messageUpdateRequest);
+
+            var message = await _messageRepository.GetByIdAsync(messageId, cancellationToken);
+
+            if (message is null)
+                return Errors.EntityNotFound(
+                    "MessageNotFound", "Message was not found.");
+
+            if (currentUserId != message.SenderId)
+                return Errors.Forbidden(
+                    "WrongUserId", "Message does not belong to that user.");
+
+            message.Edit(messageUpdateRequest.Content);
+
+            await _unitOfWork.CommitAsync(cancellationToken);
+
+            return _mapper.Map<MessageResponse>(message);
+        }
+
         public async Task<Result> DeleteMessageAsync(
             Guid currentUserId, 
             Guid messageId, 

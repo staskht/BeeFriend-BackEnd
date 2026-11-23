@@ -26,5 +26,11 @@ namespace BeeFriend.Core.Application.ServiceContracts
             Guid conversationId,
             MessageCreateRequest messageCreateRequest,
             CancellationToken cancellationToken);
+
+        Task<Result<MessageResponse>> UpdateAsync(
+            Guid currentUserId,
+            Guid messageId,
+            MessageUpdateRequest messageUpdateRequest,
+            CancellationToken cancellationToken);
     }
 }

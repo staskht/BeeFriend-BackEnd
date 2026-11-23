@@ -35,5 +35,9 @@ namespace BeeFriend.Core.Domain.Entities
             return message;
         }
 
+        internal void Edit(string content)
+        {
+            Content = content;
+        }
     }
 }

@@ -47,5 +47,22 @@ namespace BeeFriend.Web.Controllers.v1
 
             return ReturnResponse(result, NoContent);
         }
+
+        [HttpPatch("{messageId:guid}")]
+        public async Task<ActionResult<MessageResponse>> Update(
+            Guid messageId,
+            MessageUpdateRequest request,
+            CancellationToken cancellationToken)
+        {
+            var currentUserId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+
+            var result = await _messageService.UpdateAsync(
+                currentUserId,
+                messageId,
+                request,
+                cancellationToken);
+
+            return ReturnResponse(result, Ok);
+        }
     }
 }
